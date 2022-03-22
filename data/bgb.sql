@@ -111,6 +111,7 @@ CREATE TABLE `report` (
   `uid` varchar(64) NOT NULL,
   `cid` varchar(128) NOT NULL,
   `date` datetime NOT NULL,
+  `solved` tinyint(1) NOT NULL,
   PRIMARY KEY (`uid`,`cid`),
   KEY `report_FK_1` (`cid`),
   CONSTRAINT `report_FK` FOREIGN KEY (`uid`) REFERENCES `user` (`uid`),
@@ -190,4 +191,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2022-03-22 16:10:55
+-- Dump completed on 2022-03-22 16:22:13
