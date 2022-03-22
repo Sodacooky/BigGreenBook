@@ -101,6 +101,33 @@ LOCK TABLES `reply` WRITE;
 UNLOCK TABLES;
 
 --
+-- Table structure for table `report`
+--
+
+DROP TABLE IF EXISTS `report`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `report` (
+  `uid` varchar(64) NOT NULL,
+  `cid` varchar(128) NOT NULL,
+  `date` datetime NOT NULL,
+  PRIMARY KEY (`uid`,`cid`),
+  KEY `report_FK_1` (`cid`),
+  CONSTRAINT `report_FK` FOREIGN KEY (`uid`) REFERENCES `user` (`uid`),
+  CONSTRAINT `report_FK_1` FOREIGN KEY (`cid`) REFERENCES `content` (`cid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `report`
+--
+
+LOCK TABLES `report` WRITE;
+/*!40000 ALTER TABLE `report` DISABLE KEYS */;
+/*!40000 ALTER TABLE `report` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `user`
 --
 
@@ -163,4 +190,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2022-03-22 15:25:19
+-- Dump completed on 2022-03-22 16:10:55
