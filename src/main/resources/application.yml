@@ -1,0 +1,29 @@
+spring:
+  profiles:
+    active: wen
+  datasource:
+    url: jdbc:mysql://localhost:3306/bgb
+    driver-class-name: com.mysql.cj.jdbc.Driver
+mybatis:
+  configuration:
+    map-underscore-to-camel-case: true
+  type-aliases-package: main.biggreenbook.pojo
+  mapper-locations: classpath:mapper/*.xml
+
+---
+spring:
+  config:
+    activate:
+      on-profile: wen
+  datasource:
+    username: root
+    password: 123456
+
+---
+spring:
+  config:
+    activate:
+      on-profile: xiang
+  datasource:
+    username: root
+    password: 114514
