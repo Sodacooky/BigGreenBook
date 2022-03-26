@@ -140,7 +140,7 @@ CREATE TABLE `user` (
   `nickname` varchar(64) NOT NULL,
   `description` text CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci,
   `gender` smallint DEFAULT NULL,
-  `brithday` date DEFAULT NULL,
+  `birthday` date DEFAULT NULL,
   `state` smallint NOT NULL DEFAULT '0',
   `avatar_path` varchar(100) NOT NULL,
   PRIMARY KEY (`uid`)
