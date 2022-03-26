@@ -1,0 +1,40 @@
+{
+  "pages": [
+    "pages/shouye/shouye",
+    "pages/mine/mine",
+    "pages/fabu/fabu",
+    "pages/biji/biji",
+    "pages/shipin/shipin"
+  ],
+  "window": {
+    "backgroundTextStyle": "light",
+    "navigationBarBackgroundColor": "#fff",
+    "navigationBarTitleText": "Biggreenbook",
+    "navigationBarTextStyle": "black"
+  },
+  "tabBar": {
+    "selectedColor": "#000",
+    "list": [
+      {
+        "pagePath": "pages/shouye/shouye",
+        "text": "首页",
+        "iconPath": "./asset/pic/shouye.png",
+        "selectedIconPath": "./asset/pic/shouye1.png"
+      },
+      {
+        "text": "",
+        "pagePath": "pages/fabu/fabu",
+        "iconPath": "./asset/pic/fabu1.png"
+      },
+      {
+        "pagePath": "pages/mine/mine",
+        "text": "我的",
+        "iconPath": "./asset/pic/mine.png",
+        "selectedIconPath": "./asset/pic/mine1.png"
+      }
+    ]
+  },
+  "style": "v2",
+  "sitemapLocation": "sitemap.json",
+  "lazyCodeLoading": "requiredComponents"
+}
