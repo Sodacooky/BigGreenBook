@@ -1,4 +1,4 @@
-package main.biggreenbook.pojo;
+package main.biggreenbook.entity.pojo;
 
 
 import java.sql.Timestamp;

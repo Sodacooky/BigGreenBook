@@ -1,25 +1,22 @@
-package main.biggreenbook.pojo;
+package main.biggreenbook.entity.pojo;
 
-public class Picture {
+public class Video {
     private String sid;
     private String path;
-    private Integer index;
 
-    public Picture() {
+    public Video() {
     }
 
-    public Picture(String sid, String path, Integer index) {
+    public Video(String sid, String path) {
         this.sid = sid;
         this.path = path;
-        this.index = index;
     }
 
     @Override
     public String toString() {
-        return "Picture{" +
+        return "Video{" +
                 "sid='" + sid + '\'' +
                 ", path='" + path + '\'' +
-                ", index=" + index +
                 '}';
     }
 
@@ -37,13 +34,5 @@ public class Picture {
 
     public void setPath(String path) {
         this.path = path;
-    }
-
-    public Integer getIndex() {
-        return index;
-    }
-
-    public void setIndex(Integer index) {
-        this.index = index;
     }
 }

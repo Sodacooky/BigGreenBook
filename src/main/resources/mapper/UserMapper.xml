@@ -2,13 +2,15 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="main.biggreenbook.mapper.UserMapper">
 
-    <resultMap id="BaseResultMap" type="main.biggreenbook.pojo.User" >
+    <resultMap id="BaseResultMap" type="main.biggreenbook.entity.pojo.User">
         <result column="birthday" property="birthday" jdbcType="DATE"/>
         <result column="avatar_path" property="avatarPath" jdbcType="VARCHAR"/>
     </resultMap>
 
-    <select id="getUserByUid"  parameterType="java.lang.String" resultMap="BaseResultMap">
-        select * from user where uid = #{uid}
+    <select id="getUserByUid" parameterType="java.lang.String" resultMap="BaseResultMap">
+        select *
+        from user
+        where uid = #{uid}
     </select>
 
 </mapper>

@@ -1,6 +1,6 @@
 package main.biggreenbook.mapper;
 
-import main.biggreenbook.pojo.Picture;
+import main.biggreenbook.entity.pojo.Picture;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
 
