@@ -1,0 +1,31 @@
+<!-- 轮播浏览图 begin-->
+<swiper indicator-dots="true" indicator-color="rgba(0, 170, 250, 0.1)" indicator-active-color="rgb(232,78,66)" 
+autoplay="{{false}}">   <!--轮播图容器组件 毫秒 -->
+  <block wx:for="{{swiperImgUrls}}" wx:key="url">  <!--这样循环遍历不会被渲染在item上 -->
+    <swiper-item>
+      <image src="{{item.url}}" 
+      mode="aspectFit"
+      class="img"></image>
+      <view class='rLInedx'>{{index + 1}}/{{swiperImgUrls.length}}</view>
+    </swiper-item>
+  </block>
+</swiper>
+<!-- 轮播浏览图 end-->
+
+<block class="container">
+<!-- 博主信息begin -->
+<view class="bozhu">
+<!-- 信息 -->
+  <image src="http://p1.music.126.net/xhWAaHI-SIYP8ZMzL9NOqg==/109951164167032995.jpg" class="img1"></image>
+  <view class="mingzi">wayeast吃饭</view>
+  <view class="guanzhu">关注</view>
+  <!-- 信息end -->
+</view>
+<!-- 博主信息end -->
+
+<!-- 内容 begin -->
+<view class="content">想啥
+</view>
+<!-- 内容 end -->
+</block>
+

@@ -1,0 +1,30 @@
+{
+  "setting": {},
+  "condition": {
+    "plugin": {
+      "list": []
+    },
+    "game": {
+      "list": []
+    },
+    "gamePlugin": {
+      "list": []
+    },
+    "miniprogram": {
+      "list": [
+        {
+          "name": "pages/biji/biji",
+          "pathName": "pages/biji/biji",
+          "query": "",
+          "scene": null
+        },
+        {
+          "name": "pages/shipin/shipin",
+          "pathName": "pages/shipin/shipin",
+          "query": "",
+          "scene": null
+        }
+      ]
+    }
+  }
+}
