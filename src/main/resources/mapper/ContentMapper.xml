@@ -1,21 +1,16 @@
 <?xml version="1.0" encoding="UTF-8" ?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
-<mapper namespace="main.biggreenbook.mapper.ContentMapper">
-    <resultMap id="BaseResultMap" type="main.biggreenbook.entity.pojo.Content">
-        <result column="main_text" property="mainText" jdbcType="LONGVARCHAR"/>
-        <result column="date" property="date" jdbcType="TIMESTAMP"/>
-        <result column="like_amount" property="likeAmount" jdbcType="INTEGER"/>
-    </resultMap>
 
+<mapper namespace="main.biggreenbook.entity.dao.ContentMapper">
     <!--分页获取内容（按时间顺序排序）【cid、标题、点赞数和资源sid(资源类型)】-->
-    <select id="getContentByPage" resultMap="BaseResultMap">
+    <select id="getContentByPage" resultType="main.biggreenbook.entity.pojo.Content">
         select *
         from content
         order by date desc
-            limit #{pageNum}, #{pageSize}
+            limit ${pageNum * pageSize}, #{pageSize}
     </select>
 
-    <select id="getContentByCid" parameterType="java.lang.String" resultMap="BaseResultMap">
+    <select id="getContentByCid" parameterType="java.lang.String" resultType="main.biggreenbook.entity.pojo.Content">
         select *
         from content
         where cid = #{cid}

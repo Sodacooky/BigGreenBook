@@ -1,4 +1,4 @@
-package main.biggreenbook.mapper;
+package main.biggreenbook.entity.dao;
 
 import main.biggreenbook.entity.pojo.Picture;
 import org.apache.ibatis.annotations.Mapper;

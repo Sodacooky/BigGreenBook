@@ -1,11 +1,10 @@
-package main.biggreenbook.mapper;
+package main.biggreenbook.dao;
 
+import main.biggreenbook.entity.dao.ContentMapper;
 import main.biggreenbook.entity.pojo.Content;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-
-import java.util.List;
 
 @SpringBootTest
 public class ContentMapperTest {
@@ -14,16 +13,14 @@ public class ContentMapperTest {
 
     @Test
     public void getContentByPage() {
-        List<Content> contents = mapper.getContentByPage(0, 4);
-
-        for (Content content : contents) {
+        for (Content content : mapper.getContentByPage(0, 4)) {
             System.out.println(content);
         }
     }
 
     @Test
-    public void getContentBycid() {
-        Content contentBycid = mapper.getContentByCid("1");
-        System.out.println(contentBycid);
+    public void getContentByCid() {
+        Content contentByCid = mapper.getContentByCid("1");
+        System.out.println(contentByCid);
     }
 }

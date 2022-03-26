@@ -1,5 +1,6 @@
-package main.biggreenbook.mapper;
+package main.biggreenbook.dao;
 
+import main.biggreenbook.entity.dao.PictureMapper;
 import main.biggreenbook.entity.pojo.Picture;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

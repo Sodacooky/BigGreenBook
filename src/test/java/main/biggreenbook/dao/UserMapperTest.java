@@ -1,5 +1,6 @@
-package main.biggreenbook.mapper;
+package main.biggreenbook.dao;
 
+import main.biggreenbook.entity.dao.UserMapper;
 import main.biggreenbook.entity.pojo.User;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
