@@ -8,7 +8,7 @@ public class Content {
     private String title;
     private String mainText;
     private Timestamp date;
-    private Integer type;
+    private Integer type; //0: picture, 1: video
     private Integer likeAmount;
     private String uid;
     private String sid;

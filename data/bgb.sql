@@ -43,6 +43,7 @@ CREATE TABLE `content` (
 
 LOCK TABLES `content` WRITE;
 /*!40000 ALTER TABLE `content` DISABLE KEYS */;
+INSERT INTO `content` VALUES ('1','金布里来咯','顺便介绍一下，这个紫色的家伙是我的妹妹泛用性布里啦！','2022-03-30 19:25:56',0,1000,'2','2'),('2','彩布里来了哦','话说怎么没有看到另外两个家伙呢？','2022-03-25 20:20:12',0,999999,'1','1');
 /*!40000 ALTER TABLE `content` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -67,6 +68,7 @@ CREATE TABLE `picture` (
 
 LOCK TABLES `picture` WRITE;
 /*!40000 ALTER TABLE `picture` DISABLE KEYS */;
+INSERT INTO `picture` VALUES ('1','img/3am4494wob84kxiqsdm1xeh043ajiz6.jpg',0),('1','img/adjwiajdioawhiod.jpg',1),('2','img/ee8v30tmblui1tigtxq9vyklap9r8tn.jpg',0),('2','img/1ulrgd95x6755wkmxtywfc8f22srnqt.jpg',1);
 /*!40000 ALTER TABLE `picture` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -153,6 +155,7 @@ CREATE TABLE `user` (
 
 LOCK TABLES `user` WRITE;
 /*!40000 ALTER TABLE `user` DISABLE KEYS */;
+INSERT INTO `user` VALUES ('1','彩布里','特装型布里MKIII UNIV Specialized Bulin MKIII 特装型ブリMKIII',1,'2021-05-01',0,'avatar/cbl.jpg'),('2','金布里','试作型布里MKII UNIV Trial Bulin MKII 試作型ブリMKII',1,'2017-04-01',0,'avatarjbl.jpg');
 /*!40000 ALTER TABLE `user` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -192,4 +195,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2022-03-22 17:47:26
+-- Dump completed on 2022-03-27 18:12:40

@@ -1,4 +1,4 @@
-package main.biggreenbook.dao;
+package main.biggreenbook.entity.dao;
 
 import main.biggreenbook.entity.dao.UserMapper;
 import main.biggreenbook.entity.pojo.User;

@@ -7,4 +7,10 @@
         from picture
         where sid = #{sid}
     </select>
+    <select id="getPictureBySidIndex" resultType="main.biggreenbook.entity.pojo.Picture">
+        select *
+        from picture
+        where sid = #{sid}
+          and `index` = #{index}
+    </select>
 </mapper>

@@ -1,6 +1,5 @@
-package main.biggreenbook.dao;
+package main.biggreenbook.entity.dao;
 
-import main.biggreenbook.entity.dao.VideoMapper;
 import main.biggreenbook.entity.pojo.Video;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

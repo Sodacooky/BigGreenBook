@@ -1,14 +1,22 @@
+# 通用部分配置
 spring:
   profiles:
-    active: xiang
+    # 当前激活的配置文件
+    #active: xiang
+    active: product
   datasource:
+    # 数据库配置
     url: jdbc:mysql://localhost:3306/bgb
     driver-class-name: com.mysql.cj.jdbc.Driver
+    # 资源文件夹映射到url的
+  mvc:
+    static-path-pattern: /res/**
 mybatis:
-  configuration:
-    map-underscore-to-camel-case: true
-  type-aliases-package: main.biggreenbook.pojo
   mapper-locations: classpath:/mapper/*.xml
+  configuration:
+    # 开启mybatis驼峰转换
+    map-underscore-to-camel-case: true
+
 
 ---
 spring:
@@ -27,3 +35,24 @@ spring:
   datasource:
     username: root
     password: 114514
+  web:
+    resources:
+      static-locations: classpath:/META-INF/resources/, classpath:/resources/, classpath:/static/, classpath:/public/, file:D:\_Work\JavaRepository\BigGreenBook\data
+
+---
+#部署环境，Linux Debian 11
+spring:
+  config:
+    activate:
+      on-profile: product
+  datasource:
+    username: bgb
+    password: 114514
+  web:
+    resources:
+      static-locations: classpath:/META-INF/resources/, classpath:/resources/, classpath:/static/, classpath:/public/, file:/root/bgb_test/res
+server:
+  ssl:
+    key-store: classpath:bgb.p12
+    key-store-type: pkcs12
+    key-store-password: 114514

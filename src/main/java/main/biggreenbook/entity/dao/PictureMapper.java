@@ -11,4 +11,6 @@ import java.util.List;
 public interface PictureMapper {
 
     List<Picture> getPictureBySid(String sid);
+
+    Picture getPictureBySidIndex(String sid, int index);
 }

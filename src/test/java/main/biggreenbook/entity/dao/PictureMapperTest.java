@@ -1,6 +1,5 @@
-package main.biggreenbook.dao;
+package main.biggreenbook.entity.dao;
 
-import main.biggreenbook.entity.dao.PictureMapper;
 import main.biggreenbook.entity.pojo.Picture;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,7 +15,11 @@ public class PictureMapperTest {
     @Test
     public void getPictureBySid() {
         List<Picture> pictures = pictureMapper.getPictureBySid("1");
+        pictures.forEach(System.out::println);
+    }
 
-        pictures.forEach(picture -> System.out.println(picture));
+    @Test
+    public void getPictureBySidIndex() {
+        System.out.println(pictureMapper.getPictureBySidIndex("1", 0));
     }
 }
