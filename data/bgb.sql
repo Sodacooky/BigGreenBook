@@ -43,7 +43,7 @@ CREATE TABLE `content` (
 
 LOCK TABLES `content` WRITE;
 /*!40000 ALTER TABLE `content` DISABLE KEYS */;
-INSERT INTO `content` VALUES ('1','金布里来咯','顺便介绍一下，这个紫色的家伙是我的妹妹泛用性布里啦！','2022-03-30 19:25:56',0,1000,'2','2'),('2','彩布里来了哦','话说怎么没有看到另外两个家伙呢？','2022-03-25 20:20:12',0,999999,'1','1');
+INSERT INTO `content` VALUES ('1','金布里来咯','顺便介绍一下，这个紫色的家伙是我的妹妹泛用性布里啦！','2022-03-30 19:25:56',0,1000,'2','2'),('2','彩布里来了哦','话说怎么没有看到另外两个家伙呢？','2022-03-25 20:20:12',0,999999,'1','1'),('3','大家好，我是Pr.7-U型前哨级驱逐舰灵敏！','前哨级驱逐舰兼天才机械师灵敏，同时曾是黑海舰队的一员哦！我总能凭借着自己天才的灵光一现，以及一点点的运气，从敌人的猛攻之中全身而退呢！','2022-03-26 15:00:00',0,996,'3','4'),('4','哼哼，准备接受本天才机械师的改造吧！','哇哈哈哈~指挥官同志！北方联合超级天才机械师灵敏来了！不管什么样的机械，全部交给我就好啦！','2022-03-27 16:00:00',0,114514,'3','3');
 /*!40000 ALTER TABLE `content` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -68,7 +68,7 @@ CREATE TABLE `picture` (
 
 LOCK TABLES `picture` WRITE;
 /*!40000 ALTER TABLE `picture` DISABLE KEYS */;
-INSERT INTO `picture` VALUES ('1','img/3am4494wob84kxiqsdm1xeh043ajiz6.jpg',0),('1','img/adjwiajdioawhiod.jpg',1),('2','img/ee8v30tmblui1tigtxq9vyklap9r8tn.jpg',0),('2','img/1ulrgd95x6755wkmxtywfc8f22srnqt.jpg',1);
+INSERT INTO `picture` VALUES ('1','img/3am4494wob84kxiqsdm1xeh043ajiz6.jpg',0),('1','img/adjwiajdioawhiod.jpg',1),('2','img/ee8v30tmblui1tigtxq9vyklap9r8tn.jpg',0),('2','img/1ulrgd95x6755wkmxtywfc8f22srnqt.jpg',1),('3','img/sehmjhg3eid8shy4k6lyy77qhu9px8s.png',0),('4','img/lmlh.jpg',0),('4','img/SN_Soobrazitelny.jpg',1);
 /*!40000 ALTER TABLE `picture` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -99,6 +99,7 @@ CREATE TABLE `reply` (
 
 LOCK TABLES `reply` WRITE;
 /*!40000 ALTER TABLE `reply` DISABLE KEYS */;
+INSERT INTO `reply` VALUES ('1',0,'是我的错觉吗，这孩子好像在瑟瑟发抖呢…','4',5,'2022-03-28 17:00:00','4'),('2',1,'一定是兴奋的颤抖！','1',6,'2022-03-28 17:01:00','3'),('3',0,'太粗暴可不行哦，灵敏？','4',666,'2022-03-28 17:03:00','5'),('4',1,'嘿嘿，放心吧！我对机械一向是非常温柔的~','3',999,'2022-03-28 17:11:00','3');
 /*!40000 ALTER TABLE `reply` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -155,7 +156,7 @@ CREATE TABLE `user` (
 
 LOCK TABLES `user` WRITE;
 /*!40000 ALTER TABLE `user` DISABLE KEYS */;
-INSERT INTO `user` VALUES ('1','彩布里','特装型布里MKIII UNIV Specialized Bulin MKIII 特装型ブリMKIII',1,'2021-05-01',0,'avatar/cbl.jpg'),('2','金布里','试作型布里MKII UNIV Trial Bulin MKII 試作型ブリMKII',1,'2017-04-01',0,'avatarjbl.jpg');
+INSERT INTO `user` VALUES ('1','彩布里','特装型布里MKIII UNIV Specialized Bulin MKIII 特装型ブリMKIII',1,'2021-05-01',0,'avatar/cbl.jpg'),('2','金布里','试作型布里MKII UNIV Trial Bulin MKII 試作型ブリMKII',1,'2017-04-01',0,'avatar/jbl.jpg'),('3','灵敏','Pr.7-U型前哨级驱逐舰 灵敏 SN Soobrazitelny ソオブラジ－テリヌイ',1,'1941-06-07',0,'avatar/lm.jpg'),('4','阿尔汉格尔斯克','SN Arkhangelsk',1,'1939-01-01',0,'avatar/aehgesk.jpg'),('5','伏尔加','Pr.72型航空母舰 伏尔加 SN Volga',1,'2022-02-24',0,'avatar/fej.jpg');
 /*!40000 ALTER TABLE `user` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -195,4 +196,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2022-03-27 18:12:40
+-- Dump completed on 2022-03-28 17:37:25

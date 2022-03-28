@@ -16,7 +16,8 @@ mybatis:
   configuration:
     # 开启mybatis驼峰转换
     map-underscore-to-camel-case: true
-
+#前端所使用的服务器地址 默认应http://localhost:8080/
+domain: https://sodacooky.plus:8080/
 
 ---
 spring:
