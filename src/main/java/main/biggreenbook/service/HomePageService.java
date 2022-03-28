@@ -7,7 +7,7 @@ import main.biggreenbook.entity.dao.VideoMapper;
 import main.biggreenbook.entity.pojo.Content;
 import main.biggreenbook.entity.pojo.User;
 import main.biggreenbook.entity.vo.PreviewCard;
-import main.biggreenbook.utils.FilePathMappingHelper;
+import main.biggreenbook.utils.UrlPathMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -27,7 +27,7 @@ public class HomePageService {
     VideoMapper videoMapper;
 
     @Autowired
-    FilePathMappingHelper filePathMappingHelper;
+    UrlPathMapper filePathMappingHelper;
 
     public List<PreviewCard> getPreviewCards(int page) {
         //page parameter check
@@ -46,17 +46,13 @@ public class HomePageService {
             previewCard.setContentLikeAmount(content.getLikeAmount());
             previewCard.setResourceType(content.getType());
             if (content.getType() == 0) {
-                //debug
-                System.out.println("getting content: " + content.getCid());
-                System.out.println("getting resources: " + content.getSid());
-
                 //picture
                 String originalFilePath = pictureMapper.getPictureBySidIndex(content.getSid(), 0).getPath();
-                previewCard.setResourcePath(filePathMappingHelper.doMap(originalFilePath));
+                previewCard.setResourcePath(filePathMappingHelper.doMapToDomain(originalFilePath));
             } else if (content.getType() == 1) {
                 //video
                 String originalFilePath = videoMapper.getVideoBySid(content.getSid()).getPath();
-                previewCard.setResourcePath(filePathMappingHelper.doMap(originalFilePath));
+                previewCard.setResourcePath(filePathMappingHelper.doMapToDomain(originalFilePath));
             }
 
             //get user information
