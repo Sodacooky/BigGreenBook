@@ -1,4 +1,4 @@
-package main.biggreenbook.entity.dao.report;
+package main.biggreenbook.entity.dao;
 
 import main.biggreenbook.entity.pojo.User;
 import org.apache.ibatis.annotations.Mapper;
@@ -17,4 +17,6 @@ public interface UserManageMapper {
     public List<User> queryAllUser();
 
     public List<User> getUsers(Map<?, ?> map);
+
+    public int countAllUsers();
 }

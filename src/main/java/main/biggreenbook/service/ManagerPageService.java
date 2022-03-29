@@ -1,6 +1,6 @@
 package main.biggreenbook.service;
 
-import main.biggreenbook.entity.dao.report.UserManageMapper;
+import main.biggreenbook.entity.dao.UserManageMapper;
 import main.biggreenbook.entity.pojo.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -35,5 +35,9 @@ public class ManagerPageService {
 
     public List<User> getUsers(Map<?, ?> map) {
         return userManageMapper.getUsers(map);
+    }
+
+    public int countAllUsers() {
+        return userManageMapper.countAllUsers();
     }
 }

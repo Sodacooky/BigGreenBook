@@ -1,6 +1,7 @@
 package main.biggreenbook.controller;
 
 import main.biggreenbook.entity.pojo.User;
+import main.biggreenbook.entity.vo.ManageUserPage;
 import main.biggreenbook.service.ManagerPageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -14,29 +15,29 @@ import java.util.Map;
 @RequestMapping("/user")
 public class ManagerPageController {
     @Autowired
-    private ManagerPageService managaerPageService;
+    private ManagerPageService managerPageService;
 
     @GetMapping(value = "/query/{uid}")
     public User queryUserById(@PathVariable String uid) {
 
-        return managaerPageService.queryUserById(uid);
+        return managerPageService.queryUserById(uid);
     }
 
     @GetMapping(value = "/reset/{uid}")
     public User resetUserAvatar(@PathVariable String uid) {
-        User user = managaerPageService.queryUserById(uid);
+        User user = managerPageService.queryUserById(uid);
         String avatar_path = "http://localhost:8080/static/avatar/default.png";
         Map<String, String> map = new HashMap<>();
         map.put("uid", user.getUid());
         map.put("avatar_path", user.getAvatarPath());
-        managaerPageService.updateUser(map);
+        managerPageService.updateUser(map);
 
         return user;
     }
 
     @GetMapping(value = "/allUser")
     public List<User> queryAllUser() {
-        return managaerPageService.queryAllUser();
+        return managerPageService.queryAllUser();
     }
 
     @GetMapping(value = "/updateDesc/{uid}/{value}")
@@ -44,9 +45,9 @@ public class ManagerPageController {
         Map<String, String> map = new HashMap<>();
         map.put("uid", uid);
         map.put("description", value);
-        managaerPageService.updateUser(map);
+        managerPageService.updateUser(map);
 
-        return managaerPageService.queryUserById(uid);
+        return managerPageService.queryUserById(uid);
     }
 
     @GetMapping(value = "/updateName/{uid}/{value}")
@@ -54,9 +55,9 @@ public class ManagerPageController {
         Map<String, String> map = new HashMap<>();
         map.put("uid", uid);
         map.put("nickname", value);
-        managaerPageService.updateUser(map);
+        managerPageService.updateUser(map);
 
-        return managaerPageService.queryUserById(uid);
+        return managerPageService.queryUserById(uid);
     }
 
     @GetMapping(value = "/suspend/{uid}")
@@ -65,9 +66,9 @@ public class ManagerPageController {
         Map<String, Object> map = new HashMap<>();
         map.put("uid", uid);
         map.put("state", state);
-        managaerPageService.updateUser(map);
+        managerPageService.updateUser(map);
 
-        return managaerPageService.queryUserById(uid);
+        return managerPageService.queryUserById(uid);
     }
 
     @GetMapping(value = "/restore/{uid}")
@@ -76,9 +77,28 @@ public class ManagerPageController {
         Map<String, Object> map = new HashMap<>();
         map.put("uid", uid);
         map.put("state", state);
-        managaerPageService.updateUser(map);
+        managerPageService.updateUser(map);
 
-        return managaerPageService.queryUserById(uid);
+        return managerPageService.queryUserById(uid);
     }
 
+    // 实现分页功能
+    @GetMapping(value = "/getUsers/{pageIndex}")
+    public ManageUserPage getUsers(@PathVariable int pageIndex) {
+        int index;
+        int target;
+        if (pageIndex == 1) {
+            index = 0;
+        } else {
+            index = (pageIndex - 1) * 8;
+        }
+        target = index + 8;
+        Map<String, Object> map = new HashMap<>();
+        map.put("index", index);
+        map.put("target", target);
+        List<User> list = managerPageService.getUsers(map);
+        int totalUsers = managerPageService.countAllUsers();
+
+        return new ManageUserPage(list, totalUsers);
+    }
 }
