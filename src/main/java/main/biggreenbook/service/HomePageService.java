@@ -30,9 +30,6 @@ public class HomePageService {
     UrlPathMapper filePathMappingHelper;
 
     public List<PreviewCard> getPreviewCards(int page) {
-        //page parameter check
-        if (page < 0) page = 0;
-        System.out.println("page: " + page);
         //list for controller
         ArrayList<PreviewCard> previewCards = new ArrayList<>();
         //get content information
@@ -45,21 +42,21 @@ public class HomePageService {
             previewCard.setContentTitle(content.getTitle());
             previewCard.setContentLikeAmount(content.getLikeAmount());
             previewCard.setResourceType(content.getType());
+            String originalFilePath = null;
             if (content.getType() == 0) {
                 //picture
-                String originalFilePath = pictureMapper.getPictureBySidIndex(content.getSid(), 0).getPath();
-                previewCard.setResourcePath(filePathMappingHelper.doMapToDomain(originalFilePath));
+                originalFilePath = pictureMapper.getPictureBySidIndex(content.getSid(), 0).getPath();
             } else if (content.getType() == 1) {
                 //video
-                String originalFilePath = videoMapper.getVideoBySid(content.getSid()).getPath();
-                previewCard.setResourcePath(filePathMappingHelper.doMapToDomain(originalFilePath));
+                originalFilePath = videoMapper.getVideoBySid(content.getSid()).getPath();
             }
+            previewCard.setResourcePath(filePathMappingHelper.doMapToDomain(originalFilePath));
 
             //get user information
             User userByUid = userMapper.getUserByUid(content.getUid());
             //set user information
             previewCard.setUserNickname(userByUid.getNickname());
-            previewCard.setUserAvatarPath(userByUid.getAvatarPath());
+            previewCard.setUserAvatarPath(filePathMappingHelper.doMapToDomain(userByUid.getAvatarPath()));
 
             //put it into the list
             previewCards.add(previewCard);

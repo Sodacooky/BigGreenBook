@@ -20,6 +20,9 @@ public class HomePageController {
 
     @GetMapping("/home")
     public List<PreviewCard> getPreviewCards(@RequestParam int page) {
+        //page parameter check
+        if (page < 1) page = 1;
+        //to service
         return homePageService.getPreviewCards(page - 1);
     }
 }

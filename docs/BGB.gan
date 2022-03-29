@@ -39,7 +39,7 @@
             <depend id="2" type="2" difference="0" hardness="Strong"/>
         </task>
         <task id="1" name="系统详细设计" color="#8cb6ce" meeting="false" start="2022-03-29" duration="5" complete="0" thirdDate="2022-03-27" thirdDate-constraint="0" expand="true"/>
-        <task id="2" name="Layui学习" color="#8cb6ce" meeting="false" start="2022-03-29" duration="5" complete="0" thirdDate="2022-03-27" thirdDate-constraint="0" expand="true">
+        <task id="2" name="Vue.js学习" color="#8cb6ce" meeting="false" start="2022-03-29" duration="5" complete="0" thirdDate="2022-03-27" thirdDate-constraint="0" expand="true">
             <depend id="3" type="2" difference="0" hardness="Strong"/>
             <depend id="4" type="2" difference="0" hardness="Strong"/>
             <depend id="5" type="2" difference="0" hardness="Strong"/>

@@ -3,7 +3,8 @@ spring:
   profiles:
     # 当前激活的配置文件
     #active: xiang
-    active: han
+    #active: han
+    active: product
   datasource:
     # 数据库配置
     url: jdbc:mysql://localhost:3306/bgb
