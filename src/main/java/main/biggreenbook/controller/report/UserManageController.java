@@ -16,7 +16,6 @@ import java.util.Map;
 public class UserManageController {
     @Autowired
     private UserManageService userManageService;
-    static int currentPage = 1;
 
     @GetMapping(value = "/query/{uid}")
     public User queryUserById(@PathVariable String uid) {
@@ -30,7 +29,7 @@ public class UserManageController {
         String avatar_path = "http://localhost:8080/static/avatar/default.png";
         Map<String, String> map = new HashMap<>();
         map.put("uid", user.getUid());
-        map.put("avatar_path", user.getAvatarPath());
+        map.put("avatar_path", avatar_path);
         userManageService.updateUser(map);
 
         return user;
@@ -83,9 +82,9 @@ public class UserManageController {
         return userManageService.queryUserById(uid);
     }
 
+    // 实现分页功能
     @GetMapping(value = "/getUsers/{pageIndex}")
     public ManageUserPage getUsers(@PathVariable int pageIndex) {
-        currentPage = pageIndex;
         int index;
         int target;
         if (pageIndex == 1) {
@@ -100,7 +99,6 @@ public class UserManageController {
         map.put("target", target);
         List<User> list = userManageService.getUsers(map);
         int totalUsers = userManageService.countAllUsers();
-
 
         return new ManageUserPage(list, totalUsers);
     }
