@@ -1,4 +1,4 @@
-package main.biggreenbook.service.report;
+package main.biggreenbook.service;
 
 import main.biggreenbook.entity.dao.report.UserManageMapper;
 import main.biggreenbook.entity.pojo.User;
@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 @Service
-public class UserManageServiceImpl implements UserManageService{
+public class ManagerPageService {
     @Autowired
     private UserManageMapper userManageMapper;
 
@@ -17,22 +17,22 @@ public class UserManageServiceImpl implements UserManageService{
         this.userManageMapper = userManageMapper;
     }
 
-    @Override
+
     public User queryUserById(String uid) {
         return userManageMapper.queryUserById(uid);
     }
 
-    @Override
+
     public void updateUser(Map<?, ?> map) {
         userManageMapper.updateUser(map);
     }
 
-    @Override
+
     public List<User> queryAllUser() {
         return userManageMapper.queryAllUser();
     }
 
-    @Override
+
     public List<User> getUsers(Map<?, ?> map) {
         return userManageMapper.getUsers(map);
     }

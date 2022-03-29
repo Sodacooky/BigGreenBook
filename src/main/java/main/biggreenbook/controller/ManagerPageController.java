@@ -1,9 +1,8 @@
-package main.biggreenbook.controller.report;
+package main.biggreenbook.controller;
 
 import main.biggreenbook.entity.pojo.User;
-import main.biggreenbook.service.report.UserManageService;
+import main.biggreenbook.service.ManagerPageService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -13,31 +12,31 @@ import java.util.Map;
 @CrossOrigin
 @RestController
 @RequestMapping("/user")
-public class UserManageController {
+public class ManagerPageController {
     @Autowired
-    private UserManageService userManageService;
+    private ManagerPageService managaerPageService;
 
     @GetMapping(value = "/query/{uid}")
     public User queryUserById(@PathVariable String uid) {
 
-        return userManageService.queryUserById(uid);
+        return managaerPageService.queryUserById(uid);
     }
 
     @GetMapping(value = "/reset/{uid}")
     public User resetUserAvatar(@PathVariable String uid) {
-        User user = userManageService.queryUserById(uid);
+        User user = managaerPageService.queryUserById(uid);
         String avatar_path = "http://localhost:8080/static/avatar/default.png";
         Map<String, String> map = new HashMap<>();
         map.put("uid", user.getUid());
         map.put("avatar_path", user.getAvatarPath());
-        userManageService.updateUser(map);
+        managaerPageService.updateUser(map);
 
         return user;
     }
 
     @GetMapping(value = "/allUser")
     public List<User> queryAllUser() {
-        return userManageService.queryAllUser();
+        return managaerPageService.queryAllUser();
     }
 
     @GetMapping(value = "/updateDesc/{uid}/{value}")
@@ -45,9 +44,9 @@ public class UserManageController {
         Map<String, String> map = new HashMap<>();
         map.put("uid", uid);
         map.put("description", value);
-        userManageService.updateUser(map);
+        managaerPageService.updateUser(map);
 
-        return userManageService.queryUserById(uid);
+        return managaerPageService.queryUserById(uid);
     }
 
     @GetMapping(value = "/updateName/{uid}/{value}")
@@ -55,9 +54,9 @@ public class UserManageController {
         Map<String, String> map = new HashMap<>();
         map.put("uid", uid);
         map.put("nickname", value);
-        userManageService.updateUser(map);
+        managaerPageService.updateUser(map);
 
-        return userManageService.queryUserById(uid);
+        return managaerPageService.queryUserById(uid);
     }
 
     @GetMapping(value = "/suspend/{uid}")
@@ -66,9 +65,9 @@ public class UserManageController {
         Map<String, Object> map = new HashMap<>();
         map.put("uid", uid);
         map.put("state", state);
-        userManageService.updateUser(map);
+        managaerPageService.updateUser(map);
 
-        return userManageService.queryUserById(uid);
+        return managaerPageService.queryUserById(uid);
     }
 
     @GetMapping(value = "/restore/{uid}")
@@ -77,9 +76,9 @@ public class UserManageController {
         Map<String, Object> map = new HashMap<>();
         map.put("uid", uid);
         map.put("state", state);
-        userManageService.updateUser(map);
+        managaerPageService.updateUser(map);
 
-        return userManageService.queryUserById(uid);
+        return managaerPageService.queryUserById(uid);
     }
 
 }
