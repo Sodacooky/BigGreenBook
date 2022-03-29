@@ -47,8 +47,12 @@
         update bgb.user set nickname = #{nickname} where uid =#{uid};
     </update>
 
-    <select id="getUsers" parameterType="java.util.Map">
+    <select id="getUsers" parameterType="java.util.Map" resultType="main.biggreenbook.entity.pojo.User">
         select * from bgb.user limit #{index}, #{target};
+    </select>
+
+    <select id="countAllUsers" resultType="int">
+        select count(*) from bgb.user;
     </select>
 
 </mapper>

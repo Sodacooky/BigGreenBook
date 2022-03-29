@@ -1,9 +1,9 @@
 package main.biggreenbook.controller.report;
 
 import main.biggreenbook.entity.pojo.User;
+import main.biggreenbook.entity.vo.ManageUserPage;
 import main.biggreenbook.service.report.UserManageService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -16,6 +16,7 @@ import java.util.Map;
 public class UserManageController {
     @Autowired
     private UserManageService userManageService;
+    static int currentPage = 1;
 
     @GetMapping(value = "/query/{uid}")
     public User queryUserById(@PathVariable String uid) {
@@ -82,4 +83,25 @@ public class UserManageController {
         return userManageService.queryUserById(uid);
     }
 
+    @GetMapping(value = "/getUsers/{pageIndex}")
+    public ManageUserPage getUsers(@PathVariable int pageIndex) {
+        currentPage = pageIndex;
+        int index;
+        int target;
+        if (pageIndex == 1) {
+            index = 0;
+        }
+        else {
+            index = (pageIndex-1) * 8;
+        }
+        target = index + 8;
+        Map<String, Object> map = new HashMap<>();
+        map.put("index", index);
+        map.put("target", target);
+        List<User> list = userManageService.getUsers(map);
+        int totalUsers = userManageService.countAllUsers();
+
+
+        return new ManageUserPage(list, totalUsers);
+    }
 }

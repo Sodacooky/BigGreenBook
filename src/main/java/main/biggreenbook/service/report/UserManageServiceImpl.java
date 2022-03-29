@@ -36,4 +36,9 @@ public class UserManageServiceImpl implements UserManageService{
     public List<User> getUsers(Map<?, ?> map) {
         return userManageMapper.getUsers(map);
     }
+
+    @Override
+    public int countAllUsers() {
+        return userManageMapper.countAllUsers();
+    }
 }

@@ -13,4 +13,6 @@ public interface UserManageService {
     List<User> queryAllUser();
 
     List<User> getUsers(Map<?, ?> map);
+
+    int countAllUsers();
 }
