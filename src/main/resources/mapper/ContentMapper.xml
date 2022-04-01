@@ -21,13 +21,13 @@
     </resultMap>
 
     <select id="getContentByPage" resultMap="previewCardMap">
-        select `content`.`cid`                          as cid,
-               `content`.`like_amount`                  as like_amount,
-               `content`.`title`                        as title,
-               `resource`.`type`                        as type,
-               JSON_EXTRACT(`resource`.`paths`, '$[0]') as first_path,
-               `user`.`avatar_path`                     as avatar,
-               `user`.`nickname`                        as nickname
+        select `content`.`cid`                                        as cid,
+               `content`.`like_amount`                                as like_amount,
+               `content`.`title`                                      as title,
+               `resource`.`type`                                      as type,
+               JSON_UNQUOTE(JSON_EXTRACT(`resource`.`paths`, '$[0]')) as first_path,
+               `user`.`avatar_path`                                   as avatar,
+               `user`.`nickname`                                      as nickname
         from `content`
                  inner join `user` on `user`.`uid` = `content`.`uid`
                  inner join `resource` on `resource`.`sid` = `content`.`sid`
@@ -36,13 +36,13 @@
     </select>
 
     <select id="getLatestContent" resultMap="previewCardMap">
-        select `content`.`cid`                          as cid,
-               `content`.`like_amount`                  as like_amount,
-               `content`.`title`                        as title,
-               `resource`.`type`                        as type,
-               JSON_EXTRACT(`resource`.`paths`, '$[0]') as first_path,
-               `user`.`avatar_path`                     as avatar,
-               `user`.`nickname`                        as nickname
+        select `content`.`cid`                                        as cid,
+               `content`.`like_amount`                                as like_amount,
+               `content`.`title`                                      as title,
+               `resource`.`type`                                      as type,
+               JSON_UNQUOTE(JSON_EXTRACT(`resource`.`paths`, '$[0]')) as first_path,
+               `user`.`avatar_path`                                   as avatar,
+               `user`.`nickname`                                      as nickname
         from `content`
                  inner join `user` on `user`.`uid` = `content`.`uid`
                  inner join `resource` on `resource`.`sid` = `content`.`sid`

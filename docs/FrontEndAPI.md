@@ -5,7 +5,7 @@
 
 ## 获取首页瀑布流卡片
 ```http
-GET /home
+GET /home/get
 ```
 
 参数：
@@ -13,7 +13,7 @@ GET /home
 |参数名|说明|
 |---|---|
 |page|获取的页数|
-|query_id|当前时刻(或这一次)进行获取检索使用的ID，用于保证返回的数据不出现，使用```/get_home_query_id```获取|
+|query_id|当前时刻(或这一次)进行获取检索使用的ID，用于保证返回的数据不出现，使用```/home/get_query_id```获取|
 
 返回：
 
@@ -36,3 +36,16 @@ GET /get_home_query_id
 返回：
 
 整数类型的检索ID
+
+## 获得首页瀑布流页数
+```http
+GET /home/get_page_amount
+```
+
+*没什么意义，实际上可以前端通过queryId < pageSize ? 1 : queryId / pageSize 计算获得，只有当pageSize日后不是常量时有用*
+
+参数：
+
+|参数名|说明|
+|---|---|
+|query_id|整数类型的检索ID|
