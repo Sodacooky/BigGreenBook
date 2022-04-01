@@ -27,9 +27,9 @@ public class WxContentController {
     @GetMapping("/home")
     public List<PreviewCard> getPreviewCards(@RequestParam(required = true) int page, @RequestParam(required = true) int query_id) {
         //page parameter check
-        if (page < 1) page = 1;
+        if (page < 0) page = 0;
         //to service
-        return wxContentService.getPreviewCards(page - 1);
+        return wxContentService.getPreviewCards(page, query_id);
     }
 
     /***
@@ -37,6 +37,6 @@ public class WxContentController {
      */
     @GetMapping("/get_home_query_id")
     public int getHomeQueryId() {
-        return -1;//unimplemented
+        return wxContentService.getQueryId();
     }
 }

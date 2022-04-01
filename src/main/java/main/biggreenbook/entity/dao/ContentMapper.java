@@ -21,7 +21,7 @@ public interface ContentMapper {
      * 获取内容
      * 按最老在上顺序获取
      *
-     * @param pageNum  当前页,0起始
+     * @param pageNum  按时间顺序的页，也就是用户期望的页的逆
      * @param pageSize 页容量
      * @return PreviewCards
      */

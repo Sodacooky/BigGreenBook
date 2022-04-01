@@ -6,7 +6,7 @@ package main.biggreenbook.entity.vo;
 public class PreviewCard {
     //content's cid
     String contentCid;
-    //0: picture, 1: video
+    //picture or video
     String resourceType;
     //path to resource, url
     String resourcePath;
