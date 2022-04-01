@@ -1,26 +1,32 @@
 package main.biggreenbook.entity.dao;
 
-import main.biggreenbook.entity.dao.ContentMapper;
-import main.biggreenbook.entity.pojo.Content;
+import main.biggreenbook.entity.vo.PreviewCard;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.util.List;
+
 @SpringBootTest
 public class ContentMapperTest {
+
     @Autowired
-    ContentMapper mapper;
+    ContentMapper contentMapper;
 
     @Test
-    public void getContentByPage() {
-        for (Content content : mapper.getContentByPage(0, 4)) {
-            System.out.println(content);
-        }
+    public void getQueryIdTest() {
+        System.out.println("query_id=" + contentMapper.getQueryId());
     }
 
     @Test
-    public void getContentByCid() {
-        Content contentByCid = mapper.getContentByCid("1");
-        System.out.println(contentByCid);
+    public void getContentByPageTest() {
+        List<PreviewCard> contentByPage = contentMapper.getContentByPage(0, 8);
+        contentByPage.forEach(System.out::println);
+    }
+
+    @Test
+    public void getLatestContentTest() {
+        List<PreviewCard> latestContent = contentMapper.getLatestContent(2);
+        latestContent.forEach(System.out::println);
     }
 }

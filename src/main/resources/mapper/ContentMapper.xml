@@ -2,18 +2,51 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 
 <mapper namespace="main.biggreenbook.entity.dao.ContentMapper">
-    <!--分页获取内容（按时间顺序排序）【cid、标题、点赞数和资源sid(资源类型)】-->
-    <select id="getContentByPage" resultType="main.biggreenbook.entity.pojo.Content">
-        select *
-        from content
-        order by date desc
-            limit ${pageNum * pageSize}, #{pageSize}
+
+
+    <select id="getQueryId" resultType="java.lang.Integer">
+        select count(*)
+        from `content`;
     </select>
 
-    <select id="getContentByCid" parameterType="java.lang.String" resultType="main.biggreenbook.entity.pojo.Content">
-        select *
-        from content
-        where cid = #{cid}
+    <resultMap id="previewCardMap" type="main.biggreenbook.entity.vo.PreviewCard">
+        <id property="contentCid" column="cid"/>
+        <result property="contentCid" column="cid"/>
+        <result property="contentLikeAmount" column="like_amount"/>
+        <result property="contentTitle" column="title"/>
+        <result property="resourcePath" column="first_path"/>
+        <result property="resourceType" column="type"/>
+        <result property="userAvatarPath" column="avatar"/>
+        <result property="userNickname" column="nickname"/>
+    </resultMap>
+
+    <select id="getContentByPage" resultMap="previewCardMap">
+        select `content`.`cid`                          as cid,
+               `content`.`like_amount`                  as like_amount,
+               `content`.`title`                        as title,
+               `resource`.`type`                        as type,
+               JSON_EXTRACT(`resource`.`paths`, '$[0]') as first_path,
+               `user`.`avatar_path`                     as avatar,
+               `user`.`nickname`                        as nickname
+        from `content`
+                 inner join `user` on `user`.`uid` = `content`.`uid`
+                 inner join `resource` on `resource`.`sid` = `content`.`sid`
+        order by `content`.`date` asc
+            limit ${pageSize*pageNum}, #{pageSize}
+    </select>
+
+    <select id="getLatestContent" resultMap="previewCardMap">
+        select `content`.`cid`                          as cid,
+               `content`.`like_amount`                  as like_amount,
+               `content`.`title`                        as title,
+               `resource`.`type`                        as type,
+               JSON_EXTRACT(`resource`.`paths`, '$[0]') as first_path,
+               `user`.`avatar_path`                     as avatar,
+               `user`.`nickname`                        as nickname
+        from `content`
+                 inner join `user` on `user`.`uid` = `content`.`uid`
+                 inner join `resource` on `resource`.`sid` = `content`.`sid`
+        order by `content`.`date` desc limit 0,#{amount}
     </select>
 
 </mapper>

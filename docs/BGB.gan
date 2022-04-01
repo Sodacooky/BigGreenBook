@@ -1,9 +1,9 @@
-<?xml version="1.0" encoding="UTF-8"?><project name="BGB" company="" webLink="http://" view-date="2022-03-27" view-index="0" gantt-divider-location="323" resource-divider-location="300" version="3.2.3230" locale="zh_CN">
+<?xml version="1.0" encoding="UTF-8"?><project name="BGB" company="" webLink="http://" view-date="2022-03-23" view-index="0" gantt-divider-location="325" resource-divider-location="300" version="3.2.3230" locale="zh_CN">
     <description/>
-    <view zooming-state="default:0" id="gantt-chart">
-        <field id="tpd3" name="名称" width="184" order="0"/>
-        <field id="tpd4" name="开始日期" width="69" order="1"/>
-        <field id="tpd5" name="结束日期" width="69" order="2"/>
+    <view zooming-state="default:1" id="gantt-chart">
+        <field id="tpd3" name="名称" width="176" order="0"/>
+        <field id="tpd4" name="开始日期" width="66" order="1"/>
+        <field id="tpd5" name="结束日期" width="66" order="2"/>
         <option id="filter.completedTasks" value="false"/>
     </view>
     <view id="resource-table">
@@ -15,8 +15,8 @@
         <day-types>
             <day-type id="0"/>
             <day-type id="1"/>
-            <default-week id="1" name="default" sun="0" mon="0" tue="0" wed="0" thu="0" fri="0" sat="0"/>
-            <only-show-weekends value="false"/>
+            <default-week id="1" name="default" sun="1" mon="0" tue="0" wed="0" thu="0" fri="0" sat="1"/>
+            <only-show-weekends value="true"/>
             <overriden-day-types/>
             <days/>
         </day-types>
@@ -38,26 +38,37 @@
             <depend id="1" type="2" difference="0" hardness="Strong"/>
             <depend id="2" type="2" difference="0" hardness="Strong"/>
         </task>
-        <task id="1" name="系统详细设计" color="#8cb6ce" meeting="false" start="2022-03-29" duration="5" complete="0" thirdDate="2022-03-27" thirdDate-constraint="0" expand="true"/>
-        <task id="2" name="Vue.js学习" color="#8cb6ce" meeting="false" start="2022-03-29" duration="5" complete="0" thirdDate="2022-03-27" thirdDate-constraint="0" expand="true">
+        <task id="2" name="Vue.js学习" color="#8cb6ce" meeting="false" start="2022-03-29" duration="2" complete="100" thirdDate="2022-03-27" thirdDate-constraint="0" expand="true">
             <depend id="3" type="2" difference="0" hardness="Strong"/>
             <depend id="4" type="2" difference="0" hardness="Strong"/>
             <depend id="5" type="2" difference="0" hardness="Strong"/>
         </task>
-        <task id="3" name="管理员后台前端页面" meeting="false" start="2022-04-03" duration="4" complete="0" expand="true"/>
-        <task id="4" name="管理员后台后端Service" color="#8cb6ce" meeting="false" start="2022-04-03" duration="2" complete="0" thirdDate="2022-04-03" thirdDate-constraint="0" expand="true">
-            <depend id="6" type="2" difference="0" hardness="Strong"/>
-        </task>
-        <task id="5" name="管理员后台后端DAO" color="#8cb6ce" meeting="false" start="2022-04-03" duration="2" complete="0" thirdDate="2022-03-27" thirdDate-constraint="0" expand="true">
-            <depend id="6" type="2" difference="0" hardness="Strong"/>
-        </task>
-        <task id="6" name="管理员后台后端Controller" meeting="false" start="2022-04-05" duration="2" complete="0" expand="true">
-            <depend id="7" type="2" difference="0" hardness="Strong"/>
-        </task>
-        <task id="7" name="管理员后台测试" meeting="false" start="2022-04-07" duration="1" complete="0" expand="true">
+        <task id="1" name="系统详细设计" color="#8cb6ce" meeting="false" start="2022-03-29" duration="7" complete="20" thirdDate="2022-03-27" thirdDate-constraint="0" expand="true">
             <depend id="8" type="2" difference="0" hardness="Strong"/>
         </task>
-        <task id="8" name="管理员后代完成" color="#8cb6ce" meeting="true" start="2022-04-08" duration="0" complete="0" thirdDate="2022-04-08" thirdDate-constraint="0" expand="true"/>
+        <task id="10" name="管理员后台" color="#8cb6ce" meeting="false" start="2022-03-31" duration="5" complete="41" thirdDate="2022-03-28" thirdDate-constraint="0" expand="true">
+            <task id="3" name="管理员后台前端页面" meeting="false" start="2022-03-31" duration="5" complete="40" expand="true">
+                <depend id="8" type="2" difference="0" hardness="Strong"/>
+            </task>
+            <task id="5" name="管理员后台后端DAO" color="#8cb6ce" meeting="false" start="2022-03-31" duration="2" complete="50" thirdDate="2022-03-27" thirdDate-constraint="0" expand="true">
+                <depend id="6" type="2" difference="0" hardness="Strong"/>
+            </task>
+            <task id="4" name="管理员后台后端Service" color="#8cb6ce" meeting="false" start="2022-03-31" duration="2" complete="50" thirdDate="2022-04-03" thirdDate-constraint="0" expand="true">
+                <depend id="6" type="2" difference="0" hardness="Strong"/>
+            </task>
+            <task id="6" name="管理员后台后端Controller" meeting="false" start="2022-04-02" duration="2" complete="50" expand="true">
+                <depend id="7" type="2" difference="0" hardness="Strong"/>
+            </task>
+            <task id="7" name="管理员后台测试" meeting="false" start="2022-04-04" duration="1" complete="0" expand="true">
+                <depend id="8" type="2" difference="0" hardness="Strong"/>
+            </task>
+            <task id="8" name="管理员后台完成" color="#8cb6ce" meeting="true" start="2022-04-05" duration="0" complete="0" thirdDate="2022-04-08" thirdDate-constraint="0" expand="true"/>
+        </task>
+        <task id="11" name="小程序首页" meeting="false" start="2022-04-01" duration="4" complete="0" expand="true">
+            <task id="13" name="搜索服务层与控制器" meeting="false" start="2022-04-02" duration="3" complete="0" expand="true"/>
+            <task id="12" name="完善小程序首页瀑布流" color="#8cb6ce" meeting="false" start="2022-04-01" duration="2" complete="0" thirdDate="2022-03-26" thirdDate-constraint="0" expand="true"/>
+        </task>
+        <task id="9" name="最终演示验收" color="#8cb6ce" meeting="true" start="2022-04-26" duration="0" complete="0" thirdDate="2022-03-27" thirdDate-constraint="0" expand="true"/>
     </tasks>
     <resources>
         <resource id="0" name="Xiang" function="Default:0" contacts="" phone=""/>

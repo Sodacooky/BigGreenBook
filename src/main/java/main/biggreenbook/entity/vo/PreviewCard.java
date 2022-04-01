@@ -4,8 +4,10 @@ package main.biggreenbook.entity.vo;
 瀑布流、收藏夹等地方使用到的预览卡片所需要的数据
  */
 public class PreviewCard {
+    //content's cid
+    String contentCid;
     //0: picture, 1: video
-    Integer resourceType;
+    String resourceType;
     //path to resource, url
     String resourcePath;
     //the title of the content
@@ -17,7 +19,8 @@ public class PreviewCard {
     //like amount
     Integer contentLikeAmount;
 
-    public PreviewCard(Integer resourceType, String resourcePath, String contentTitle, String userAvatarPath, String userNickname, Integer contentLikeAmount) {
+    public PreviewCard(String contentCid, String resourceType, String resourcePath, String contentTitle, String userAvatarPath, String userNickname, Integer contentLikeAmount) {
+        this.contentCid = contentCid;
         this.resourceType = resourceType;
         this.resourcePath = resourcePath;
         this.contentTitle = contentTitle;
@@ -29,11 +32,11 @@ public class PreviewCard {
     public PreviewCard() {
     }
 
-    public Integer getResourceType() {
+    public String getResourceType() {
         return resourceType;
     }
 
-    public void setResourceType(Integer resourceType) {
+    public void setResourceType(String resourceType) {
         this.resourceType = resourceType;
     }
 
@@ -77,10 +80,19 @@ public class PreviewCard {
         this.contentLikeAmount = contentLikeAmount;
     }
 
+    public String getContentCid() {
+        return contentCid;
+    }
+
+    public void setContentCid(String contentCid) {
+        this.contentCid = contentCid;
+    }
+
     @Override
     public String toString() {
         return "PreviewCard{" +
-                "resourceType=" + resourceType +
+                "contentCid='" + contentCid + '\'' +
+                ", resourceType=" + resourceType +
                 ", resourcePath='" + resourcePath + '\'' +
                 ", contentTitle='" + contentTitle + '\'' +
                 ", userAvatarPath='" + userAvatarPath + '\'' +

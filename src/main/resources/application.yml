@@ -2,23 +2,31 @@
 spring:
   profiles:
     # 当前激活的配置文件
-    #active: xiang
+    active: xiang
     #active: han
-    active: han
+    #active: han
+    #active: product
+
   datasource:
-    # 数据库配置
-    url: jdbc:mysql://localhost:3306/bgb
     driver-class-name: com.mysql.cj.jdbc.Driver
-    # 资源文件夹映射到url的
   mvc:
+    # 资源文件夹映射到url的
     static-path-pattern: /res/**
 mybatis:
   mapper-locations: classpath:/mapper/*.xml
   configuration:
     # 开启mybatis驼峰转换
     map-underscore-to-camel-case: true
+
+#DEBUGING
+logging:
+  level:
+    main.biggreenbook.entity.dao.*: debug
+
 #前端所使用的服务器地址 默认应http://localhost:8080/
 domain: https://sodacooky.plus:8080/
+
+
 
 ---
 spring:
@@ -28,6 +36,8 @@ spring:
   datasource:
     username: root
     password: 123456
+
+
 
 ---
 spring:
@@ -39,17 +49,23 @@ spring:
     password: 12345
 server:
   port: 8081
+
+
+
 ---
 spring:
   config:
     activate:
       on-profile: xiang
   datasource:
-    username: root
+    url: jdbc:mysql://sodacooky.plus:3306/bgb
+    username: bgb
     password: 114514
   web:
     resources:
       static-locations: classpath:/META-INF/resources/, classpath:/resources/, classpath:/static/, classpath:/public/, file:D:\_Work\JavaRepository\BigGreenBook\data
+
+
 
 ---
 #部署环境，Linux Debian 11
@@ -58,6 +74,7 @@ spring:
     activate:
       on-profile: product
   datasource:
+    url: jdbc:mysql://localhost:3306/bgb
     username: bgb
     password: 114514
   web:

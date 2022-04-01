@@ -1,6 +1,6 @@
 package main.biggreenbook.entity.dao;
 
-import main.biggreenbook.entity.pojo.Content;
+import main.biggreenbook.entity.vo.PreviewCard;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
@@ -11,15 +11,27 @@ import java.util.List;
 @Repository
 public interface ContentMapper {
 
-    /**
-     * 分页获取内容（cid、标题、资源sid和点赞数)
-     * 按最新获取，倒序
-     *
-     * @param pageNum  当前页
-     * @param pageSize 页容量
+    /***
+     * 获取当前的查询Id，实际上就是这一时刻的数据库数量
+     * @return query_id
      */
-    List<Content> getContentByPage(@Param("pageNum") int pageNum, @Param("pageSize") int pageSize);
+    int getQueryId();
 
-    Content getContentByCid(String cid);
+    /**
+     * 获取内容
+     * 按最老在上顺序获取
+     *
+     * @param pageNum  当前页,0起始
+     * @param pageSize 页容量
+     * @return PreviewCards
+     */
+    List<PreviewCard> getContentByPage(@Param("pageNum") int pageNum, @Param("pageSize") int pageSize);
 
+    /**
+     * 获取时间上最新的若干条，用于解决不完整分页
+     *
+     * @param amount 最新的若干条
+     * @return PreviewCards
+     */
+    List<PreviewCard> getLatestContent(@Param("amount") int amount);
 }
