@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="UTF-8"?><project name="BGB" company="" webLink="http://" view-date="2022-03-23" view-index="0" gantt-divider-location="325" resource-divider-location="300" version="3.2.3230" locale="zh_CN">
+<?xml version="1.0" encoding="UTF-8"?><project name="BGB" company="" webLink="http://" view-date="2022-03-26" view-index="0" gantt-divider-location="324" resource-divider-location="300" version="3.2.3230" locale="zh_CN">
     <description/>
     <view zooming-state="default:1" id="gantt-chart">
         <field id="tpd3" name="名称" width="176" order="0"/>
@@ -64,9 +64,10 @@
             </task>
             <task id="8" name="管理员后台完成" color="#8cb6ce" meeting="true" start="2022-04-05" duration="0" complete="0" thirdDate="2022-04-08" thirdDate-constraint="0" expand="true"/>
         </task>
-        <task id="11" name="小程序首页" meeting="false" start="2022-04-01" duration="4" complete="0" expand="true">
+        <task id="11" name="小程序首页" meeting="false" start="2022-04-01" duration="5" complete="10" expand="true">
+            <task id="14" name="鉴权相关" color="#8cb6ce" meeting="false" start="2022-04-01" duration="5" complete="0" thirdDate="2022-03-26" thirdDate-constraint="0" expand="true"/>
             <task id="13" name="搜索服务层与控制器" meeting="false" start="2022-04-02" duration="3" complete="0" expand="true"/>
-            <task id="12" name="完善小程序首页瀑布流" color="#8cb6ce" meeting="false" start="2022-04-01" duration="2" complete="0" thirdDate="2022-03-26" thirdDate-constraint="0" expand="true"/>
+            <task id="12" name="完善小程序首页瀑布流" color="#8cb6ce" meeting="false" start="2022-04-01" duration="2" complete="50" thirdDate="2022-03-26" thirdDate-constraint="0" expand="true"/>
         </task>
         <task id="9" name="最终演示验收" color="#8cb6ce" meeting="true" start="2022-04-26" duration="0" complete="0" thirdDate="2022-03-27" thirdDate-constraint="0" expand="true"/>
     </tasks>

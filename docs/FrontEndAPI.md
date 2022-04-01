@@ -30,7 +30,7 @@ PreviewCard数组，PreviewCard类型如下：
 
 ## 获得首页瀑布流卡片获取检索ID
 ```http
-GET /get_home_query_id
+GET /home/get_query_id
 ```
 
 返回：
