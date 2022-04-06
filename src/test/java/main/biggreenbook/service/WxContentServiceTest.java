@@ -15,7 +15,7 @@ public class WxContentServiceTest {
 
     @Test
     public void getPreviewCardsTest() {
-        int queryId = wxContentService.getQueryId();
+        int queryId = wxContentService.getQueryId(null);
         List<PreviewCard> previewCards = wxContentService.getPreviewCards(0, queryId);
         previewCards.forEach(System.out::println);
     }

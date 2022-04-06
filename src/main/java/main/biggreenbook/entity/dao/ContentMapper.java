@@ -15,7 +15,7 @@ public interface ContentMapper {
      * 获取当前的查询Id，实际上就是这一时刻的数据库数量
      * @return query_id
      */
-    int getQueryId();
+    int getQueryId(String search);
 
     /**
      * 获取内容
@@ -34,4 +34,16 @@ public interface ContentMapper {
      * @return PreviewCards
      */
     List<PreviewCard> getLatestContent(@Param("amount") int amount);
+
+    /**
+     *
+
+     * @param sort 排序条件：LAST:最新 / HOT:最热
+     * @param search 搜索内容
+     * @return PreviewCard
+     */
+    List<PreviewCard> queryContent(@Param("sort") String sort,@Param("search") String search,
+                                   @Param("pageNum") int pageNum, @Param("pageSize") int pageSize,
+                                   @Param("amount") int amount);
+
 }
