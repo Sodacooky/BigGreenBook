@@ -2,10 +2,10 @@
 spring:
   profiles:
     # 当前激活的配置文件
-    #active: xiang
+    active: xiang
     #active: han
     #active: wen
-    active: product
+    #active: product
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
   mvc:
