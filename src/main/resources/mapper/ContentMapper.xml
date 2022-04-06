@@ -53,4 +53,38 @@
         order by `content`.`date` desc limit 0,#{amount}
     </select>
 
+    <select id="queryContent" resultMap="previewCardMap">
+        select `content`.`cid`                          as cid,
+        `content`.`like_amount`                  as like_amount,
+        `content`.`title`                        as title,
+        `resource`.`type`                        as type,
+        JSON_EXTRACT(`resource`.`paths`, '$[0]') as first_path,
+        `user`.`avatar_path`                     as avatar,
+        `user`.`nickname`                        as nickname
+        from `content`
+        inner join `user` on `user`.`uid` = `content`.`uid`
+        inner join `resource` on `resource`.`sid` = `content`.`sid`
+        <where>
+            <if test="search != null and search != ''">
+                `content`.`title` like '%${search}%'
+                or `content`.`main_text` like '%${search}%'
+            </if>
+        </where>
+
+        <choose>
+            <when test="sort == 'HOT' and pageNum == 0">
+                order by `content`.`like_amount` desc limit 0,#{amount}
+            </when>
+            <when test="sort == 'HOT' and pageNum != 0">
+                order by `content`.`like_amount` asc limit ${pageSize*pageNum}, #{pageSize}
+            </when>
+            <when test="sort == 'LAST' and pageNum == 0">
+                order by `content`.`date` desc limit 0,#{amount}
+            </when>
+            <when test="sort == 'LAST' and pageNum != 0">
+                order by `content`.`date` asc limit ${pageSize*pageNum}, #{pageSize}
+            </when>
+        </choose>
+
+    </select>
 </mapper>
