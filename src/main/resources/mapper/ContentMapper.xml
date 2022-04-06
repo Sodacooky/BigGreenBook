@@ -6,7 +6,11 @@
 
     <select id="getQueryId" resultType="java.lang.Integer">
         select count(*)
-        from `content`;
+        from `content`
+        <if test="search != null and search != ''">
+            where `content`.`title` like '%${search}%'
+                or `content`.`main_text` like '%${search}%'
+        </if>
     </select>
 
     <resultMap id="previewCardMap" type="main.biggreenbook.entity.vo.PreviewCard">
