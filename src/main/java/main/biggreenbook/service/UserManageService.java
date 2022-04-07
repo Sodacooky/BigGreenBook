@@ -1,4 +1,4 @@
-package main.biggreenbook.service.report;
+package main.biggreenbook.service;
 
 import main.biggreenbook.entity.pojo.User;
 
@@ -15,4 +15,5 @@ public interface UserManageService {
     List<User> getUsers(Map<?, ?> map);
 
     int countAllUsers();
+
 }

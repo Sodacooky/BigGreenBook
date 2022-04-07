@@ -25,7 +25,7 @@
                 nickname = #{nickname},
             </if>
             <if test="description != null">
-                description = #{description},
+                `description` = #{description},
             </if>
             <if test="state != null">
                 state = #{state},

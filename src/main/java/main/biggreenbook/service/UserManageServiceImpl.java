@@ -1,4 +1,4 @@
-package main.biggreenbook.service.report;
+package main.biggreenbook.service;
 
 import main.biggreenbook.entity.dao.report.UserManageMapper;
 import main.biggreenbook.entity.pojo.User;
@@ -9,7 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 @Service
-public class UserManageServiceImpl implements UserManageService{
+public class UserManageServiceImpl implements UserManageService {
     @Autowired
     private UserManageMapper userManageMapper;
 

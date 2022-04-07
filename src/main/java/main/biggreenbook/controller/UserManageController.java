@@ -1,8 +1,9 @@
-package main.biggreenbook.controller.report;
+package main.biggreenbook.controller;
 
 import main.biggreenbook.entity.pojo.User;
 import main.biggreenbook.entity.vo.ManageUserPage;
-import main.biggreenbook.service.report.UserManageService;
+
+import main.biggreenbook.service.UserManageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -62,7 +63,7 @@ public class UserManageController {
 
     @GetMapping(value = "/suspend/{uid}")
     public User suspendUser(@PathVariable String uid) {
-        int state = 0;
+        int state = 1;
         Map<String, Object> map = new HashMap<>();
         map.put("uid", uid);
         map.put("state", state);
@@ -73,7 +74,7 @@ public class UserManageController {
 
     @GetMapping(value = "/restore/{uid}")
     public User restoreUser(@PathVariable String uid) {
-        int state = 1;
+        int state = 0;
         Map<String, Object> map = new HashMap<>();
         map.put("uid", uid);
         map.put("state", state);
@@ -101,5 +102,11 @@ public class UserManageController {
         int totalUsers = userManageService.countAllUsers();
 
         return new ManageUserPage(list, totalUsers);
+    }
+
+    // 管理员登录
+    @GetMapping(value = "/manageLogin/{username}/{password}")
+    public boolean ManageLogin(@PathVariable String username, @PathVariable String password) {
+        return username.equals("admin") && password.equals("12345");
     }
 }
