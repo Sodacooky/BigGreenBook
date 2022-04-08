@@ -2,12 +2,7 @@ package main.biggreenbook.controller;
 
 import main.biggreenbook.entity.pojo.User;
 import main.biggreenbook.entity.vo.ManageUserPage;
-<<<<<<< HEAD:src/main/java/main/biggreenbook/controller/UserManageController.java
-
-import main.biggreenbook.service.UserManageService;
-=======
 import main.biggreenbook.service.ManagerPageService;
->>>>>>> 049cb7235c9e854795f8160766a57b1d3e0dc179:src/main/java/main/biggreenbook/controller/ManagerPageController.java
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 

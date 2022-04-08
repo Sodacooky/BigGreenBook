@@ -1,11 +1,13 @@
 package main.biggreenbook.entity.dao;
 
+import main.biggreenbook.entity.pojo.ContentMessage;
 import main.biggreenbook.entity.vo.PreviewCard;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Map;
 
 @Mapper
 @Repository
@@ -34,4 +36,22 @@ public interface ContentMapper {
      * @return PreviewCards
      */
     List<PreviewCard> getLatestContent(@Param("amount") int amount);
+
+
+    List<ContentMessage> getContents(Map<?, ?> map);
+
+    int countAllContents();
+
+    int deleteSelect(List<?> list);
+
+    List<ContentMessage> queryContents(Map<?, ?> map);
+
+    // 计算符合查询结果的内容有多少条
+    int countQueryContents(Map<?, ?> map);
+
+    List<ContentMessage> queryContentsByUid(Map<?, ?> map);
+
+    //int deleteContent(String cid);
+
+    ContentMessage checkContent(Map<?, ?> map);
 }

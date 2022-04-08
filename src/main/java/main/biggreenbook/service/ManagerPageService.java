@@ -9,11 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 @Service
-<<<<<<< HEAD:src/main/java/main/biggreenbook/service/UserManageServiceImpl.java
-public class UserManageServiceImpl implements UserManageService {
-=======
 public class ManagerPageService {
->>>>>>> 049cb7235c9e854795f8160766a57b1d3e0dc179:src/main/java/main/biggreenbook/service/ManagerPageService.java
     @Autowired
     private UserManageMapper userManageMapper;
 
