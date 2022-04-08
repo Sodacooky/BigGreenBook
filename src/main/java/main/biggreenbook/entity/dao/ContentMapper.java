@@ -38,20 +38,26 @@ public interface ContentMapper {
     List<PreviewCard> getLatestContent(@Param("amount") int amount);
 
 
+    //什么玩意？
     List<ContentMessage> getContents(Map<?, ?> map);
 
+    //获取Content数量？若是则与getQueryId()相等
     int countAllContents();
 
+    //删除所选的若干项，应该是传入cid
     int deleteSelect(List<?> list);
 
+    //通过属性值，以一个或多个属性查找内容
     List<ContentMessage> queryContents(Map<?, ?> map);
 
     // 计算符合查询结果的内容有多少条
     int countQueryContents(Map<?, ?> map);
 
+    //获取属于该用户的内容
     List<ContentMessage> queryContentsByUid(Map<?, ?> map);
 
     //int deleteContent(String cid);
 
+    //似乎只是查找
     ContentMessage checkContent(Map<?, ?> map);
 }
