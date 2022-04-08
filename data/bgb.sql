@@ -16,6 +16,34 @@
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
 
 --
+-- Table structure for table `collection`
+--
+
+DROP TABLE IF EXISTS `collection`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `collection` (
+  `uid` varchar(64) NOT NULL,
+  `cid` varchar(128) NOT NULL,
+  `date` datetime NOT NULL,
+  PRIMARY KEY (`uid`,`cid`),
+  KEY `collection_FK` (`cid`),
+  CONSTRAINT `collection_FK` FOREIGN KEY (`cid`) REFERENCES `content` (`cid`),
+  CONSTRAINT `collection_FK_1` FOREIGN KEY (`uid`) REFERENCES `user` (`uid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `collection`
+--
+
+LOCK TABLES `collection` WRITE;
+/*!40000 ALTER TABLE `collection` DISABLE KEYS */;
+INSERT INTO `collection` VALUES ('1','1','2022-04-07 21:05:42'),('1','2','2022-04-09 21:05:54');
+/*!40000 ALTER TABLE `collection` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `content`
 --
 
@@ -45,8 +73,36 @@ CREATE TABLE `content` (
 
 LOCK TABLES `content` WRITE;
 /*!40000 ALTER TABLE `content` DISABLE KEYS */;
-INSERT INTO `content` VALUES ('1','彩布里来咯','驱逐舰\'特装型布里MKIII\'参上!“Burin!~感动吧!在你面前的是布里家族传说的隐藏角色，也就是我!为你那无与伦比的好运而欢呼吧bulin!”','2022-04-01 16:29:38',0,111,'1','1'),('10','彩布里来咯','驱逐舰\'特装型布里MKIII\'参上!“Burin!~感动吧!在你面前的是布里家族传说的隐藏角色，也就是我!为你那无与伦比的好运而欢呼吧bulin!”','2022-04-01 16:29:38',0,123456,'1','1'),('2','彩布里来咯','驱逐舰\'特装型布里MKIII\'参上!“Burin!~感动吧!在你面前的是布里家族传说的隐藏角色，也就是我!为你那无与伦比的好运而欢呼吧bulin!”','2022-04-01 16:29:38',0,666,'1','1'),('3','彩布里来咯','驱逐舰\'特装型布里MKIII\'参上!“Burin!~感动吧!在你面前的是布里家族传说的隐藏角色，也就是我!为你那无与伦比的好运而欢呼吧bulin!”','2022-04-01 16:29:38',0,123456,'1','1'),('4','彩布里来咯','驱逐舰\'特装型布里MKIII\'参上!“Burin!~感动吧!在你面前的是布里家族传说的隐藏角色，也就是我!为你那无与伦比的好运而欢呼吧bulin!”','2022-04-01 16:29:38',0,123456,'1','1'),('5','彩布里来咯','驱逐舰\'特装型布里MKIII\'参上!“Burin!~感动吧!在你面前的是布里家族传说的隐藏角色，也就是我!为你那无与伦比的好运而欢呼吧bulin!”','2022-04-01 16:29:38',0,123456,'1','1'),('6','彩布里来咯','驱逐舰\'特装型布里MKIII\'参上!“Burin!~感动吧!在你面前的是布里家族传说的隐藏角色，也就是我!为你那无与伦比的好运而欢呼吧bulin!”','2022-04-01 16:29:38',0,123456,'1','1'),('7','金布里来咯','布里布里','2022-06-01 17:02:08',0,9999,'4','4'),('8','彩布里来咯','驱逐舰\'特装型布里MKIII\'参上!“Burin!~感动吧!在你面前的是布里家族传说的隐藏角色，也就是我!为你那无与伦比的好运而欢呼吧bulin!”','2022-04-01 16:29:38',0,123456,'1','1'),('9','彩布里来咯','驱逐舰\'特装型布里MKIII\'参上!“Burin!~感动吧!在你面前的是布里家族传说的隐藏角色，也就是我!为你那无与伦比的好运而欢呼吧bulin!”','2022-04-01 16:29:38',0,123456,'1','1');
+INSERT INTO `content` VALUES ('1','彩布里来咯','驱逐舰\'特装型布里MKIII\'参上!“Burin!~感动吧!在你面前的是布里家族传说的隐藏角色，也就是我!为你那无与伦比的好运而欢呼吧bulin!”','2022-04-01 16:29:38',0,111,'1','1'),('2','彩布里来咯','驱逐舰\'特装型布里MKIII\'参上!“Burin!~感动吧!在你面前的是布里家族传说的隐藏角色，也就是我!为你那无与伦比的好运而欢呼吧bulin!”','2022-04-01 16:29:38',0,666,'1','1'),('7','金布里来咯','布里布里','2022-06-01 17:02:08',0,9999,'4','4');
 /*!40000 ALTER TABLE `content` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
+-- Table structure for table `follow`
+--
+
+DROP TABLE IF EXISTS `follow`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `follow` (
+  `uid` varchar(64) NOT NULL,
+  `follower` varchar(64) NOT NULL,
+  `date` datetime NOT NULL,
+  PRIMARY KEY (`uid`,`follower`),
+  KEY `follow_FK_1` (`follower`),
+  CONSTRAINT `follow_FK` FOREIGN KEY (`uid`) REFERENCES `user` (`uid`),
+  CONSTRAINT `follow_FK_1` FOREIGN KEY (`follower`) REFERENCES `user` (`uid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `follow`
+--
+
+LOCK TABLES `follow` WRITE;
+/*!40000 ALTER TABLE `follow` DISABLE KEYS */;
+INSERT INTO `follow` VALUES ('1','1','2022-04-13 21:11:42'),('1','2','2022-04-08 21:11:32'),('1','3','2022-04-06 21:11:51');
+/*!40000 ALTER TABLE `follow` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -158,7 +214,7 @@ CREATE TABLE `user` (
 
 LOCK TABLES `user` WRITE;
 /*!40000 ALTER TABLE `user` DISABLE KEYS */;
-INSERT INTO `user` VALUES ('1','222','1111',1,'2021-05-01',1,'avatar/cbl.jpg'),('2','金布里','试作型布里MKII UNIV Trial Bulin MKII 試作型ブリMKII',1,'2017-04-01',0,'avatar/jbl.jpg'),('3','灵敏','Pr.7-U型前哨级驱逐舰 灵敏 SN Soobrazitelny ソオブラジ－テリヌイ',1,'1941-06-07',0,'avatar/lm.jpg'),('4','阿尔汉格尔斯克','SN Arkhangelsk',1,'1939-01-01',0,'avatar/aehgesk.jpg'),('5','伏尔加','Pr.72型航空母舰 伏尔加 SN Volga',1,'2022-02-24',1,'avatar/fej.jpg');
+INSERT INTO `user` VALUES ('1','222','1234',1,'2021-05-01',1,'avatar/cbl.jpg'),('2','金布里','试作型布里MKII UNIV Trial Bulin MKII 試作型ブリMKII',1,'2017-04-01',0,'avatar/jbl.jpg'),('3','灵敏','Pr.7-U型前哨级驱逐舰 灵敏 SN Soobrazitelny ソオブラジ－テリヌイ',1,'1941-06-07',0,'avatar/lm.jpg'),('4','阿尔汉格尔斯克','SN Arkhangelsk',1,'1939-01-01',0,'avatar/aehgesk.jpg'),('5','伏尔加','Pr.72型航空母舰 伏尔加 SN Volga',1,'2022-02-24',1,'avatar/fej.jpg');
 /*!40000 ALTER TABLE `user` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -179,4 +235,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2022-04-01 19:36:33
+-- Dump completed on 2022-04-08  5:00:02
