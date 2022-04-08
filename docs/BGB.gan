@@ -1,9 +1,10 @@
-<?xml version="1.0" encoding="UTF-8"?><project name="BGB" company="" webLink="http://" view-date="2022-03-26" view-index="0" gantt-divider-location="324" resource-divider-location="300" version="3.2.3230" locale="zh_CN">
+<?xml version="1.0" encoding="UTF-8"?><project name="BGB" company="" webLink="http://" view-date="2022-03-22" view-index="0" gantt-divider-location="344" resource-divider-location="300" version="3.2.3230" locale="zh_CN">
     <description/>
     <view zooming-state="default:1" id="gantt-chart">
-        <field id="tpd3" name="名称" width="176" order="0"/>
-        <field id="tpd4" name="开始日期" width="66" order="1"/>
-        <field id="tpd5" name="结束日期" width="66" order="2"/>
+        <field id="tpd12" name="成本" width="20" order="0"/>
+        <field id="tpd3" name="名称" width="176" order="1"/>
+        <field id="tpd4" name="开始日期" width="66" order="2"/>
+        <field id="tpd5" name="结束日期" width="66" order="3"/>
         <option id="filter.completedTasks" value="false"/>
     </view>
     <view id="resource-table">
