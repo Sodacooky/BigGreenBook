@@ -7,11 +7,7 @@ spring:
     #active: wen
     active: product
   datasource:
-<<<<<<< HEAD
-    # 数据库配置
-    url: jdbc:mysql://Sodacooky.plus:3306/bgb
-=======
->>>>>>> 049cb7235c9e854795f8160766a57b1d3e0dc179
+    # 使用8.0 MySQL驱动
     driver-class-name: com.mysql.cj.jdbc.Driver
   mvc:
     # 资源文件夹映射到url的
@@ -42,6 +38,7 @@ spring:
     activate:
       on-profile: han
   datasource:
+    url: jdbc:mysql://sodacooky.plus:3306/bgb
     username: bgb
     password: 114514
 server:
