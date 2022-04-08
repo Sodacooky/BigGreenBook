@@ -1,19 +1,47 @@
--- MySQL dump 10.13  Distrib 8.0.25, for Win64 (x86_64)
+-- MySQL dump 10.13  Distrib 8.0.24, for Linux (x86_64)
 --
 -- Host: localhost    Database: bgb
 -- ------------------------------------------------------
--- Server version	8.0.25
+-- Server version	8.0.24
 
 /*!40101 SET @OLD_CHARACTER_SET_CLIENT=@@CHARACTER_SET_CLIENT */;
 /*!40101 SET @OLD_CHARACTER_SET_RESULTS=@@CHARACTER_SET_RESULTS */;
 /*!40101 SET @OLD_COLLATION_CONNECTION=@@COLLATION_CONNECTION */;
-/*!50503 SET NAMES utf8mb4 */;
+/*!50503 SET NAMES utf8 */;
 /*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
 /*!40103 SET TIME_ZONE='+00:00' */;
 /*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
+
+--
+-- Table structure for table `collection`
+--
+
+DROP TABLE IF EXISTS `collection`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `collection` (
+  `uid` varchar(64) NOT NULL,
+  `cid` varchar(128) NOT NULL,
+  `date` datetime NOT NULL,
+  PRIMARY KEY (`uid`,`cid`),
+  KEY `collection_FK` (`cid`),
+  CONSTRAINT `collection_FK` FOREIGN KEY (`cid`) REFERENCES `content` (`cid`),
+  CONSTRAINT `collection_FK_1` FOREIGN KEY (`uid`) REFERENCES `user` (`uid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `collection`
+--
+
+LOCK TABLES `collection` WRITE;
+/*!40000 ALTER TABLE `collection` DISABLE KEYS */;
+INSERT INTO `collection` VALUES ('1','1','2022-04-07 21:05:42'),('1','2','2022-04-09 21:05:54');
+/*!40000 ALTER TABLE `collection` ENABLE KEYS */;
+UNLOCK TABLES;
 
 --
 -- Table structure for table `content`
@@ -23,17 +51,19 @@ DROP TABLE IF EXISTS `content`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
 CREATE TABLE `content` (
-  `cid` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL DEFAULT 'null',
+  `cid` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
   `title` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
-  `main_text` mediumtext NOT NULL,
-  `date` datetime NOT NULL,
+  `main_text` mediumtext CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `date` datetime NOT NULL DEFAULT '1970-01-01 00:00:00',
   `type` int NOT NULL DEFAULT '0',
   `like_amount` int unsigned NOT NULL DEFAULT '0',
-  `uid` varchar(64) NOT NULL,
-  `sid` varchar(128) NOT NULL,
+  `uid` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `sid` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
   PRIMARY KEY (`cid`),
   KEY `content_FK` (`uid`),
-  CONSTRAINT `content_FK` FOREIGN KEY (`uid`) REFERENCES `user` (`uid`)
+  KEY `content_FK_1` (`sid`),
+  CONSTRAINT `content_FK` FOREIGN KEY (`uid`) REFERENCES `user` (`uid`),
+  CONSTRAINT `content_FK_1` FOREIGN KEY (`sid`) REFERENCES `resource` (`sid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
@@ -43,33 +73,36 @@ CREATE TABLE `content` (
 
 LOCK TABLES `content` WRITE;
 /*!40000 ALTER TABLE `content` DISABLE KEYS */;
-INSERT INTO `content` VALUES ('1','金布里来咯','顺便介绍一下，这个紫色的家伙是我的妹妹泛用性布里啦！','2022-03-30 19:25:56',0,1000,'2','2'),('2','彩布里来了哦','话说怎么没有看到另外两个家伙呢？','2022-03-25 20:20:12',0,999999,'1','1'),('3','大家好，我是Pr.7-U型前哨级驱逐舰灵敏！','前哨级驱逐舰兼天才机械师灵敏，同时曾是黑海舰队的一员哦！我总能凭借着自己天才的灵光一现，以及一点点的运气，从敌人的猛攻之中全身而退呢！','2022-03-26 15:00:00',0,996,'3','4'),('4','哼哼，准备接受本天才机械师的改造吧！','哇哈哈哈~指挥官同志！北方联合超级天才机械师灵敏来了！不管什么样的机械，全部交给我就好啦！','2022-03-27 16:00:00',0,114514,'3','3');
+INSERT INTO `content` VALUES ('1','彩布里来咯','驱逐舰\'特装型布里MKIII\'参上!“Burin!~感动吧!在你面前的是布里家族传说的隐藏角色，也就是我!为你那无与伦比的好运而欢呼吧bulin!”','2022-04-01 16:29:38',0,111,'1','1'),('2','彩布里来咯','驱逐舰\'特装型布里MKIII\'参上!“Burin!~感动吧!在你面前的是布里家族传说的隐藏角色，也就是我!为你那无与伦比的好运而欢呼吧bulin!”','2022-04-01 16:29:38',0,666,'1','1'),('7','金布里来咯','布里布里','2022-06-01 17:02:08',0,9999,'4','4');
 /*!40000 ALTER TABLE `content` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
--- Table structure for table `picture`
+-- Table structure for table `follow`
 --
 
-DROP TABLE IF EXISTS `picture`;
+DROP TABLE IF EXISTS `follow`;
 /*!40101 SET @saved_cs_client     = @@character_set_client */;
 /*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `picture` (
-  `sid` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL DEFAULT 'null',
-  `path` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL DEFAULT 'null',
-  `index` smallint NOT NULL DEFAULT '0',
-  PRIMARY KEY (`sid`,`index`)
+CREATE TABLE `follow` (
+  `uid` varchar(64) NOT NULL,
+  `follower` varchar(64) NOT NULL,
+  `date` datetime NOT NULL,
+  PRIMARY KEY (`uid`,`follower`),
+  KEY `follow_FK_1` (`follower`),
+  CONSTRAINT `follow_FK` FOREIGN KEY (`uid`) REFERENCES `user` (`uid`),
+  CONSTRAINT `follow_FK_1` FOREIGN KEY (`follower`) REFERENCES `user` (`uid`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
--- Dumping data for table `picture`
+-- Dumping data for table `follow`
 --
 
-LOCK TABLES `picture` WRITE;
-/*!40000 ALTER TABLE `picture` DISABLE KEYS */;
-INSERT INTO `picture` VALUES ('1','img/3am4494wob84kxiqsdm1xeh043ajiz6.jpg',0),('1','img/adjwiajdioawhiod.jpg',1),('2','img/ee8v30tmblui1tigtxq9vyklap9r8tn.jpg',0),('2','img/1ulrgd95x6755wkmxtywfc8f22srnqt.jpg',1),('3','img/sehmjhg3eid8shy4k6lyy77qhu9px8s.png',0),('4','img/lmlh.jpg',0),('4','img/SN_Soobrazitelny.jpg',1);
-/*!40000 ALTER TABLE `picture` ENABLE KEYS */;
+LOCK TABLES `follow` WRITE;
+/*!40000 ALTER TABLE `follow` DISABLE KEYS */;
+INSERT INTO `follow` VALUES ('1','1','2022-04-13 21:11:42'),('1','2','2022-04-08 21:11:32'),('1','3','2022-04-06 21:11:51');
+/*!40000 ALTER TABLE `follow` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
@@ -132,6 +165,31 @@ LOCK TABLES `report` WRITE;
 UNLOCK TABLES;
 
 --
+-- Table structure for table `resource`
+--
+
+DROP TABLE IF EXISTS `resource`;
+/*!40101 SET @saved_cs_client     = @@character_set_client */;
+/*!50503 SET character_set_client = utf8mb4 */;
+CREATE TABLE `resource` (
+  `sid` varchar(256) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `type` varchar(64) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
+  `paths` json NOT NULL,
+  PRIMARY KEY (`sid`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+/*!40101 SET character_set_client = @saved_cs_client */;
+
+--
+-- Dumping data for table `resource`
+--
+
+LOCK TABLES `resource` WRITE;
+/*!40000 ALTER TABLE `resource` DISABLE KEYS */;
+INSERT INTO `resource` VALUES ('1','picture','[\"img/3am4494wob84kxiqsdm1xeh043ajiz6.jpg\", \"img/adjwiajdioawhiod.jpg\"]'),('2','picture','[\"img/ee8v30tmblui1tigtxq9vyklap9r8tn.jpg\", \"img/1ulrgd95x6755wkmxtywfc8f22srnqt.jpg\"]'),('3','picture','[\"img/sehmjhg3eid8shy4k6lyy77qhu9px8s.png\"]'),('4','picture','[\"img/lmlh.jpg\", \"img/SN_Soobrazitelny.jpg\"]');
+/*!40000 ALTER TABLE `resource` ENABLE KEYS */;
+UNLOCK TABLES;
+
+--
 -- Table structure for table `user`
 --
 
@@ -156,32 +214,13 @@ CREATE TABLE `user` (
 
 LOCK TABLES `user` WRITE;
 /*!40000 ALTER TABLE `user` DISABLE KEYS */;
-INSERT INTO `user` VALUES ('1','彩布里','特装型布里MKIII UNIV Specialized Bulin MKIII 特装型ブリMKIII',1,'2021-05-01',0,'avatar/cbl.jpg'),('2','金布里','试作型布里MKII UNIV Trial Bulin MKII 試作型ブリMKII',1,'2017-04-01',0,'avatar/jbl.jpg'),('3','灵敏','Pr.7-U型前哨级驱逐舰 灵敏 SN Soobrazitelny ソオブラジ－テリヌイ',1,'1941-06-07',0,'avatar/lm.jpg'),('4','阿尔汉格尔斯克','SN Arkhangelsk',1,'1939-01-01',0,'avatar/aehgesk.jpg'),('5','伏尔加','Pr.72型航空母舰 伏尔加 SN Volga',1,'2022-02-24',0,'avatar/fej.jpg');
+INSERT INTO `user` VALUES ('1','222','1234',1,'2021-05-01',1,'avatar/cbl.jpg'),('2','金布里','试作型布里MKII UNIV Trial Bulin MKII 試作型ブリMKII',1,'2017-04-01',0,'avatar/jbl.jpg'),('3','灵敏','Pr.7-U型前哨级驱逐舰 灵敏 SN Soobrazitelny ソオブラジ－テリヌイ',1,'1941-06-07',0,'avatar/lm.jpg'),('4','阿尔汉格尔斯克','SN Arkhangelsk',1,'1939-01-01',0,'avatar/aehgesk.jpg'),('5','伏尔加','Pr.72型航空母舰 伏尔加 SN Volga',1,'2022-02-24',1,'avatar/fej.jpg');
 /*!40000 ALTER TABLE `user` ENABLE KEYS */;
 UNLOCK TABLES;
 
 --
--- Table structure for table `video`
+-- Dumping events for database 'bgb'
 --
-
-DROP TABLE IF EXISTS `video`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!50503 SET character_set_client = utf8mb4 */;
-CREATE TABLE `video` (
-  `sid` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL DEFAULT 'null',
-  `path` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL DEFAULT 'null',
-  PRIMARY KEY (`sid`)
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
-
---
--- Dumping data for table `video`
---
-
-LOCK TABLES `video` WRITE;
-/*!40000 ALTER TABLE `video` DISABLE KEYS */;
-/*!40000 ALTER TABLE `video` ENABLE KEYS */;
-UNLOCK TABLES;
 
 --
 -- Dumping routines for database 'bgb'
@@ -196,4 +235,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2022-03-28 17:37:25
+-- Dump completed on 2022-04-08  5:00:02

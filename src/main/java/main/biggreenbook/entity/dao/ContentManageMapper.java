@@ -24,4 +24,6 @@ public interface ContentManageMapper {
     public List<ContentMessage> queryContentsByUid(Map<?,?> map);
 
     public int deleteContent(String cid);
+
+    public ContentMessage checkContent(Map<?,?> map);
 }

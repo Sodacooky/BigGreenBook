@@ -2,7 +2,7 @@
 <!DOCTYPE mapper
         PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="main.biggreenbook.entity.dao.report.UserManageMapper">
+<mapper namespace="main.biggreenbook.entity.dao.UserManageMapper">
 
     <!--    在当前Mapper.xml中使用二级缓存-->
     <cache eviction="FIFO"
@@ -11,11 +11,14 @@
            readOnly="true"/>
 
     <select id="queryUserById" resultType="main.biggreenbook.entity.pojo.User">
-        select * from bgb.user where uid = #{uid};
+        select *
+        from bgb.user
+        where uid = #{uid};
     </select>
 
     <select id="queryAllUser" resultType="main.biggreenbook.entity.pojo.User">
-        select * from bgb.user;
+        select *
+        from bgb.user;
     </select>
 
     <update id="updateUser" parameterType="java.util.Map">
@@ -40,19 +43,26 @@
     </update>
 
     <update id="updateDescription" parameterType="java.util.Map">
-        update bgb.user set description = #{description} where uid =#{uid};
+        update bgb.user
+        set description = #{description}
+        where uid = #{uid};
     </update>
 
     <update id="updateNickName" parameterType="java.util.Map">
-        update bgb.user set nickname = #{nickname} where uid =#{uid};
+        update bgb.user
+        set nickname = #{nickname}
+        where uid = #{uid};
     </update>
 
     <select id="getUsers" parameterType="java.util.Map" resultType="main.biggreenbook.entity.pojo.User">
-        select * from bgb.user limit #{index}, #{target};
+        select *
+        from bgb.user
+        limit #{index}, #{target};
     </select>
 
     <select id="countAllUsers" resultType="int">
-        select count(*) from bgb.user;
+        select count(*)
+        from bgb.user;
     </select>
 
 </mapper>

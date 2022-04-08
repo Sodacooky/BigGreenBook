@@ -20,4 +20,6 @@ public interface ContentManageService {
 
     int deleteContent(String cid);
 
+    ContentMessage checkContent(Map<?,?> map);
+
 }

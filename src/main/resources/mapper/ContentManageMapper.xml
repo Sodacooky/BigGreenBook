@@ -14,26 +14,19 @@
         select * from bgb.content limit #{index}, #{target}
     </select>
 
-<!--    <resultMap id="ContentMap" type="ContentMessage">-->
-<!--        <result property="path" column="path"/>-->
-<!--        <result property="author" column="nickname"/>-->
-<!--        <collection property="list" javaType="list" ofType="Content"/>-->
-<!--    </resultMap>-->
-
-<!--    <select id="getContents" parameterType="map" resultMap="ContentMap">-->
-<!--        select c.cid, c.title, c.date, c.like_amount, c.type, p.path, u.nickname from picture p, content c join user u on u.uid = c.uid-->
-<!--        where c.sid = p.sid and p.index = 0 limit #{index}, #{target};-->
-<!--    </select>-->
-
     <resultMap id="ContentMap" type="main.biggreenbook.entity.pojo.ContentMessage">
-        <result property="path" column="path"/>
+        <result property="cid" column="cid"/>
+        <result property="title" column="title"/>
+        <result property="date" column="date"/>
         <result property="author" column="nickname"/>
         <result property="uid" column="uid"/>
         <result property="likeAmount" column="like_amount"/>
+        <result property="text" column="main_text"/>
+        <result property="path" column="paths"/>
     </resultMap>
 
     <select id="getContents" parameterType="map" resultMap="ContentMap">
-        select c.cid, c.title, c.date, c.like_amount, c.type, JSON_EXTRACT(paths, '$[0]') path, u.nickname, u.uid from resource r, content c join user u on u.uid = c.uid
+        select c.cid, c.title, c.main_text, c.date, c.like_amount, c.type, r.paths, u.nickname, u.uid from resource r, content c join user u on u.uid = c.uid
         where c.sid = r.sid  limit #{index}, #{target};
     </select>
 
@@ -56,7 +49,7 @@
 <!--    </select>-->
 
     <select id="queryContents" parameterType="map" resultMap="ContentMap">
-        select c.cid, c.title, c.date, c.like_amount, c.type, JSON_EXTRACT(paths, '$[0]') path, u.nickname, u.uid from resource r, content c join user u on u.uid = c.uid
+        select c.cid, c.title, c.main_text, c.date, c.like_amount, c.type, r.paths, u.nickname, u.uid from resource r, content c join user u on u.uid = c.uid
         <where>
             c.sid = r.sid
             <if test="uid != null">
@@ -86,8 +79,13 @@
     </select>
 
     <select id="queryContentsByUid" parameterType="map" resultMap="ContentMap">
-        select c.cid, c.title, c.date, c.like_amount, c.type, JSON_EXTRACT(paths, '$[0]') path, u.nickname, u.uid from resource r, content c join user u on u.uid = c.uid
+        select c.cid, c.title, c.main_text, c.date, c.like_amount, c.type, r.paths, u.nickname, u.uid from resource r, content c join user u on u.uid = c.uid
         where c.sid = r.sid and c.uid = #{uid} limit #{index}, #{target};
+    </select>
+
+    <select id="checkContent" parameterType="map" resultMap="ContentMap">
+        select c.cid, c.title, c.main_text, c.date, c.like_amount, c.type, paths , u.nickname, u.uid from resource r, content c join user u on u.uid = c.uid
+        where c.sid = r.sid and c.cid = #{cid};
     </select>
 
 </mapper>

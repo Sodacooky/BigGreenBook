@@ -32,8 +32,8 @@ public class ContentManageController {
         map.put("index", index);
         map.put("target", target);
         List<ContentMessage> list = contentManageService.getContents(map);
-
         int totalContents = contentManageService.countAllContents();
+
         return new ManageContentPage(list, totalContents);
     }
 
@@ -60,9 +60,6 @@ public class ContentManageController {
         map.put("target", target);
         List<ContentMessage> list = contentManageService.queryContents(map);
         int totalContents = contentManageService.countQueryContents(map);
-        System.out.println("-------------------------------------------------------");
-
-        System.out.println("-------------------------------------------------------");
 
         return new ManageContentPage(list, totalContents) ;
     }
@@ -82,16 +79,8 @@ public class ContentManageController {
         map.put("uid", uid);
         map.put("index", index);
         map.put("target", target);
-
         List<ContentMessage> list = contentManageService.queryContents(map);
         int totalContents = contentManageService.countQueryContents(map);
-        System.out.println("-------------------------------------------------------");
-        System.out.println(pageIndex);
-        System.out.println(index);
-        System.out.println(target);
-        System.out.println(list.size());
-        System.out.println(totalContents);
-        System.out.println("-------------------------------------------------------");
 
         return new ManageContentPage(list, totalContents);
     }
@@ -111,20 +100,18 @@ public class ContentManageController {
         map.put("nickname", nickname);
         map.put("index", index);
         map.put("target", target);
-
         List<ContentMessage> list = contentManageService.queryContents(map);
         int totalContents = contentManageService.countQueryContents(map);
-        System.out.println("nickname:" + nickname);
-        System.out.println("-------------------------------------------------------");
-        System.out.println(pageIndex);
-        System.out.println(index);
-        System.out.println(target);
-        System.out.println(list.size());
-        System.out.println(totalContents);
-        System.out.println("-------------------------------------------------------");
 
         return new ManageContentPage(list, totalContents);
     }
 
+    @GetMapping(value = "/check/{cid}")
+    public ContentMessage checkContent(@PathVariable String cid) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("cid", cid);
+
+        return contentManageService.checkContent(map);
+    }
 
 }

@@ -8,14 +8,15 @@ import org.springframework.boot.test.context.SpringBootTest;
 import java.util.List;
 
 @SpringBootTest
-public class HomePageServiceTest {
+public class WxContentServiceTest {
 
     @Autowired
-    HomePageService homePageService;
+    WxContentService wxContentService;
 
     @Test
     public void getPreviewCardsTest() {
-        List<PreviewCard> previewCards = homePageService.getPreviewCards(0);
+        int queryId = wxContentService.getQueryId();
+        List<PreviewCard> previewCards = wxContentService.getPreviewCards(0, queryId);
         previewCards.forEach(System.out::println);
     }
 }
