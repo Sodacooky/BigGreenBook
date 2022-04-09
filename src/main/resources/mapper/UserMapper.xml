@@ -14,8 +14,7 @@
         <result property="userAvatarPath" column="avatar_path"/>
         <result property="contentAmount" column="contentAmount"/>
         <result property="fansAmount" column="fansAmount"/>
-        <association property="isStatus" column="uid" javaType="int" select="getStatus">
-        </association>
+        <association property="status" column="uid" javaType="int" select="getStatus"></association>
     </resultMap>
 
     <!--获取用户数量（含搜索）-->

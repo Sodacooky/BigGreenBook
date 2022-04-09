@@ -34,7 +34,7 @@ public class UserCard {
                 ", userAvatarPath='" + userAvatarPath + '\'' +
                 ", contentAmount=" + contentAmount +
                 ", fansAmount=" + fansAmount +
-                ", isStatus=" + status +
+                ", status=" + status +
                 '}';
     }
 
