@@ -2,7 +2,6 @@ package main.biggreenbook.service;
 
 import main.biggreenbook.entity.dao.UserMapper;
 import main.biggreenbook.entity.vo.Example;
-import main.biggreenbook.entity.vo.PreviewCard;
 import main.biggreenbook.entity.vo.UserCard;
 import main.biggreenbook.utils.UrlPathMapper;
 import org.springframework.beans.factory.annotation.Autowired;
