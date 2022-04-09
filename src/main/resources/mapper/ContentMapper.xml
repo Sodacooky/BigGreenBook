@@ -53,14 +53,6 @@
         order by `content`.`date` desc limit 0,#{amount}
     </select>
 
-    <
-    <
-    <
-    <
-    <
-    <
-    < HEAD
-
     <!--    &lt;!&ndash;    在当前Mapper.xml中使用二级缓存&ndash;&gt;-->
     <!--    <cache eviction="FIFO"-->
     <!--           flushInterval="60000"-->
@@ -196,6 +188,7 @@
         from `content`
         inner join `user` on `user`.`uid` = `content`.`uid`
         inner join `resource` on `resource`.`sid` = `content`.`sid`
+
         <if test="search != null and search != ''">
             where `content`.`title` like '%${search}%'
             or `content`.`main_text` like '%${search}%'
