@@ -53,7 +53,7 @@
         order by `content`.`date` desc limit 0,#{amount}
     </select>
 
-    <select id="queryContent" resultMap="previewCardMap">
+    <select id="getContentBySearch" resultMap="previewCardMap">
         select `content`.`cid`                          as cid,
         `content`.`like_amount`                  as like_amount,
         `content`.`title`                        as title,
@@ -64,13 +64,11 @@
         from `content`
         inner join `user` on `user`.`uid` = `content`.`uid`
         inner join `resource` on `resource`.`sid` = `content`.`sid`
-        <where>
-            <if test="search != null and search != ''">
-                `content`.`title` like '%${search}%'
-                or `content`.`main_text` like '%${search}%'
-            </if>
-        </where>
 
+        <if test="search != null and search != ''">
+                where `content`.`title` like '%${search}%'
+                or `content`.`main_text` like '%${search}%'
+        </if>
         <choose>
             <when test="sort == 'HOT' and pageNum == 0">
                 order by `content`.`like_amount` desc limit 0,#{amount}
