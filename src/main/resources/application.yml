@@ -84,3 +84,6 @@ server:
     key-store: classpath:bgb.p12
     key-store-type: pkcs12
     key-store-password: 114514
+logging:
+  file:
+    path: ./log

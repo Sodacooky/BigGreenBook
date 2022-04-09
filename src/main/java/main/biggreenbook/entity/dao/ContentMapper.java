@@ -48,6 +48,7 @@ public interface ContentMapper {
     int deleteSelect(List<?> list);
 
     //通过属性值，以一个或多个属性查找内容
+    //TODO: THERE'S BUG
     List<ContentMessage> queryContents(Map<?, ?> map);
 
     // 计算符合查询结果的内容有多少条
