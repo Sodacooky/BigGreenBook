@@ -49,6 +49,5 @@ public class WxUserService {
         return queryId < PAGESiZE ? 1 : queryId / PAGESiZE;
     }
 
-
     private static final int PAGESiZE = 8;
 }
