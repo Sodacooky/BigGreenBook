@@ -42,7 +42,7 @@ public interface ContentMapper {
      * @param search 搜索内容
      * @return PreviewCard
      */
-    List<PreviewCard> queryContent(@Param("sort") String sort,@Param("search") String search,
+    List<PreviewCard> getContentBySearch(@Param("sort") String sort,@Param("search") String search,
                                    @Param("pageNum") int pageNum, @Param("pageSize") int pageSize,
                                    @Param("amount") int amount );
 

@@ -35,7 +35,7 @@ public class ContentMapperTest {
         int queryid = contentMapper.getQueryId("布里");
         System.out.println(queryid);
         int amount = queryid % 8;
-        List<PreviewCard> previewCards = contentMapper.queryContent("LAST", null,1,8,amount);
+        List<PreviewCard> previewCards = contentMapper.getContentBySearch("LAST", null,1,8,amount);
         previewCards.forEach(System.out::println);
     }
 }
