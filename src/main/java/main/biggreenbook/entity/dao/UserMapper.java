@@ -1,6 +1,7 @@
 package main.biggreenbook.entity.dao;
 
 import main.biggreenbook.entity.pojo.User;
+import main.biggreenbook.entity.vo.Example;
 import main.biggreenbook.entity.vo.UserCard;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
