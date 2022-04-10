@@ -1,11 +1,13 @@
 package main.biggreenbook.entity.dao;
 
+import main.biggreenbook.entity.pojo.ContentMessage;
 import main.biggreenbook.entity.vo.PreviewCard;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Map;
 
 @Mapper
 @Repository
@@ -15,7 +17,7 @@ public interface ContentMapper {
      * 获取当前的查询Id，实际上就是这一时刻的数据库数量
      * @return query_id
      */
-    int getQueryId();
+    int getQueryId(String search);
 
     /**
      * 获取内容
@@ -34,4 +36,37 @@ public interface ContentMapper {
      * @return PreviewCards
      */
     List<PreviewCard> getLatestContent(@Param("amount") int amount);
+
+    //什么玩意？
+    List<ContentMessage> getContents(Map<?, ?> map);
+
+    //获取Content数量？若是则与getQueryId()相等
+    int countAllContents();
+
+    //删除所选的若干项，应该是传入cid
+    int deleteSelect(List<?> list);
+
+    //通过属性值，以一个或多个属性查找内容
+    List<ContentMessage> queryContents(Map<?, ?> map);
+
+    // 计算符合查询结果的内容有多少条
+    int countQueryContents(Map<?, ?> map);
+
+    //获取属于该用户的内容
+    List<ContentMessage> queryContentsByUid(Map<?, ?> map);
+
+    //int deleteContent(String cid);
+
+    //似乎只是查找
+    ContentMessage checkContent(Map<?, ?> map);
+
+    /**
+     * @param sort   排序条件：LAST:最新 / HOT:最热
+     * @param search 搜索内容
+     * @return PreviewCard
+     */
+    List<PreviewCard> getContentBySearch(@Param("sort") String sort, @Param("search") String search,
+                                         @Param("pageNum") int pageNum, @Param("pageSize") int pageSize,
+                                         @Param("amount") int amount);
+
 }

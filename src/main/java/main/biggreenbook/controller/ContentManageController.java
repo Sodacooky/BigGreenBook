@@ -23,9 +23,8 @@ public class ContentManageController {
         int target;
         if (pageIndex == 1) {
             index = 0;
-        }
-        else {
-            index = (pageIndex-1) * 8;
+        } else {
+            index = (pageIndex - 1) * 8;
         }
         target = index + 8;
         Map<String, Integer> map = new HashMap<>();
@@ -39,7 +38,6 @@ public class ContentManageController {
 
     @GetMapping(value = "/deleteSelect/{select}")
     public int deleteSelect(@PathVariable List<Integer> select) {
-
         return contentManageService.deleteSelect(select);
     }
 
@@ -49,9 +47,8 @@ public class ContentManageController {
         int target;
         if (pageIndex == 1) {
             index = 0;
-        }
-        else {
-            index = (pageIndex-1) * 8;
+        } else {
+            index = (pageIndex - 1) * 8;
         }
         target = index + 8;
         Map<String, Object> map = new HashMap<>();
@@ -61,7 +58,7 @@ public class ContentManageController {
         List<ContentMessage> list = contentManageService.queryContents(map);
         int totalContents = contentManageService.countQueryContents(map);
 
-        return new ManageContentPage(list, totalContents) ;
+        return new ManageContentPage(list, totalContents);
     }
 
     @GetMapping(value = "/queryUid/{uid}/{pageIndex}")
@@ -70,9 +67,8 @@ public class ContentManageController {
         int target;
         if (pageIndex == 1) {
             index = 0;
-        }
-        else {
-            index = (pageIndex-1) * 8;
+        } else {
+            index = (pageIndex - 1) * 8;
         }
         target = index + 8;
         Map<String, Object> map = new HashMap<>();
@@ -91,9 +87,8 @@ public class ContentManageController {
         int target;
         if (pageIndex == 1) {
             index = 0;
-        }
-        else {
-            index = (pageIndex-1) * 8;
+        } else {
+            index = (pageIndex - 1) * 8;
         }
         target = index + 8;
         Map<String, Object> map = new HashMap<>();

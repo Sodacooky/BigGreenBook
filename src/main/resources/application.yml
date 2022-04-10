@@ -7,14 +7,11 @@ spring:
     #active: wen
 
   datasource:
-
-    # 数据库配置
-    url: jdbc:mysql://Sodacooky.plus:3306/bgb
-
     driver-class-name: com.mysql.cj.jdbc.Driver
   mvc:
     # 资源文件夹映射到url的
     static-path-pattern: /static/**
+
 mybatis:
   mapper-locations: classpath:/mapper/*.xml
   configuration:
@@ -41,6 +38,7 @@ spring:
     activate:
       on-profile: han
   datasource:
+    url: jdbc:mysql://sodacooky.plus:3306/bgb
     username: bgb
     password: 114514
 server:
@@ -86,3 +84,6 @@ server:
     key-store: classpath:bgb.p12
     key-store-type: pkcs12
     key-store-password: 114514
+logging:
+  file:
+    path: ./log

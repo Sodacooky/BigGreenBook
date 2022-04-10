@@ -3,7 +3,7 @@ package main.biggreenbook.service;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.type.TypeFactory;
-import main.biggreenbook.entity.dao.ContentManageMapper;
+import main.biggreenbook.entity.dao.ContentMapper;
 import main.biggreenbook.entity.pojo.ContentMessage;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,51 +13,46 @@ import java.util.List;
 import java.util.Map;
 
 @Service
-public class ContentManageService{
+public class ContentManageService {
     @Autowired
-    private ContentManageMapper contentManageMapper;
-
-    public void setContentManageMapper(ContentManageMapper contentManageMapper) {
-        this.contentManageMapper = contentManageMapper;
-    }
-
+    private ContentMapper contentMapper;
 
     public List<ContentMessage> getContents(Map<?, ?> map) {
-        List<ContentMessage> list = contentManageMapper.getContents(map);
+        List<ContentMessage> list = contentMapper.getContents(map);
         switchJson(list);
         return list;
     }
 
     public int countAllContents() {
-        return contentManageMapper.countAllContents();
+        return contentMapper.countAllContents();
     }
 
     public int deleteSelect(List<?> list) {
-        return contentManageMapper.deleteSelect(list);
+        return contentMapper.deleteSelect(list);
     }
 
-    public List<ContentMessage> queryContents(Map<?,?> map) {
-        List<ContentMessage> list = contentManageMapper.queryContents(map);
+    public List<ContentMessage> queryContents(Map<?, ?> map) {
+        List<ContentMessage> list = contentMapper.queryContents(map);
         switchJson(list);
-        return contentManageMapper.queryContents(map);
+        return contentMapper.queryContents(map);
     }
 
     public int countQueryContents(Map<?, ?> map) {
-        return contentManageMapper.countQueryContents(map);
+        return contentMapper.countQueryContents(map);
     }
 
     public List<ContentMessage> queryContentsByUid(Map<?, ?> map) {
-        List<ContentMessage> list = contentManageMapper.queryContentsByUid(map);
+        List<ContentMessage> list = contentMapper.queryContentsByUid(map);
         switchJson(list);
         return list;
     }
 
-    public int deleteContent(String cid) {
-        return contentManageMapper.deleteContent(cid);
-    }
+//    public int deleteContent(String cid) {
+//        return contentMapper.deleteContent(cid);
+//    }
 
-    public ContentMessage checkContent(Map<?,?> map) {
-        ContentMessage contentMessage = contentManageMapper.checkContent(map);
+    public ContentMessage checkContent(Map<?, ?> map) {
+        ContentMessage contentMessage = contentMapper.checkContent(map);
         ObjectMapper mapper = new ObjectMapper();
         List<String> jsonList = new ArrayList<>();
         try {

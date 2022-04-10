@@ -6,7 +6,11 @@
 
     <select id="getQueryId" resultType="java.lang.Integer">
         select count(*)
-        from `content`;
+        from `content`
+        <if test="search != null and search != ''">
+            where `content`.`title` like '%${search}%'
+            or `content`.`main_text` like '%${search}%'
+        </if>
     </select>
 
     <resultMap id="previewCardMap" type="main.biggreenbook.entity.vo.PreviewCard">
@@ -49,4 +53,159 @@
         order by `content`.`date` desc limit 0,#{amount}
     </select>
 
+    <!--    &lt;!&ndash;    在当前Mapper.xml中使用二级缓存&ndash;&gt;-->
+    <!--    <cache eviction="FIFO"-->
+    <!--           flushInterval="60000"-->
+    <!--           size="512"-->
+    <!--           readOnly="true"/>-->
+
+    <select id="getContent" parameterType="map" resultMap="ContentMap">
+        select *
+        from bgb.content limit #{index}, #{target}
+    </select>
+
+    <resultMap id="ContentMap" type="main.biggreenbook.entity.pojo.ContentMessage">
+        <result property="cid" column="cid"/>
+        <result property="title" column="title"/>
+        <result property="date" column="date"/>
+        <result property="author" column="nickname"/>
+        <result property="uid" column="uid"/>
+        <result property="likeAmount" column="like_amount"/>
+        <result property="text" column="main_text"/>
+        <result property="path" column="paths"/>
+    </resultMap>
+
+    <select id="getContents" parameterType="map" resultMap="ContentMap">
+        select c.cid,
+               c.title,
+               c.main_text,
+               c.date,
+               c.like_amount,
+               c.type,
+               r.paths,
+               u.nickname,
+               u.uid
+        from resource r,
+             content c
+                 join user u on u.uid = c.uid
+        where c.sid = r.sid limit #{index}
+            , #{target};
+    </select>
+
+    <select id="countAllContents" resultType="int">
+        select count(*)
+        from bgb.content;
+    </select>
+
+    <delete id="deleteSelect" parameterType="list">
+        delete from content
+        <where>
+            <foreach collection="list" item="cid" open="(" separator="or" close=")">
+                cid = #{cid}
+            </foreach>
+        </where>
+    </delete>
+
+    <!--    <select id="queryContents" parameterType="map" resultMap="ContentMap">-->
+    <!--        select c.cid, c.title, c.date, c.like_amount, c.type, JSON_EXTRACT(paths, '$[0]') path, u.nickname, u.uid from resource r, content c join user u on u.uid = c.uid-->
+    <!--        where c.sid = r.sid and c.title like concat('%', #{title}, '%') limit #{index}, #{target};-->
+    <!--    </select>-->
+
+    <select id="queryContents" parameterType="map" resultMap="ContentMap">
+        select c.cid, c.title, c.main_text, c.date, c.like_amount, c.type, r.paths, u.nickname, u.uid from resource r,
+        content c join user u on u.uid = c.uid
+        <where>
+            c.sid = r.sid
+            <if test="uid != null">
+                and c.uid = #{uid}
+            </if>
+            <if test="title != null">
+                and c.title like concat('%', #{title}, '%')
+            </if>
+            <if test="nickname != null">
+                and u.nickname like concat('%', #{nickname}, '%')
+            </if>
+        </where>
+        limit #{index}, #{target}
+    </select>
+
+    <select id="countQueryContents" parameterType="map" resultType="int">
+        select count(*) from bgb.content
+        <where>
+            <if test="title != null">
+                title like concat('%', #{title}, '%')
+            </if>
+            <if test="uid != null">
+                uid = #{uid};
+            </if>
+        </where>
+
+    </select>
+
+    <select id="queryContentsByUid" parameterType="map" resultMap="ContentMap">
+        select c.cid,
+               c.title,
+               c.main_text,
+               c.date,
+               c.like_amount,
+               c.type,
+               r.paths,
+               u.nickname,
+               u.uid
+        from resource r,
+             content c
+                 join user u on u.uid = c.uid
+        where c.sid = r.sid
+          and c.uid = #{uid} limit #{index}
+            , #{target};
+    </select>
+
+    <select id="checkContent" parameterType="map" resultMap="ContentMap">
+        select c.cid,
+               c.title,
+               c.main_text,
+               c.date,
+               c.like_amount,
+               c.type,
+               paths,
+               u.nickname,
+               u.uid
+        from resource r,
+             content c
+                 join user u on u.uid = c.uid
+        where c.sid = r.sid
+          and c.cid = #{cid};
+    </select>
+
+    <select id="getContentBySearch" resultMap="previewCardMap">
+        select `content`.`cid` as cid,
+        `content`.`like_amount` as like_amount,
+        `content`.`title` as title,
+        `resource`.`type` as type,
+        JSON_EXTRACT(`resource`.`paths`, '$[0]') as first_path,
+        `user`.`avatar_path` as avatar,
+        `user`.`nickname` as nickname
+        from `content`
+        inner join `user` on `user`.`uid` = `content`.`uid`
+        inner join `resource` on `resource`.`sid` = `content`.`sid`
+
+        <if test="search != null and search != ''">
+            where `content`.`title` like '%${search}%'
+            or `content`.`main_text` like '%${search}%'
+        </if>
+        <choose>
+            <when test="sort == 'HOT' and pageNum == 0">
+                order by `content`.`like_amount` desc limit 0,#{amount}
+            </when>
+            <when test="sort == 'HOT' and pageNum != 0">
+                order by `content`.`like_amount` asc limit ${pageSize*pageNum}, #{pageSize}
+            </when>
+            <when test="sort == 'LAST' and pageNum == 0">
+                order by `content`.`date` desc limit 0,#{amount}
+            </when>
+            <when test="sort == 'LAST' and pageNum != 0">
+                order by `content`.`date` asc limit ${pageSize*pageNum}, #{pageSize}
+            </when>
+        </choose>
+    </select>
 </mapper>

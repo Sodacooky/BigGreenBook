@@ -43,8 +43,8 @@ public class WxContentService {
         return result;
     }
 
-    public int getQueryId() {
-        return contentMapper.getQueryId();
+    public int getQueryId(String search) {
+        return contentMapper.getQueryId(search);
     }
 
     public int getPageAmount(int queryId) {

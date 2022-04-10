@@ -9,8 +9,7 @@ import java.util.List;
 import java.util.Map;
 
 @Service
-public class UserManageService {
-
+public class ManagerPageService {
     @Autowired
     private UserManageMapper userManageMapper;
 
@@ -18,17 +17,21 @@ public class UserManageService {
         this.userManageMapper = userManageMapper;
     }
 
+
     public User queryUserById(String uid) {
         return userManageMapper.queryUserById(uid);
     }
+
 
     public void updateUser(Map<?, ?> map) {
         userManageMapper.updateUser(map);
     }
 
+
     public List<User> queryAllUser() {
         return userManageMapper.queryAllUser();
     }
+
 
     public List<User> getUsers(Map<?, ?> map) {
         return userManageMapper.getUsers(map);

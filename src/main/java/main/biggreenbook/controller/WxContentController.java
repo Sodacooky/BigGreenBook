@@ -36,7 +36,7 @@ public class WxContentController {
      */
     @GetMapping("/get_query_id")
     public int getHomeQueryId() {
-        return wxContentService.getQueryId();
+        return wxContentService.getQueryId(null);
     }
 
 
