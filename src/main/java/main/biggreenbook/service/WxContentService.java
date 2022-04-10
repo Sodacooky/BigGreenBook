@@ -2,7 +2,7 @@ package main.biggreenbook.service;
 
 import main.biggreenbook.entity.dao.ContentMapper;
 import main.biggreenbook.entity.vo.PreviewCard;
-import main.biggreenbook.utils.UrlPathMapper;
+import main.biggreenbook.utils.StaticMappingHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -16,7 +16,7 @@ public class WxContentService {
     ContentMapper contentMapper;
 
     @Autowired
-    UrlPathMapper filePathMappingHelper;
+    StaticMappingHelper staticMappingHelper;
 
     public List<PreviewCard> getPreviewCards(int page, int queryId) {
         ArrayList<PreviewCard> result = new ArrayList<>();
@@ -36,8 +36,8 @@ public class WxContentService {
 
         //路径映射
         result.forEach(one -> {
-            one.setUserAvatarPath(filePathMappingHelper.doMapToDomain(one.getUserAvatarPath()));
-            one.setResourcePath(filePathMappingHelper.doMapToDomain(one.getResourcePath()));
+            one.setUserAvatarPath(staticMappingHelper.doMapToDomain(one.getUserAvatarPath()));
+            one.setResourcePath(staticMappingHelper.doMapToDomain(one.getResourcePath()));
         });
 
         return result;

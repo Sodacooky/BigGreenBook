@@ -2,15 +2,12 @@
 spring:
   profiles:
     # 当前激活的配置文件
-    #active: xiang
-    #active: han
-    #active: wen
+    #active: dev
     active: product
   datasource:
     # 使用8.0 MySQL驱动
     driver-class-name: com.mysql.cj.jdbc.Driver
   mvc:
-    # 资源文件夹映射到url的
     static-path-pattern: /static/**
 
 mybatis:
@@ -20,45 +17,23 @@ mybatis:
     map-underscore-to-camel-case: true
 
 #前端所使用的服务器地址 默认应http://localhost:8080/
-domain: https://sodacooky.plus:8080/
-
----
-spring:
-  config:
-    activate:
-      on-profile: wen
-  datasource:
-    username: root
-    password: 123456
-
+my-env:
+  domain: https://sodacooky.plus:8080/
 
 
 ---
+# 开发环境
 spring:
   config:
     activate:
-      on-profile: han
-  datasource:
-    url: jdbc:mysql://sodacooky.plus:3306/bgb
-    username: bgb
-    password: 114514
-server:
-  port: 8081
-
-
-
----
-spring:
-  config:
-    activate:
-      on-profile: xiang
+      on-profile: dev
   datasource:
     url: jdbc:mysql://sodacooky.plus:3306/bgb
     username: bgb
     password: 114514
   web:
     resources:
-      static-locations: classpath:/META-INF/resources/, classpath:/resources/, classpath:/static/, classpath:/public/, file:D:\_Work\JavaRepository\BigGreenBook\data
+      static-locations: file:D:\_Work\JavaRepository\BigGreenBook\data
 #DEBUGING
 logging:
   level:
@@ -79,7 +54,7 @@ spring:
       max-lifetime: 90000
   web:
     resources:
-      static-locations: classpath:/META-INF/resources/, classpath:/resources/, classpath:/static/, classpath:/public/, file:/root/bgb_test/res
+      static-locations: file:/root/bgb_test/res
 server:
   ssl:
     key-store: classpath:bgb.p12
