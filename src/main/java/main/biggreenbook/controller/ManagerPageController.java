@@ -2,12 +2,8 @@ package main.biggreenbook.controller;
 
 import main.biggreenbook.entity.pojo.User;
 import main.biggreenbook.entity.vo.ManageUserPage;
-<<<<<<< HEAD:src/main/java/main/biggreenbook/controller/UserManageController.java
 
 import main.biggreenbook.service.UserManageService;
-=======
-import main.biggreenbook.service.ManagerPageService;
->>>>>>> 049cb7235c9e854795f8160766a57b1d3e0dc179:src/main/java/main/biggreenbook/controller/ManagerPageController.java
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,29 +16,29 @@ import java.util.Map;
 @RequestMapping("/user")
 public class ManagerPageController {
     @Autowired
-    private ManagerPageService managerPageService;
+    private UserManageService userManageService;
 
     @GetMapping(value = "/query/{uid}")
     public User queryUserById(@PathVariable String uid) {
 
-        return managerPageService.queryUserById(uid);
+        return userManageService.queryUserById(uid);
     }
 
     @GetMapping(value = "/reset/{uid}")
     public User resetUserAvatar(@PathVariable String uid) {
-        User user = managerPageService.queryUserById(uid);
+        User user = userManageService.queryUserById(uid);
         String avatar_path = "http://localhost:8080/static/avatar/default.png";
         Map<String, String> map = new HashMap<>();
         map.put("uid", user.getUid());
         map.put("avatar_path", user.getAvatarPath());
-        managerPageService.updateUser(map);
+        userManageService.updateUser(map);
 
         return user;
     }
 
     @GetMapping(value = "/allUser")
     public List<User> queryAllUser() {
-        return managerPageService.queryAllUser();
+        return userManageService.queryAllUser();
     }
 
     @GetMapping(value = "/updateDesc/{uid}/{value}")
@@ -50,9 +46,9 @@ public class ManagerPageController {
         Map<String, String> map = new HashMap<>();
         map.put("uid", uid);
         map.put("description", value);
-        managerPageService.updateUser(map);
+        userManageService.updateUser(map);
 
-        return managerPageService.queryUserById(uid);
+        return userManageService.queryUserById(uid);
     }
 
     @GetMapping(value = "/updateName/{uid}/{value}")
@@ -60,9 +56,9 @@ public class ManagerPageController {
         Map<String, String> map = new HashMap<>();
         map.put("uid", uid);
         map.put("nickname", value);
-        managerPageService.updateUser(map);
+        userManageService.updateUser(map);
 
-        return managerPageService.queryUserById(uid);
+        return userManageService.queryUserById(uid);
     }
 
     @GetMapping(value = "/suspend/{uid}")
@@ -71,9 +67,9 @@ public class ManagerPageController {
         Map<String, Object> map = new HashMap<>();
         map.put("uid", uid);
         map.put("state", state);
-        managerPageService.updateUser(map);
+        userManageService.updateUser(map);
 
-        return managerPageService.queryUserById(uid);
+        return userManageService.queryUserById(uid);
     }
 
     @GetMapping(value = "/restore/{uid}")
@@ -82,9 +78,9 @@ public class ManagerPageController {
         Map<String, Object> map = new HashMap<>();
         map.put("uid", uid);
         map.put("state", state);
-        managerPageService.updateUser(map);
+        userManageService.updateUser(map);
 
-        return managerPageService.queryUserById(uid);
+        return userManageService.queryUserById(uid);
     }
 
     // 实现分页功能
@@ -101,8 +97,8 @@ public class ManagerPageController {
         Map<String, Object> map = new HashMap<>();
         map.put("index", index);
         map.put("target", target);
-        List<User> list = managerPageService.getUsers(map);
-        int totalUsers = managerPageService.countAllUsers();
+        List<User> list = userManageService.getUsers(map);
+        int totalUsers = userManageService.countAllUsers();
 
         return new ManageUserPage(list, totalUsers);
     }

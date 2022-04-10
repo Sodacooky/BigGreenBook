@@ -3,15 +3,14 @@ spring:
   profiles:
     # 当前激活的配置文件
     #active: xiang
-    #active: han
+    active: han
     #active: wen
-    active: product
+
   datasource:
-<<<<<<< HEAD
+
     # 数据库配置
     url: jdbc:mysql://Sodacooky.plus:3306/bgb
-=======
->>>>>>> 049cb7235c9e854795f8160766a57b1d3e0dc179
+
     driver-class-name: com.mysql.cj.jdbc.Driver
   mvc:
     # 资源文件夹映射到url的
