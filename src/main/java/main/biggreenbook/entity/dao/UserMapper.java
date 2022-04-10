@@ -2,7 +2,6 @@ package main.biggreenbook.entity.dao;
 
 import main.biggreenbook.entity.pojo.User;
 import main.biggreenbook.entity.vo.UserCard;
-import main.biggreenbook.entity.vo.Example;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
@@ -21,8 +20,9 @@ public interface UserMapper {
      */
     int getQueryId(String search);
 
+
     List<UserCard> getUserBySearch(@Param("pageNum") int pageNum, @Param("pageSize") int pageSize,
-                                 @Param("example")Example example);
+                                   @Param("example") Example example);
 
 
 }

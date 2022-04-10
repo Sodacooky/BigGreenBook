@@ -28,15 +28,14 @@
 
     <!--获取用户（含搜索）-->
     <select id="getUserBySearch" resultMap="userCardMap" parameterType="main.biggreenbook.entity.vo.Example">
-        select  `user`.`uid`                             as uid,
-                `user`.`nickname`                        as nickname,
-                `user`.`avatar_path`                     as avatar_path,
-                count(`collection`.`uid`)                as contentAmount,
-                count(`follow`.`uid`)                    as fansAmount
+        select `user`.`uid` as uid,
+        `user`.`nickname` as nickname,
+        `user`.`avatar_path` as avatar_path,
+        count(`collection`.`uid`) as contentAmount,
+        count(`follow`.`uid`) as fansAmount
         from `user`
         left join `collection` on `collection`.`uid` = `user`.uid
         left join `follow` on `follow`.`uid` = `user`.`uid`
-
         <if test="example.search != null and example.search != ''">
             where `user`.`nickname` like '%${example.search}%'
         </if>
@@ -53,11 +52,13 @@
             </when>
         </choose>
     </select>
-        <!--本人是否关注该用户-->
-        <select id="getStatus" resultType="int">
-            select count(`follow`.`uid`) as status
-            from `follow`
-            where `follow`.`uid` = ${uid} and `follow`.`follower` = ${follower}
-        </select>
+
+    <!--本人是否关注该用户-->
+    <select id="getStatus" resultType="int">
+        select count(`follow`.`uid`) as status
+        from `follow`
+        where `follow`.`uid` = ${uid}
+          and `follow`.`follower` = ${follower}
+    </select>
 
 </mapper>

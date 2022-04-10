@@ -2,16 +2,17 @@
 spring:
   profiles:
     # 当前激活的配置文件
-    active: xiang
+    #active: xiang
     #active: han
     #active: wen
-    #active: product
+    active: product
   datasource:
     # 使用8.0 MySQL驱动
     driver-class-name: com.mysql.cj.jdbc.Driver
   mvc:
     # 资源文件夹映射到url的
     static-path-pattern: /static/**
+
 mybatis:
   mapper-locations: classpath:/mapper/*.xml
   configuration:
