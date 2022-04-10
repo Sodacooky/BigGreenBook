@@ -5,7 +5,6 @@ spring:
     #active: dev
     active: product
   datasource:
-    # 使用8.0 MySQL驱动
     driver-class-name: com.mysql.cj.jdbc.Driver
   mvc:
     static-path-pattern: /static/**
