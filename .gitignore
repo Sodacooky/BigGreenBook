@@ -36,6 +36,6 @@ build/
 src/main/resources/bgb.p12
 
 ### frontend ####
-ManagerFrontEndProject/node_modules/**
-ManagerFrontEndProject/build/
-ManagerFrontEndProject/.idea/
+ManagerWebClientProject/node_modules/**
+ManagerWebClientProject/build/
+ManagerWebClientProject/.idea/
