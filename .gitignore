@@ -34,3 +34,8 @@ build/
 
 ### ssl key ###
 src/main/resources/bgb.p12
+
+### frontend ####
+ManagerWebClientProject/node_modules/**
+ManagerWebClientProject/build/
+ManagerWebClientProject/.idea/
