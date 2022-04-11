@@ -1,18 +1,37 @@
 <template>
   <div>
+    <el-row>
+    <el-col :span="2" >
+      <el-button v-if="multipleSelection.length > 0" type="danger"  icon="el-icon-delete" size="small" @click="openDeleteSelect">批量删除</el-button>
+      <el-button v-if="multipleSelection.length === 0" type="primary" icon="el-icon-delete" size="small" disabled>批量删除</el-button>
+    </el-col>
+      <el-col :span="1.5" :offset="5">
+      <el-select size="medium" v-model="value" placeholder="请选择">
+        <el-option
+          v-for="item in options"
+          :key="item.value"
+          :label="item.label"
+          :value="item.value">
+        </el-option>
+      </el-select>
+        <el-input v-if="value === ''" size="medium" style="width: 180px" v-model="input" placeholder="请输入"></el-input>
+        <el-input v-if="value === '选项1'" size="medium" style="width: 180px" v-model="input" placeholder="请输入uid"></el-input>
+        <el-input v-if="value === '选项2'" size="medium" style="width: 180px" v-model="input" placeholder="请输入用户昵称"></el-input>
+        <el-input v-if="value === '选项3'" size="medium" style="width: 180px" v-model="input" placeholder="请输入标题"></el-input>
+        <el-button type="primary" size="small" @click="query(value, input)" icon="el-icon-search">搜索</el-button>
+      </el-col>
+    </el-row>
+
+    <el-row><br/>
     <el-table
       align="center"
       ref="multipleTable"
       :data="tableData"
       tooltip-effect="dark"
       style="width: 100%"
+      border
       @selection-change="handleSelectionChange">
 
-      <el-table-column>
-        <template slot="header" slot-scope="scope">
-          <el-button v-if="multipleSelection.length > 0" type="danger"  icon="el-icon-delete" size="small" @click="openDeleteSelect">批量删除</el-button>
-          <el-button v-if="multipleSelection.length === 0" type="primary" icon="el-icon-delete" size="small" disabled>批量删除</el-button>
-        </template>
         <el-table-column
            type="selection"
            width="50">
@@ -28,26 +47,6 @@
             </div>
           </template>
         </el-table-column>
-      </el-table-column>
-
-        <el-table-column>
-          <template slot="header" slot-scope="scope">
-            <template>
-              <el-select size="medium" v-model="value" placeholder="请选择">
-                <el-option
-                  v-for="item in options"
-                  :key="item.value"
-                  :label="item.label"
-                  :value="item.value">
-                </el-option>
-              </el-select>
-            </template>
-            <el-input v-if="value === ''" size="medium" style="width: 180px" v-model="input" placeholder="请输入"></el-input>
-            <el-input v-if="value === '选项1'" size="medium" style="width: 180px" v-model="input" placeholder="请输入uid"></el-input>
-            <el-input v-if="value === '选项2'" size="medium" style="width: 180px" v-model="input" placeholder="请输入用户昵称"></el-input>
-            <el-input v-if="value === '选项3'" size="medium" style="width: 180px" v-model="input" placeholder="请输入标题"></el-input>
-            <el-button type="primary" size="small" @click="query(value, input)" icon="el-icon-search">搜索</el-button>
-          </template>
 
             <el-table-column
               prop="title"
@@ -86,9 +85,9 @@
               <el-button type="danger" size="small" @click="openDelete(scope.row.cid, scope.row.title)">删除</el-button>
             </template>
           </el-table-column>
-        </el-table-column>
 
     </el-table>
+    </el-row>
 
     <br></br>
     <el-pagination @current-change="handleCurrentChange"
@@ -104,6 +103,8 @@
 <script>
 import axios from "axios";
 import Vue from "vue";
+import moment from 'moment';
+Vue.prototype.$moment = moment;
 
 export default {
   name: "ContentMessage",
@@ -157,17 +158,17 @@ export default {
       var canvas = document.createElement('canvas') // 获取 canvas 对象
       const ctx = canvas.getContext('2d'); // 绘制2d
       let img = new Image();
-      video.currentTime = 1 // 第一帧
+      video.currentTime = 0.1 // 第一帧
       video.oncanplay= function() {
-        canvas.width = 400; // 获取视频宽度
-        canvas.height = 300; //获取视频高度
+        canvas.width = 600; // 获取视频宽度
+        canvas.height = 500; //获取视频高度
         // 利用canvas对象方法绘图
         ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
         // 转换成base64形式
         const imgsrc = canvas.toDataURL ("image/jpeg") // 截取后的视频封面
         Vue.set(_this.tableData, i, {
           cid: file.cid, title: file.title, author: file.author,
-          like_amount: file.likeAmount, cover_path: imgsrc, date: file.date})
+          like_amount: file.likeAmount, cover_path: imgsrc, date: _this.$moment(file.date).format('YYYY-MM-DD HH:mm:ss')})
       };
 
     },
@@ -183,6 +184,7 @@ export default {
         let obj = JSON.parse(JSON.stringify(res.data));
         let list = obj.list;
         _this.totalPage = Math.ceil(obj.totalContents / _this.pageSize)*10;
+        console.log(list);
         for (let i = 0; i < list.length; i++) {
           if (list[i].type === 1) {
             _this.findvideocover("/api/" +list[i].paths[0], list[i], i);
@@ -190,7 +192,8 @@ export default {
           else {
             Vue.set(_this.tableData, i, {
               cid: list[i].cid, title: list[i].title, author: list[i].author,
-              like_amount: list[i].likeAmount, cover_path: "https://sodacooky.plus:8080/static/" + list[i].paths[0], date: list[i].date});
+              like_amount: list[i].likeAmount, cover_path: "https://sodacooky.plus:8080/static/" + list[i].paths[0],
+              date: _this.$moment(list[i].date).format('YYYY-MM-DD HH:mm:ss')});
           }
         }
       });
@@ -265,7 +268,8 @@ export default {
           else {
             Vue.set(_this.tableData, i, {
               cid: list[i].cid, title: list[i].title, author: list[i].author,
-              like_amount: list[i].likeAmount, cover_path: "https://sodacooky.plus:8080/static/" + list[i].paths[0], date: list[i].date});
+              like_amount: list[i].likeAmount, cover_path: "https://sodacooky.plus:8080/static/" + list[i].paths[0],
+              date: _this.$moment(list[i].date).format('YYYY-MM-DD HH:mm:ss')});
           }
         }
       })
@@ -291,7 +295,8 @@ export default {
           else {
             Vue.set(_this.tableData, i, {
               cid: list[i].cid, title: list[i].title, author: list[i].author,
-              like_amount: list[i].likeAmount, cover_path: "https://sodacooky.plus:8080/static/" + list[i].paths[0], date: list[i].date});
+              like_amount: list[i].likeAmount, cover_path: "https://sodacooky.plus:8080/static/" + list[i].paths[0],
+              date: _this.$moment(list[i].date).format('YYYY-MM-DD HH:mm:ss')});
           }
         }
       })
@@ -317,7 +322,8 @@ export default {
           else {
             Vue.set(_this.tableData, i, {
               cid: list[i].cid, title: list[i].title, author: list[i].author,
-              like_amount: list[i].likeAmount, cover_path: "https://sodacooky.plus:8080/static/" + list[i].paths[0], date: list[i].date});
+              like_amount: list[i].likeAmount, cover_path: "https://sodacooky.plus:8080/static/" + list[i].paths[0],
+              date: _this.$moment(list[i].date).format('YYYY-MM-DD HH:mm:ss')});
           }
         }
       })
@@ -380,7 +386,8 @@ export default {
         console.log(content);
         _this.$router.push({path: '/contentManage/ContentCheck/', query: {content: content}});
       })
-    }
+    },
+
 
   },
 

@@ -147,7 +147,7 @@ export default {
       _this.tableData = [];
       axios({
         method: 'get',
-        url: 'http://localhost:8081/user/query/' + uid,
+        url: 'http://localhost:8081/manage/query/' + uid,
         contentType:"application/json;charset=UTF-8",
       }).then(function (res) {
           let obj = JSON.parse(JSON.stringify(res.data));
@@ -171,7 +171,7 @@ export default {
 
       axios({
         method: 'get',
-        url: 'http://localhost:8081/user/reset/' + uid,
+        url: 'http://localhost:8081/manage/reset/' + uid,
         contentType:"application/json;charset=UTF-8",
       }).then(function (res) {
         let obj = JSON.parse(JSON.stringify(res.data));
@@ -215,7 +215,7 @@ export default {
       _this.tableData = [];
       axios({
         method: 'get',
-        url: 'http://localhost:8081/user/allUser',
+        url: 'http://localhost:8081/manage/allUser',
         contentType:"application/json;charset=UTF-8",
       }).then(function (res) {
         let obj = JSON.parse(JSON.stringify(res.data));
@@ -236,7 +236,7 @@ export default {
       _this.inputId = uid;
       axios({
         method: 'get',
-        url: 'http://localhost:8081/user/updateDesc/' + uid + '/' + value,
+        url: 'http://localhost:8081/manage/updateDesc/' + uid + '/' + value,
         contentType:"application/json;charset=UTF-8",
       }).then(function (res) {
           let obj = JSON.parse(JSON.stringify(res.data));
@@ -258,7 +258,7 @@ export default {
       _this.inputId = uid;
       axios({
         method: 'get',
-        url: 'http://localhost:8081/user/updateName/' + uid + '/' + value,
+        url: 'http://localhost:8081/manage/updateName/' + uid + '/' + value,
         contentType:"application/json;charset=UTF-8",
       }).then(function (res) {
         let obj = JSON.parse(JSON.stringify(res.data));
@@ -295,7 +295,7 @@ export default {
       _this.inputId = uid;
       axios({
         method: 'get',
-        url: 'http://localhost:8081/user/suspend/' + uid,
+        url: 'http://localhost:8081/manage/suspend/' + uid,
         contentType:"application/json;charset=UTF-8",
       }).then(function (res) {
           let obj = JSON.parse(JSON.stringify(res.data));
@@ -331,7 +331,7 @@ export default {
       _this.inputId = uid;
       axios({
         method: 'get',
-        url: 'http://localhost:8081/user/restore/' + uid,
+        url: 'http://localhost:8081/manage/restore/' + uid,
         contentType:"application/json;charset=UTF-8",
       }).then(function (res) {
         let obj = JSON.parse(JSON.stringify(res.data));
@@ -352,7 +352,7 @@ export default {
       _this.tableData = [];
       axios({
         method: 'get',
-        url: 'http://localhost:8081/user/getUsers/' + currentPage,
+        url: 'http://localhost:8081/manage/getUsers/' + currentPage,
         contentType:"application/json;charset=UTF-8",
       }).then(function (res) {
           let obj = JSON.parse(JSON.stringify(res.data));

@@ -97,13 +97,11 @@
         from bgb.content;
     </select>
 
-    <delete id="deleteSelect" parameterType="list">
-        delete from content
-        <where>
-            <foreach collection="list" item="cid" open="(" separator="or" close=")">
+    <delete id="deleteSelect" parameterType="java.util.List">
+        delete from bgb.content where
+            <foreach collection="list" item="cid" separator="or">
                 cid = #{cid}
             </foreach>
-        </where>
     </delete>
 
     <!--    <select id="queryContents" parameterType="map" resultMap="ContentMap">-->

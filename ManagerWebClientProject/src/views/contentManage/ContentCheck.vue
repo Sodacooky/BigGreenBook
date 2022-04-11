@@ -3,8 +3,14 @@
     <el-header style="height: 80px">
       <el-page-header @back="goBack">
       </el-page-header>
+      <el-col :span="1.5" :offset="8">
       <el-input size="medium" style="width: 180px" v-model="inputId" placeholder="请输入cid"></el-input>
       <el-button type="primary" size="small" @click="query(inputId)" icon="el-icon-search">搜索</el-button>
+      </el-col>
+
+      <el-col :span="1.5" :offset="9">
+      <el-button type="danger" size="small" icon="el-icon-delete">删除</el-button>
+      </el-col>
       <div>
       <br/>
       </div>
@@ -12,25 +18,32 @@
     <el-main>
     <!-- 内容 -->
       <el-row>
-        <el-col :span="4" :offset="2" style=" height: 40px; padding: 4px">
+        <el-col :span="1.5" :offset="10" style=" padding: 0; padding-right: 6px">
           <div>
           <el-tag>作者</el-tag>
           {{content.author}}
           </div>
         </el-col>
 
-        <el-col :span="4" :offset="9" style="height: 40px; padding: 4px">
-          <div>
+        <el-col :span="1.5" :offset="1" style=" padding: 0; padding-right: 6px">
+          <div style="line-height: 6px">
             <el-tag>标题</el-tag>
             {{content.title}}
+          </div>
+        </el-col>
+
+        <el-col :span="1.5" :offset="3" style=" padding: 0; padding-right: 4px">
+          <div>
+            <el-tag style="height: 30px" type="danger">点赞数</el-tag>
+            {{content.likeAmount}}
           </div>
         </el-col>
       </el-row>
 
       <el-row gutter="20">
         <el-row>
-          <el-col v-if="content.type === 0" :span="0.8" :offset="1" style="height: 12px"><el-tag>图片</el-tag></el-col>
-          <el-col v-if="content.type === 1" :span="0.8" :offset="1" style="height: 12px"><el-tag>视频</el-tag></el-col>
+          <el-col v-if="content.type === 0" :span="0.8" :offset="1" style="height: 12px"><el-tag type="info">图片</el-tag></el-col>
+          <el-col v-if="content.type === 1" :span="0.8" :offset="1" style="height: 12px"><el-tag type="info">视频</el-tag></el-col>
           <el-col :span="0.8" :offset="12" style="height: 12px"><el-tag>正文</el-tag></el-col>
         </el-row>
 

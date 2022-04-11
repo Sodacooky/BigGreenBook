@@ -34,7 +34,7 @@ public class ContentManageService {
     public List<ContentMessage> queryContents(Map<?, ?> map) {
         List<ContentMessage> list = contentMapper.queryContents(map);
         switchJson(list);
-        return contentMapper.queryContents(map);
+        return list;
     }
 
     public int countQueryContents(Map<?, ?> map) {
@@ -79,6 +79,7 @@ public class ContentManageService {
                 e.printStackTrace();
             }
             cm.setPaths(jsonList);
+            System.out.println(cm.getPaths().get(0));
         }
     }
 }
