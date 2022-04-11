@@ -1,0 +1,132 @@
+2022-04-11 22:55:42.627  INFO 23212 --- [main] m.biggreenbook.BigGreenBookApplication   : Starting BigGreenBookApplication using Java 16.0.2 on LAPTOP-KN4R8IH8 with PID 23212 (D:\Workspace\GreenBook\big-green-book\target\classes started by 帅得惊动党中央 in D:\Workspace\GreenBook\big-green-book)
+2022-04-11 22:55:42.630  INFO 23212 --- [main] m.biggreenbook.BigGreenBookApplication   : The following 1 profile is active: "product"
+2022-04-11 22:55:43.313  WARN 23212 --- [main] ConfigServletWebServerApplicationContext : Exception encountered during context initialization - cancelling refresh attempt: org.springframework.context.ApplicationContextException: Unable to start web server; nested exception is org.springframework.boot.web.server.WebServerException: Could not load key store 'classpath:bgb.p12'
+2022-04-11 22:55:43.327  INFO 23212 --- [main] ConditionEvaluationReportLoggingListener : 
+
+Error starting ApplicationContext. To display the conditions report re-run your application with 'debug' enabled.
+2022-04-11 22:55:43.343 ERROR 23212 --- [main] o.s.boot.SpringApplication               : Application run failed
+
+org.springframework.context.ApplicationContextException: Unable to start web server; nested exception is org.springframework.boot.web.server.WebServerException: Could not load key store 'classpath:bgb.p12'
+	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.onRefresh(ServletWebServerApplicationContext.java:163) ~[spring-boot-2.6.4.jar:2.6.4]
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:577) ~[spring-context-5.3.16.jar:5.3.16]
+	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.refresh(ServletWebServerApplicationContext.java:145) ~[spring-boot-2.6.4.jar:2.6.4]
+	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:740) ~[spring-boot-2.6.4.jar:2.6.4]
+	at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:415) ~[spring-boot-2.6.4.jar:2.6.4]
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:303) ~[spring-boot-2.6.4.jar:2.6.4]
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1312) ~[spring-boot-2.6.4.jar:2.6.4]
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1301) ~[spring-boot-2.6.4.jar:2.6.4]
+	at main.biggreenbook.BigGreenBookApplication.main(BigGreenBookApplication.java:9) ~[classes/:na]
+Caused by: org.springframework.boot.web.server.WebServerException: Could not load key store 'classpath:bgb.p12'
+	at org.springframework.boot.web.embedded.tomcat.SslConnectorCustomizer.configureSslKeyStore(SslConnectorCustomizer.java:132) ~[spring-boot-2.6.4.jar:2.6.4]
+	at org.springframework.boot.web.embedded.tomcat.SslConnectorCustomizer.configureSsl(SslConnectorCustomizer.java:92) ~[spring-boot-2.6.4.jar:2.6.4]
+	at org.springframework.boot.web.embedded.tomcat.SslConnectorCustomizer.customize(SslConnectorCustomizer.java:57) ~[spring-boot-2.6.4.jar:2.6.4]
+	at org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactory.customizeSsl(TomcatServletWebServerFactory.java:363) ~[spring-boot-2.6.4.jar:2.6.4]
+	at org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactory.customizeConnector(TomcatServletWebServerFactory.java:341) ~[spring-boot-2.6.4.jar:2.6.4]
+	at org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactory.getWebServer(TomcatServletWebServerFactory.java:203) ~[spring-boot-2.6.4.jar:2.6.4]
+	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.createWebServer(ServletWebServerApplicationContext.java:182) ~[spring-boot-2.6.4.jar:2.6.4]
+	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.onRefresh(ServletWebServerApplicationContext.java:160) ~[spring-boot-2.6.4.jar:2.6.4]
+	... 8 common frames omitted
+Caused by: java.io.FileNotFoundException: class path resource [bgb.p12] cannot be resolved to URL because it does not exist
+	at org.springframework.util.ResourceUtils.getURL(ResourceUtils.java:137) ~[spring-core-5.3.16.jar:5.3.16]
+	at org.springframework.boot.web.embedded.tomcat.SslConnectorCustomizer.configureSslKeyStore(SslConnectorCustomizer.java:129) ~[spring-boot-2.6.4.jar:2.6.4]
+	... 15 common frames omitted
+
+2022-04-11 22:55:53.671  INFO 1028 --- [main] m.biggreenbook.BigGreenBookApplication   : Starting BigGreenBookApplication using Java 16.0.2 on LAPTOP-KN4R8IH8 with PID 1028 (D:\Workspace\GreenBook\big-green-book\target\classes started by 帅得惊动党中央 in D:\Workspace\GreenBook\big-green-book)
+2022-04-11 22:55:53.673  INFO 1028 --- [main] m.biggreenbook.BigGreenBookApplication   : The following 1 profile is active: "product"
+2022-04-11 22:55:54.335  WARN 1028 --- [main] ConfigServletWebServerApplicationContext : Exception encountered during context initialization - cancelling refresh attempt: org.springframework.context.ApplicationContextException: Unable to start web server; nested exception is org.springframework.boot.web.server.WebServerException: Could not load key store 'classpath:bgb.p12'
+2022-04-11 22:55:54.340  INFO 1028 --- [main] ConditionEvaluationReportLoggingListener : 
+
+Error starting ApplicationContext. To display the conditions report re-run your application with 'debug' enabled.
+2022-04-11 22:55:54.353 ERROR 1028 --- [main] o.s.boot.SpringApplication               : Application run failed
+
+org.springframework.context.ApplicationContextException: Unable to start web server; nested exception is org.springframework.boot.web.server.WebServerException: Could not load key store 'classpath:bgb.p12'
+	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.onRefresh(ServletWebServerApplicationContext.java:163) ~[spring-boot-2.6.4.jar:2.6.4]
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:577) ~[spring-context-5.3.16.jar:5.3.16]
+	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.refresh(ServletWebServerApplicationContext.java:145) ~[spring-boot-2.6.4.jar:2.6.4]
+	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:740) ~[spring-boot-2.6.4.jar:2.6.4]
+	at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:415) ~[spring-boot-2.6.4.jar:2.6.4]
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:303) ~[spring-boot-2.6.4.jar:2.6.4]
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1312) ~[spring-boot-2.6.4.jar:2.6.4]
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1301) ~[spring-boot-2.6.4.jar:2.6.4]
+	at main.biggreenbook.BigGreenBookApplication.main(BigGreenBookApplication.java:9) ~[classes/:na]
+Caused by: org.springframework.boot.web.server.WebServerException: Could not load key store 'classpath:bgb.p12'
+	at org.springframework.boot.web.embedded.tomcat.SslConnectorCustomizer.configureSslKeyStore(SslConnectorCustomizer.java:132) ~[spring-boot-2.6.4.jar:2.6.4]
+	at org.springframework.boot.web.embedded.tomcat.SslConnectorCustomizer.configureSsl(SslConnectorCustomizer.java:92) ~[spring-boot-2.6.4.jar:2.6.4]
+	at org.springframework.boot.web.embedded.tomcat.SslConnectorCustomizer.customize(SslConnectorCustomizer.java:57) ~[spring-boot-2.6.4.jar:2.6.4]
+	at org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactory.customizeSsl(TomcatServletWebServerFactory.java:363) ~[spring-boot-2.6.4.jar:2.6.4]
+	at org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactory.customizeConnector(TomcatServletWebServerFactory.java:341) ~[spring-boot-2.6.4.jar:2.6.4]
+	at org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactory.getWebServer(TomcatServletWebServerFactory.java:203) ~[spring-boot-2.6.4.jar:2.6.4]
+	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.createWebServer(ServletWebServerApplicationContext.java:182) ~[spring-boot-2.6.4.jar:2.6.4]
+	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.onRefresh(ServletWebServerApplicationContext.java:160) ~[spring-boot-2.6.4.jar:2.6.4]
+	... 8 common frames omitted
+Caused by: java.io.FileNotFoundException: class path resource [bgb.p12] cannot be resolved to URL because it does not exist
+	at org.springframework.util.ResourceUtils.getURL(ResourceUtils.java:137) ~[spring-core-5.3.16.jar:5.3.16]
+	at org.springframework.boot.web.embedded.tomcat.SslConnectorCustomizer.configureSslKeyStore(SslConnectorCustomizer.java:129) ~[spring-boot-2.6.4.jar:2.6.4]
+	... 15 common frames omitted
+
+2022-04-11 22:56:47.419  INFO 23912 --- [main] m.biggreenbook.BigGreenBookApplication   : Starting BigGreenBookApplication using Java 16.0.2 on LAPTOP-KN4R8IH8 with PID 23912 (D:\Workspace\GreenBook\big-green-book\target\classes started by 帅得惊动党中央 in D:\Workspace\GreenBook\big-green-book)
+2022-04-11 22:56:47.423  INFO 23912 --- [main] m.biggreenbook.BigGreenBookApplication   : The following 1 profile is active: "product"
+2022-04-11 22:56:48.362  WARN 23912 --- [main] ConfigServletWebServerApplicationContext : Exception encountered during context initialization - cancelling refresh attempt: org.springframework.context.ApplicationContextException: Unable to start web server; nested exception is org.springframework.boot.web.server.WebServerException: Could not load key store 'classpath:bgb.p12'
+2022-04-11 22:56:48.378  INFO 23912 --- [main] ConditionEvaluationReportLoggingListener : 
+
+Error starting ApplicationContext. To display the conditions report re-run your application with 'debug' enabled.
+2022-04-11 22:56:48.399 ERROR 23912 --- [main] o.s.boot.SpringApplication               : Application run failed
+
+org.springframework.context.ApplicationContextException: Unable to start web server; nested exception is org.springframework.boot.web.server.WebServerException: Could not load key store 'classpath:bgb.p12'
+	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.onRefresh(ServletWebServerApplicationContext.java:163) ~[spring-boot-2.6.4.jar:2.6.4]
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:577) ~[spring-context-5.3.16.jar:5.3.16]
+	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.refresh(ServletWebServerApplicationContext.java:145) ~[spring-boot-2.6.4.jar:2.6.4]
+	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:740) ~[spring-boot-2.6.4.jar:2.6.4]
+	at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:415) ~[spring-boot-2.6.4.jar:2.6.4]
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:303) ~[spring-boot-2.6.4.jar:2.6.4]
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1312) ~[spring-boot-2.6.4.jar:2.6.4]
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1301) ~[spring-boot-2.6.4.jar:2.6.4]
+	at main.biggreenbook.BigGreenBookApplication.main(BigGreenBookApplication.java:9) ~[classes/:na]
+Caused by: org.springframework.boot.web.server.WebServerException: Could not load key store 'classpath:bgb.p12'
+	at org.springframework.boot.web.embedded.tomcat.SslConnectorCustomizer.configureSslKeyStore(SslConnectorCustomizer.java:132) ~[spring-boot-2.6.4.jar:2.6.4]
+	at org.springframework.boot.web.embedded.tomcat.SslConnectorCustomizer.configureSsl(SslConnectorCustomizer.java:92) ~[spring-boot-2.6.4.jar:2.6.4]
+	at org.springframework.boot.web.embedded.tomcat.SslConnectorCustomizer.customize(SslConnectorCustomizer.java:57) ~[spring-boot-2.6.4.jar:2.6.4]
+	at org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactory.customizeSsl(TomcatServletWebServerFactory.java:363) ~[spring-boot-2.6.4.jar:2.6.4]
+	at org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactory.customizeConnector(TomcatServletWebServerFactory.java:341) ~[spring-boot-2.6.4.jar:2.6.4]
+	at org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactory.getWebServer(TomcatServletWebServerFactory.java:203) ~[spring-boot-2.6.4.jar:2.6.4]
+	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.createWebServer(ServletWebServerApplicationContext.java:182) ~[spring-boot-2.6.4.jar:2.6.4]
+	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.onRefresh(ServletWebServerApplicationContext.java:160) ~[spring-boot-2.6.4.jar:2.6.4]
+	... 8 common frames omitted
+Caused by: java.io.FileNotFoundException: class path resource [bgb.p12] cannot be resolved to URL because it does not exist
+	at org.springframework.util.ResourceUtils.getURL(ResourceUtils.java:137) ~[spring-core-5.3.16.jar:5.3.16]
+	at org.springframework.boot.web.embedded.tomcat.SslConnectorCustomizer.configureSslKeyStore(SslConnectorCustomizer.java:129) ~[spring-boot-2.6.4.jar:2.6.4]
+	... 15 common frames omitted
+
+2022-04-11 23:00:17.053  INFO 11156 --- [main] m.biggreenbook.BigGreenBookApplication   : Starting BigGreenBookApplication using Java 16.0.2 on LAPTOP-KN4R8IH8 with PID 11156 (D:\Workspace\GreenBook\big-green-book\target\classes started by 帅得惊动党中央 in D:\Workspace\GreenBook\big-green-book)
+2022-04-11 23:00:17.055  INFO 11156 --- [main] m.biggreenbook.BigGreenBookApplication   : The following 1 profile is active: "product"
+2022-04-11 23:00:17.783  WARN 11156 --- [main] ConfigServletWebServerApplicationContext : Exception encountered during context initialization - cancelling refresh attempt: org.springframework.context.ApplicationContextException: Unable to start web server; nested exception is org.springframework.boot.web.server.WebServerException: Could not load key store 'classpath:bgb.p12'
+2022-04-11 23:00:17.789  INFO 11156 --- [main] ConditionEvaluationReportLoggingListener : 
+
+Error starting ApplicationContext. To display the conditions report re-run your application with 'debug' enabled.
+2022-04-11 23:00:17.802 ERROR 11156 --- [main] o.s.boot.SpringApplication               : Application run failed
+
+org.springframework.context.ApplicationContextException: Unable to start web server; nested exception is org.springframework.boot.web.server.WebServerException: Could not load key store 'classpath:bgb.p12'
+	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.onRefresh(ServletWebServerApplicationContext.java:163) ~[spring-boot-2.6.4.jar:2.6.4]
+	at org.springframework.context.support.AbstractApplicationContext.refresh(AbstractApplicationContext.java:577) ~[spring-context-5.3.16.jar:5.3.16]
+	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.refresh(ServletWebServerApplicationContext.java:145) ~[spring-boot-2.6.4.jar:2.6.4]
+	at org.springframework.boot.SpringApplication.refresh(SpringApplication.java:740) ~[spring-boot-2.6.4.jar:2.6.4]
+	at org.springframework.boot.SpringApplication.refreshContext(SpringApplication.java:415) ~[spring-boot-2.6.4.jar:2.6.4]
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:303) ~[spring-boot-2.6.4.jar:2.6.4]
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1312) ~[spring-boot-2.6.4.jar:2.6.4]
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1301) ~[spring-boot-2.6.4.jar:2.6.4]
+	at main.biggreenbook.BigGreenBookApplication.main(BigGreenBookApplication.java:9) ~[classes/:na]
+Caused by: org.springframework.boot.web.server.WebServerException: Could not load key store 'classpath:bgb.p12'
+	at org.springframework.boot.web.embedded.tomcat.SslConnectorCustomizer.configureSslKeyStore(SslConnectorCustomizer.java:132) ~[spring-boot-2.6.4.jar:2.6.4]
+	at org.springframework.boot.web.embedded.tomcat.SslConnectorCustomizer.configureSsl(SslConnectorCustomizer.java:92) ~[spring-boot-2.6.4.jar:2.6.4]
+	at org.springframework.boot.web.embedded.tomcat.SslConnectorCustomizer.customize(SslConnectorCustomizer.java:57) ~[spring-boot-2.6.4.jar:2.6.4]
+	at org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactory.customizeSsl(TomcatServletWebServerFactory.java:363) ~[spring-boot-2.6.4.jar:2.6.4]
+	at org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactory.customizeConnector(TomcatServletWebServerFactory.java:341) ~[spring-boot-2.6.4.jar:2.6.4]
+	at org.springframework.boot.web.embedded.tomcat.TomcatServletWebServerFactory.getWebServer(TomcatServletWebServerFactory.java:203) ~[spring-boot-2.6.4.jar:2.6.4]
+	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.createWebServer(ServletWebServerApplicationContext.java:182) ~[spring-boot-2.6.4.jar:2.6.4]
+	at org.springframework.boot.web.servlet.context.ServletWebServerApplicationContext.onRefresh(ServletWebServerApplicationContext.java:160) ~[spring-boot-2.6.4.jar:2.6.4]
+	... 8 common frames omitted
+Caused by: java.io.FileNotFoundException: class path resource [bgb.p12] cannot be resolved to URL because it does not exist
+	at org.springframework.util.ResourceUtils.getURL(ResourceUtils.java:137) ~[spring-core-5.3.16.jar:5.3.16]
+	at org.springframework.boot.web.embedded.tomcat.SslConnectorCustomizer.configureSslKeyStore(SslConnectorCustomizer.java:129) ~[spring-boot-2.6.4.jar:2.6.4]
+	... 15 common frames omitted
+

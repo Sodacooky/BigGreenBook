@@ -178,7 +178,7 @@ export default {
       _this.tableData = [];
       axios({
         method: 'get',
-        url: 'http://localhost:8081/manage/getContents/' + JSON.stringify(currentPage),
+        url: 'http://localhost:8080/manage/getContents/' + JSON.stringify(currentPage),
         contentType:"application/json;charset=UTF-8",
       }).then(function (res) {
         let obj = JSON.parse(JSON.stringify(res.data));
@@ -225,7 +225,7 @@ export default {
       }
       axios({
         method: 'get',
-        url: 'http://localhost:8081/manage/deleteSelect/' + select,
+        url: 'http://localhost:8080/manage/deleteSelect/' + select,
         contentType:"application/json;charset=UTF-8",
       }).then(function () {
         _this.handleCurrentChange(_this.currentPage);
@@ -253,7 +253,7 @@ export default {
       _this.tableData = [];
       axios({
         method: 'get',
-        url: 'http://localhost:8081/manage/queryContents/' + inputName  + '/' + _this.currentPage,
+        url: 'http://localhost:8080/manage/queryContents/' + inputName  + '/' + _this.currentPage,
         contentType:"application/json;charset=UTF-8",
       }).then(function (res) {
         let obj = JSON.parse(JSON.stringify(res.data));
@@ -280,7 +280,7 @@ export default {
       _this.tableData = [];
       axios({
         method: 'get',
-        url: 'http://localhost:8081/manage/queryUid/' + uid  + '/' + _this.currentPage,
+        url: 'http://localhost:8080/manage/queryUid/' + uid  + '/' + _this.currentPage,
         contentType:"application/json;charset=UTF-8",
       }).then(function (res) {
         let obj = JSON.parse(JSON.stringify(res.data));
@@ -307,7 +307,7 @@ export default {
       _this.tableData = [];
       axios({
         method: 'get',
-        url: 'http://localhost:8081/manage/queryNickname/' + nickname  + '/' + _this.currentPage,
+        url: 'http://localhost:8080/manage/queryNickname/' + nickname  + '/' + _this.currentPage,
         contentType:"application/json;charset=UTF-8",
       }).then(function (res) {
         let obj = JSON.parse(JSON.stringify(res.data));
@@ -368,7 +368,7 @@ export default {
       select.push(cid);
       axios({
         method: 'get',
-        url: 'http://localhost:8081/manage/deleteSelect/' + select,
+        url: 'http://localhost:8080/manage/deleteSelect/' + select,
         contentType:"application/json;charset=UTF-8",
       }).then(function (res) {
           _this.handleCurrentChange(_this.currentPage);
@@ -379,7 +379,7 @@ export default {
       let _this= this;
       axios({
         method: 'get',
-        url: 'http://localhost:8081/manage/check/' + cid,
+        url: 'http://localhost:8080/manage/check/' + cid,
         contentType:"application/json;charset=UTF-8",
       }).then(function (res) {
         let content = res.data;
