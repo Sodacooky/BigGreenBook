@@ -14,7 +14,7 @@
         <result property="userAvatarPath" column="avatar_path"/>
         <result property="contentAmount" column="contentAmount"/>
         <result property="fansAmount" column="fansAmount"/>
-        <association property="status" column="uid" javaType="int" select="getStatus"></association>
+        <result property="status" column="status"/>
     </resultMap>
 
     <!--获取用户数量（含搜索）-->
@@ -27,38 +27,39 @@
     </select>
 
     <!--获取用户（含搜索）-->
-    <select id="getUserBySearch" resultMap="userCardMap" parameterType="main.biggreenbook.entity.vo.Example">
-        select `user`.`uid` as uid,
-        `user`.`nickname` as nickname,
-        `user`.`avatar_path` as avatar_path,
-        count(`collection`.`uid`) as contentAmount,
-        count(`follow`.`uid`) as fansAmount
-        from `user`
-        left join `collection` on `collection`.`uid` = `user`.uid
-        left join `follow` on `follow`.`uid` = `user`.`uid`
-        <if test="example.search != null and example.search != ''">
-            where `user`.`nickname` like '%${example.search}%'
-        </if>
-        group by `user`.`uid`
-        <choose>
-            <when test="example.sort == null or example.sort == ''">
-                order by `user`.`nickname` asc limit ${pageSize*pageNum}, #{pageSize}
-            </when>
-            <when test="example.sort == 'FANS' and pageNum == 0">
-                order by fansAmount desc limit 0,#{example.amount}
-            </when>
-            <when test="example.sort == 'FANS' and pageNum != 0">
-                order by fansAmount asc limit ${pageSize*pageNum}, #{pageSize}
-            </when>
-        </choose>
-    </select>
-
-    <!--本人是否关注该用户-->
-    <select id="getStatus" resultType="int">
-        select count(`follow`.`uid`) as status
-        from `follow`
-        where `follow`.`uid` = ${uid}
-          and `follow`.`follower` = ${follower}
+    <select id="getUserBySearch" resultMap="userCardMap">
+        select `tmp`.`uid` as uid,
+        `tmp`.`nickname` as nickname,
+        `tmp`.`avatar_path` as avatar_path,
+        `tmp`.`contentAmount` as contentAmount,
+        `tmp`.`fansAmount` as fansAmount,
+        count(`follow`.`uid`) as status
+        from (select `user`.`uid` as uid,
+                `user`.`nickname` as nickname,
+                `user`.`avatar_path` as avatar_path,
+                count(`collection`.`uid`) as contentAmount,
+                count(`follow`.`uid`) as fansAmount
+                from `user`
+                left join `collection` on `collection`.`uid` = `user`.uid
+                left join `follow` on `follow`.`uid` = `user`.`uid`
+                <if test="example.search != null and example.search != ''">
+                    where `user`.`nickname` like '%${example.search}%'
+                </if>
+                group by `user`.`uid`
+                <choose>
+                    <when test="example.sort == null or example.sort == ''">
+                     order by `user`.`nickname` asc limit ${pageSize*pageNum}, #{pageSize}
+                    </when>
+                    <when test="example.sort == 'FANS' and pageNum == 0">
+                        order by fansAmount desc limit 0,#{example.amount}
+                    </when>
+                    <when test="example.sort == 'FANS' and pageNum != 0">
+                        order by fansAmount asc limit ${pageSize*pageNum}, #{pageSize}
+                    </when>
+                </choose>
+                )tmp
+        left join `follow` on `follow`.`uid` = `tmp`.`uid` and `follow`.`follower` = ${example.follower}
+        group by `tmp`.`uid`
     </select>
 
 </mapper>

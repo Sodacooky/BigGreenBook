@@ -22,10 +22,10 @@ public class WxUserServiceTest {
         example.setAmount(queryId % 8);
         example.setSearch(null);
         example.setSort("FANS");
+        example.setFollower("2");
 
         List<UserCard> userCards = wxUserService.getUserCards(page, queryId, example);
 
         userCards.forEach(System.out::println);
-
     }
 }
