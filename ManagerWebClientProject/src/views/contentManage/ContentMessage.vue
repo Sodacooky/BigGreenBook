@@ -5,7 +5,15 @@
       <el-button v-if="multipleSelection.length > 0" type="danger"  icon="el-icon-delete" size="small" @click="openDeleteSelect">批量删除</el-button>
       <el-button v-if="multipleSelection.length === 0" type="primary" icon="el-icon-delete" size="small" disabled>批量删除</el-button>
     </el-col>
-      <el-col :span="1.5" :offset="5">
+      <el-col :span="1.5" :offset="3">
+          <el-date-picker size="small"
+            v-model="dateValue"
+            type="daterange"
+            range-separator="至"
+            start-placeholder="开始日期"
+            end-placeholder="结束日期">
+          </el-date-picker>
+
       <el-select size="medium" v-model="value" placeholder="请选择">
         <el-option
           v-for="item in options"
@@ -111,6 +119,7 @@ export default {
   params: ['content'],
   data() {
     return {
+      dateValue: '',
       input: '',
       count: 0,
       currentPage: 1,
@@ -202,12 +211,16 @@ export default {
     handleCurrentChange: function(currentPage){
       var _this = this;
       this.currentPage = currentPage;
-      if (_this.value === '选项3' || _this.input !== '') {
-        _this.queryContent(_this.input);
-      }
-      else if (_this.value === "选项1") {
+      if (_this.value === "选项1") {
         _this.queryUserId(_this.input);
       }
+      else if (_this.value === '选项2') {
+        _this.queryNickname(_this.input);
+      }
+      else if (_this.value === '选项3' || _this.input !== '') {
+        _this.queryContent(_this.input);
+      }
+
       else if (_this.input === '') {
         _this.loadPage(currentPage);
       }
@@ -251,9 +264,10 @@ export default {
     queryContent: function (inputName) {
       let _this = this;
       _this.tableData = [];
+      let date = _this.dateIsNull(_this.dateValue);
       axios({
         method: 'get',
-        url: 'http://localhost:8080/manage/queryContents/' + inputName  + '/' + _this.currentPage,
+        url: 'http://localhost:8080/manage/queryContents/' + inputName  + '/' + _this.currentPage + '/' + date,
         contentType:"application/json;charset=UTF-8",
       }).then(function (res) {
         let obj = JSON.parse(JSON.stringify(res.data));
@@ -277,10 +291,12 @@ export default {
 
     queryUserId: function (uid) {
       let _this = this;
+      console.log(_this.dateValue);
       _this.tableData = [];
+      let date = _this.dateIsNull(_this.dateValue);
       axios({
         method: 'get',
-        url: 'http://localhost:8080/manage/queryUid/' + uid  + '/' + _this.currentPage,
+        url: 'http://localhost:8080/manage/queryUid/' + uid  + '/' + _this.currentPage + '/' + date,
         contentType:"application/json;charset=UTF-8",
       }).then(function (res) {
         let obj = JSON.parse(JSON.stringify(res.data));
@@ -305,9 +321,10 @@ export default {
     queryNickname: function (nickname) {
       let _this = this;
       _this.tableData = [];
+      let date = _this.dateIsNull(_this.dateValue);
       axios({
         method: 'get',
-        url: 'http://localhost:8080/manage/queryNickname/' + nickname  + '/' + _this.currentPage,
+        url: 'http://localhost:8080/manage/queryNickname/' + nickname  + '/' + _this.currentPage + '/' + date,
         contentType:"application/json;charset=UTF-8",
       }).then(function (res) {
         let obj = JSON.parse(JSON.stringify(res.data));
@@ -336,12 +353,15 @@ export default {
         _this.loadPage(_this.currentPage);
       }
       else if (_this.value === "选项1") {
+        console.log("执行了选项1");
         _this.queryUserId(input);
       }
       else if (_this.value === "选项2") {
+        console.log("执行了选项2");
         _this.queryNickname(input);
       }
       else if (_this.value === "选项3" || input !== ''){
+        console.log("执行了选项3");
         _this.queryContent(input);
       }
 
@@ -388,6 +408,13 @@ export default {
       })
     },
 
+    dateIsNull: function (dateValue) {
+      if (dateValue === '' || dateValue === null) {
+        dateValue = ['Fri Apr 01 2022 00:00:00 GMT+0800,Sun May 01 2050 00:00:00 GMT+0800']
+      }
+      console.log("dateValue: " + dateValue);
+      return dateValue;
+    }
 
   },
 

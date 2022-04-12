@@ -123,18 +123,28 @@
             <if test="nickname != null">
                 and u.nickname like concat('%', #{nickname}, '%')
             </if>
+            <if test="start != null">
+                and c.date between #{start} and #{end}
+            </if>
         </where>
-        limit #{index}, #{target}
+        order by c.date desc limit #{index}, #{target}
     </select>
 
     <select id="countQueryContents" parameterType="map" resultType="int">
-        select count(*) from bgb.content
+        select count(*) from content c, user u
         <where>
+            c.uid = u.uid and
             <if test="title != null">
-                title like concat('%', #{title}, '%')
+                c.title like concat('%', #{title}, '%')
+            </if>
+            <if test="nickname != null">
+                u.nickname like concat('%', #{nickname}, '%')
             </if>
             <if test="uid != null">
-                uid = #{uid};
+                c.uid = #{uid}
+            </if>
+            <if test="start != null">
+                and c.date between #{start} and #{end}
             </if>
         </where>
 

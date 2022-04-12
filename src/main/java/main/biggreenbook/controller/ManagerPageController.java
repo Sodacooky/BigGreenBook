@@ -9,9 +9,7 @@ import main.biggreenbook.service.ManagerPageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @CrossOrigin
 @RestController
@@ -108,6 +106,7 @@ public class ManagerPageController {
     }
 
 
+    // 进入页面时初始加载的内容
     @GetMapping(value = "/getContents/{pageIndex}")
     public ManageContentPage getContents(@PathVariable int pageIndex) {
         int index;
@@ -132,8 +131,8 @@ public class ManagerPageController {
         return contentManageService.deleteSelect(select);
     }
 
-    @GetMapping(value = "/queryContents/{inputName}/{pageIndex}")
-    public ManageContentPage queryConTents(@PathVariable String inputName, @PathVariable int pageIndex) {
+    @GetMapping(value = "/queryContents/{inputName}/{pageIndex}/{dateValue}")
+    public ManageContentPage queryConTents(@PathVariable String inputName, @PathVariable int pageIndex, @PathVariable Date[] dateValue) {
         int index;
         int target;
         if (pageIndex == 1) {
@@ -146,6 +145,8 @@ public class ManagerPageController {
         map.put("title", inputName);
         map.put("index", index);
         map.put("target", target);
+        map.put("start", dateValue[0]);
+        map.put("end", dateValue[1]);
         List<ContentMessage> list = contentManageService.queryContents(map);
         int totalContents = contentManageService.countQueryContents(map);
 
@@ -153,8 +154,8 @@ public class ManagerPageController {
     }
 
 
-    @GetMapping(value = "/queryUid/{uid}/{pageIndex}")
-    public ManageContentPage queryContentsByUid(@PathVariable String uid, @PathVariable int pageIndex) {
+    @GetMapping(value = "/queryUid/{uid}/{pageIndex}/{dateValue}")
+    public ManageContentPage queryContentsByUid(@PathVariable String uid, @PathVariable int pageIndex, @PathVariable Date[] dateValue) {
         int index;
         int target;
         if (pageIndex == 1) {
@@ -167,14 +168,16 @@ public class ManagerPageController {
         map.put("uid", uid);
         map.put("index", index);
         map.put("target", target);
+        map.put("start", dateValue[0]);
+        map.put("end", dateValue[1]);
         List<ContentMessage> list = contentManageService.queryContents(map);
         int totalContents = contentManageService.countQueryContents(map);
 
         return new ManageContentPage(list, totalContents);
     }
 
-    @GetMapping(value = "/queryNickname/{nickname}/{pageIndex}")
-    public ManageContentPage queryContentsByNickname(@PathVariable String nickname, @PathVariable int pageIndex) {
+    @GetMapping(value = "/queryNickname/{nickname}/{pageIndex}/{dateValue}")
+    public ManageContentPage queryContentsByNickname(@PathVariable String nickname, @PathVariable int pageIndex, @PathVariable Date[] dateValue) {
         int index;
         int target;
         if (pageIndex == 1) {
@@ -187,6 +190,8 @@ public class ManagerPageController {
         map.put("nickname", nickname);
         map.put("index", index);
         map.put("target", target);
+        map.put("start", dateValue[0]);
+        map.put("end", dateValue[1]);
         List<ContentMessage> list = contentManageService.queryContents(map);
         int totalContents = contentManageService.countQueryContents(map);
 

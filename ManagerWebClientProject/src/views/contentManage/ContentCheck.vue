@@ -4,8 +4,8 @@
       <el-page-header @back="goBack">
       </el-page-header>
       <el-col :span="1.5" :offset="8">
-      <el-input size="medium" style="width: 180px" v-model="inputId" placeholder="请输入cid"></el-input>
-      <el-button type="primary" size="small" @click="query(inputId)" icon="el-icon-search">搜索</el-button>
+      <el-input size="medium" style="width: 180px" v-model="input" placeholder="请输入cid"></el-input>
+      <el-button type="primary" size="small" @click="query(input)" icon="el-icon-search">搜索</el-button>
       </el-col>
 
       <el-col :span="1.5" :offset="9">
@@ -84,6 +84,7 @@ export default {
   name: "ContentCheck",
   data() {
     return {
+      input: '',
       content: '',
       test: "对于一个在北平住惯的人，像我，冬天要是不刮风，便觉得是奇迹；济南的冬天是没有风声的。对于一个刚由伦敦回来的人，像我，冬天要能看得见日光，便觉得是怪事；济南的冬天是响晴的。自然，在热带的地方，日光是永远那么毒，响亮的天气，反有点叫人害怕。可是，在北中国的冬天，而能有温晴的天气，济南真得算个宝地。 [1]设若单单是有阳光，那也算不了出奇。请闭上眼睛想：一个老城，有山有水，全在天底下晒着阳光，暖和安适地睡着，只等春风来把它们唤醒，这是不是个理想的境界？\n" +
         "          小山整把济南围了个圈儿，只有北边缺着点口儿。这一圈小山在冬天特别可爱，好像是把济南放在一个小摇篮里，它们安静不动地低声地说：“你们放心吧，这儿准保暖和。”真的，济南的人们在冬天是面上含笑的。他们一看那些小山，心中便觉得有了着落，有了依靠。他们由天上看到山上，便不知不觉地想起：“明天也许就是春天了吧？这样的温暖，今天夜里山草也许就绿起来了吧？”就是这点幻想不能一时实现，他们也并不着急，因为有这样慈善的冬天，干啥还希望别的呢！\n" +
@@ -94,9 +95,8 @@ export default {
     }
   },
   methods: {
-    setSize:function () {
-      // 通过浏览器宽度(图⽚宽度)计算⾼度
-      this.bannerHeight = 400 / 1920 * this.screenWidth;
+    goBack() {
+      this.$router.go(-1);
     },
 
   },
@@ -110,16 +110,10 @@ export default {
     }
   },
 
-  mounted() {
-    // ⾸次加载时,需要调⽤⼀次
-    this.screenWidth =  window.innerWidth;
-    this.setSize();
-    // 窗⼝⼤⼩发⽣改变时,调⽤⼀次
-    window.onresize = () =>{
-      this.screenWidth =  window.innerWidth;
-      this.setSize();
-    }
+  computed: {
+
   }
+
 }
 </script>
 

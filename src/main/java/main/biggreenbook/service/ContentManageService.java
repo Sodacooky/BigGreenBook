@@ -34,18 +34,14 @@ public class ContentManageService {
     public List<ContentMessage> queryContents(Map<?, ?> map) {
         List<ContentMessage> list = contentMapper.queryContents(map);
         switchJson(list);
+
         return list;
     }
 
     public int countQueryContents(Map<?, ?> map) {
         return contentMapper.countQueryContents(map);
     }
-
-    public List<ContentMessage> queryContentsByUid(Map<?, ?> map) {
-        List<ContentMessage> list = contentMapper.queryContentsByUid(map);
-        switchJson(list);
-        return list;
-    }
+    
 
 //    public int deleteContent(String cid) {
 //        return contentMapper.deleteContent(cid);
