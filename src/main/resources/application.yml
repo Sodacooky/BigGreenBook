@@ -1,13 +1,15 @@
 # 通用部分配置
 spring:
   profiles:
-    # 当前激活的配置文件
     #active: dev
     active: product
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
   mvc:
     static-path-pattern: /static/**
+  redis:
+    host: 127.0.0.1
+    port: 6379
 
 mybatis:
   mapper-locations: classpath:/mapper/*.xml
@@ -30,6 +32,8 @@ spring:
     url: jdbc:mysql://sodacooky.plus:3306/bgb
     username: bgb
     password: 114514
+    hikari:
+      max-lifetime: 90000
   web:
     resources:
       static-locations: file:D:\_Work\JavaRepository\BigGreenBook\data

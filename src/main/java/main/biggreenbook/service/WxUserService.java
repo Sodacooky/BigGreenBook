@@ -1,12 +1,17 @@
 package main.biggreenbook.service;
 
+import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import main.biggreenbook.entity.dao.UserMapper;
 import main.biggreenbook.entity.vo.Example;
 import main.biggreenbook.entity.vo.UserCard;
 import main.biggreenbook.utils.StaticMappingHelper;
+import main.biggreenbook.utils.WxInfoContainer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.io.IOException;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -48,5 +53,31 @@ public class WxUserService {
         return queryId < PAGESiZE ? 1 : queryId / PAGESiZE;
     }
 
+    /**
+     * 处理登录
+     *
+     * @param jsCode 前端登录的Code
+     * @return 自定义登录态（自定义登录状态ID）
+     */
+    public String login(String jsCode) {
+        //fill value
+        String appId = wxInfoContainer.getAppId();
+        String secret = wxInfoContainer.getSecret();
+        String wxLoginApiURL = "https://api.weixin.qq.com/sns/jscode2session?grant_type=authorization_code&";
+        String withParams = String.format("appid=%s&secret=%s&js_code=%s", appId, secret, jsCode);
+        //do get
+        try {
+            JsonNode jsonNode = new ObjectMapper().readValue(new URL(wxLoginApiURL + withParams), JsonNode.class);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;//todo 返回自定义登录态
+    }
+
+
+    //默认获取8个卡片
     private static final int PAGESiZE = 8;
+
+    @Autowired
+    private WxInfoContainer wxInfoContainer;
 }

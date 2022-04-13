@@ -52,5 +52,6 @@ public class WxContentService {
         return queryId < pageSize ? 1 : queryId / pageSize;
     }
 
+    //默认获取8个卡片
     private static final int pageSize = 8;
 }

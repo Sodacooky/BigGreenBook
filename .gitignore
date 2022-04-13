@@ -32,8 +32,9 @@ build/
 ### VS Code ###
 .vscode/
 
-### ssl key ###
+### private key ###
 src/main/resources/bgb.p12
+src/main/resources/wx.yml
 
 ### frontend ####
 ManagerWebClientProject/node_modules/**
