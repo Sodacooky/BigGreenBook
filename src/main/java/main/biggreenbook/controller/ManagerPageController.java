@@ -1,21 +1,24 @@
 package main.biggreenbook.controller;
 
+import main.biggreenbook.entity.pojo.ContentMessage;
 import main.biggreenbook.entity.pojo.User;
+import main.biggreenbook.entity.vo.ManageContentPage;
 import main.biggreenbook.entity.vo.ManageUserPage;
+import main.biggreenbook.service.ContentManageService;
 import main.biggreenbook.service.ManagerPageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @CrossOrigin
 @RestController
-@RequestMapping("/user")
+@RequestMapping("/manage")
 public class ManagerPageController {
     @Autowired
     private ManagerPageService managerPageService;
+    @Autowired
+    private ContentManageService contentManageService;
 
     @GetMapping(value = "/query/{uid}")
     public User queryUserById(@PathVariable String uid) {
@@ -101,6 +104,108 @@ public class ManagerPageController {
 
         return new ManageUserPage(list, totalUsers);
     }
+
+
+    // 进入页面时初始加载的内容
+    @GetMapping(value = "/getContents/{pageIndex}")
+    public ManageContentPage getContents(@PathVariable int pageIndex) {
+        int index;
+        int target;
+        if (pageIndex == 1) {
+            index = 0;
+        } else {
+            index = (pageIndex - 1) * 8;
+        }
+        target = index + 8;
+        Map<String, Integer> map = new HashMap<>();
+        map.put("index", index);
+        map.put("target", target);
+        List<ContentMessage> list = contentManageService.getContents(map);
+        int totalContents = contentManageService.countAllContents();
+
+        return new ManageContentPage(list, totalContents);
+    }
+
+    @GetMapping(value = "/deleteSelect/{select}")
+    public int deleteSelect(@PathVariable List<Integer> select) {
+        return contentManageService.deleteSelect(select);
+    }
+
+    @GetMapping(value = "/queryContents/{inputName}/{pageIndex}/{dateValue}")
+    public ManageContentPage queryConTents(@PathVariable String inputName, @PathVariable int pageIndex, @PathVariable Date[] dateValue) {
+        int index;
+        int target;
+        if (pageIndex == 1) {
+            index = 0;
+        } else {
+            index = (pageIndex - 1) * 8;
+        }
+        target = index + 8;
+        Map<String, Object> map = new HashMap<>();
+        map.put("title", inputName);
+        map.put("index", index);
+        map.put("target", target);
+        map.put("start", dateValue[0]);
+        map.put("end", dateValue[1]);
+        List<ContentMessage> list = contentManageService.queryContents(map);
+        int totalContents = contentManageService.countQueryContents(map);
+
+        return new ManageContentPage(list, totalContents);
+    }
+
+
+    @GetMapping(value = "/queryUid/{uid}/{pageIndex}/{dateValue}")
+    public ManageContentPage queryContentsByUid(@PathVariable String uid, @PathVariable int pageIndex, @PathVariable Date[] dateValue) {
+        int index;
+        int target;
+        if (pageIndex == 1) {
+            index = 0;
+        } else {
+            index = (pageIndex - 1) * 8;
+        }
+        target = index + 8;
+        Map<String, Object> map = new HashMap<>();
+        map.put("uid", uid);
+        map.put("index", index);
+        map.put("target", target);
+        map.put("start", dateValue[0]);
+        map.put("end", dateValue[1]);
+        List<ContentMessage> list = contentManageService.queryContents(map);
+        int totalContents = contentManageService.countQueryContents(map);
+
+        return new ManageContentPage(list, totalContents);
+    }
+
+    @GetMapping(value = "/queryNickname/{nickname}/{pageIndex}/{dateValue}")
+    public ManageContentPage queryContentsByNickname(@PathVariable String nickname, @PathVariable int pageIndex, @PathVariable Date[] dateValue) {
+        int index;
+        int target;
+        if (pageIndex == 1) {
+            index = 0;
+        } else {
+            index = (pageIndex - 1) * 8;
+        }
+        target = index + 8;
+        Map<String, Object> map = new HashMap<>();
+        map.put("nickname", nickname);
+        map.put("index", index);
+        map.put("target", target);
+        map.put("start", dateValue[0]);
+        map.put("end", dateValue[1]);
+        List<ContentMessage> list = contentManageService.queryContents(map);
+        int totalContents = contentManageService.countQueryContents(map);
+
+        return new ManageContentPage(list, totalContents);
+    }
+
+    @GetMapping(value = "/check/{cid}")
+    public ContentMessage checkContent(@PathVariable String cid) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("cid", cid);
+
+        return contentManageService.checkContent(map);
+    }
+
 
     // 管理员登录
     @GetMapping(value = "/manageLogin/{username}/{password}")

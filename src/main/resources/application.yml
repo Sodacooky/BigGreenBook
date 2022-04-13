@@ -3,7 +3,7 @@ spring:
   profiles:
     # 当前激活的配置文件
     #active: dev
-    active: product
+    active: dev
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
   mvc:
@@ -32,7 +32,7 @@ spring:
     password: 114514
   web:
     resources:
-      static-locations: file:D:\_Work\JavaRepository\BigGreenBook\data
+      static-locations: file:D:\Workspace\GreenBook\big-green-book
 #DEBUGING
 logging:
   level:
