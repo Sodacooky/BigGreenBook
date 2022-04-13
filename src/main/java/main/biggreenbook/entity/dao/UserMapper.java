@@ -8,6 +8,7 @@ import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
+import java.util.Map;
 
 @Mapper
 @Repository
@@ -22,8 +23,35 @@ public interface UserMapper {
     int getQueryId(String search);
 
 
-    List<UserCard> getUserBySearch(@Param("pageNum") int pageNum, @Param("pageSize") int pageSize,
-                                   @Param("example") Example example);
+    /**
+     *
+     * @param map
+     *      int pageNum 页数
+     *      int pageSize 页面容量
+     *      String sort 排序方式；默认为null，即按nickname排序  FANS:粉丝数量
+     *      String search 搜索内容
+     *      String follower 关注者uid
+     *      int amount 最新的若干条
+     *
+     * @date 2022/4/12 20:46
+     * @return java.util.List<main.biggreenbook.entity.vo.UserCard>
+     */
+    List<UserCard> getUserCardByAmount(Map<String,Object> map);
+
+    /**
+     *
+     * @param map
+     *      int pageNum 页数
+     *      int pageSize 页面容量
+     *      String sort 排序方式；默认为null，即按nickname排序  FANS:粉丝数量
+     *      String search 搜索内容
+     *      String follower 关注者uid
+     *      int amount 最新的若干条
+     *
+     * @date 2022/4/12 20:46
+     * @return java.util.List<main.biggreenbook.entity.vo.UserCard>
+     */
+    List<UserCard> getUserCardBySearch(Map<String,Object> map);
 
 
 }

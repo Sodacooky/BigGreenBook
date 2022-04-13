@@ -5,7 +5,9 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @SpringBootTest
 public class ContentMapperTest {
@@ -20,22 +22,16 @@ public class ContentMapperTest {
 
     @Test
     public void getContentByPageTest() {
-        List<PreviewCard> contentByPage = contentMapper.getContentByPage(0, 8);
+        Map<String, Object> map = new HashMap<>();
+        List<PreviewCard> contentByPage = contentMapper.getContentByPage(map);
         contentByPage.forEach(System.out::println);
     }
 
     @Test
     public void getLatestContentTest() {
-        List<PreviewCard> latestContent = contentMapper.getLatestContent(2);
+        Map<String, Object> map = new HashMap<>();
+        List<PreviewCard> latestContent = contentMapper.getLatestContent(map);
         latestContent.forEach(System.out::println);
     }
 
-    @Test
-    public void queryContent(){
-        int queryid = contentMapper.getQueryId("布里");
-        System.out.println(queryid);
-        int amount = queryid % 8;
-        List<PreviewCard> previewCards = contentMapper.getContentBySearch("LAST", null,1,8,amount);
-        previewCards.forEach(System.out::println);
-    }
 }

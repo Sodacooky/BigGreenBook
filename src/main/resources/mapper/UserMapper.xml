@@ -26,40 +26,77 @@
         </if>
     </select>
 
-    <!--获取用户（含搜索）-->
-    <select id="getUserBySearch" resultMap="userCardMap">
+    <!--获取用户卡片（含搜索）-->
+    <select id="getUserCardBySearch" resultMap="userCardMap" resultType="map">
         select `tmp`.`uid` as uid,
         `tmp`.`nickname` as nickname,
         `tmp`.`avatar_path` as avatar_path,
         `tmp`.`contentAmount` as contentAmount,
         `tmp`.`fansAmount` as fansAmount,
         count(`follow`.`uid`) as status
+        FROM(select `tmp1`.`uid` as uid,
+        `tmp1`.`nickname` as nickname,
+        `tmp1`.`avatar_path` as avatar_path,
+        `tmp1`.`contentAmount` as contentAmount,
+        count(`follow`.`uid`) as fansAmount
         from (select `user`.`uid` as uid,
-                `user`.`nickname` as nickname,
-                `user`.`avatar_path` as avatar_path,
-                count(`collection`.`uid`) as contentAmount,
-                count(`follow`.`uid`) as fansAmount
-                from `user`
-                left join `collection` on `collection`.`uid` = `user`.uid
-                left join `follow` on `follow`.`uid` = `user`.`uid`
-                <if test="example.search != null and example.search != ''">
-                    where `user`.`nickname` like '%${example.search}%'
-                </if>
-                group by `user`.`uid`
-                <choose>
-                    <when test="example.sort == null or example.sort == ''">
-                     order by `user`.`nickname` asc limit ${pageSize*pageNum}, #{pageSize}
-                    </when>
-                    <when test="example.sort == 'FANS' and pageNum == 0">
-                        order by fansAmount desc limit 0,#{example.amount}
-                    </when>
-                    <when test="example.sort == 'FANS' and pageNum != 0">
-                        order by fansAmount asc limit ${pageSize*pageNum}, #{pageSize}
-                    </when>
-                </choose>
-                )tmp
-        left join `follow` on `follow`.`uid` = `tmp`.`uid` and `follow`.`follower` = ${example.follower}
+        `user`.`nickname` as nickname,
+        `user`.`avatar_path` as avatar_path,
+        count(`content`.`uid`) as contentAmount
+        from `user`
+        left join `content` on `user`.uid  = `content`.`uid`
+        <if test="search != null and search != ''">
+            where `user`.`nickname` like '%${search}%'
+        </if>
+        group by `user`.`uid`)tmp1
+        LEFT JOIN `follow` ON `follow`.`uid` = `tmp1`.uid
+        GROUP BY `tmp1`.uid)tmp
+        LEFT JOIN `follow` on `follow`.`uid` = `tmp`.`uid` and `follow`.`follower` = ${follower}
         group by `tmp`.`uid`
+        <choose>
+            <when test="sort == null or sort == ''">
+                order by nickname asc limit ${pageSize*pageNum}, #{pageSize}
+            </when>
+            <when test="sort == 'FANS'">
+                order by fansAmount asc limit ${pageSize*pageNum}, #{pageSize}
+            </when>
+        </choose>
+    </select>
+    <!--通过amount获取用户卡片（含搜索）-->
+    <select id="getUserCardByAmount" resultMap="userCardMap" resultType="map">
+        select `tmp`.`uid` as uid,
+        `tmp`.`nickname` as nickname,
+        `tmp`.`avatar_path` as avatar_path,
+        `tmp`.`contentAmount` as contentAmount,
+        `tmp`.`fansAmount` as fansAmount,
+        count(`follow`.`uid`) as status
+        FROM(select `tmp1`.`uid` as uid,
+        `tmp1`.`nickname` as nickname,
+        `tmp1`.`avatar_path` as avatar_path,
+        `tmp1`.`contentAmount` as contentAmount,
+        count(`follow`.`uid`) as fansAmount
+        from (select `user`.`uid` as uid,
+        `user`.`nickname` as nickname,
+        `user`.`avatar_path` as avatar_path,
+        count(`content`.`uid`) as contentAmount
+        from `user`
+        left join `content` on `user`.uid  = `content`.`uid`
+        <if test="search != null and search != ''">
+            where `user`.`nickname` like '%${search}%'
+        </if>
+        group by `user`.`uid`)tmp1
+        LEFT JOIN `follow` ON `follow`.`uid` = `tmp1`.uid
+        GROUP BY `tmp1`.uid)tmp
+        LEFT JOIN `follow` on `follow`.`uid` = `tmp`.`uid` and `follow`.`follower` = ${follower}
+        group by `tmp`.`uid`
+        <choose>
+            <when test="sort == null or sort == ''">
+                order by nickname desc limit 0, #{amount}
+            </when>
+            <when test="sort == 'FANS'">
+                order by fansAmount desc limit 0,#{amount}
+            </when>
+        </choose>
     </select>
 
 </mapper>
