@@ -4,7 +4,7 @@ import java.sql.Timestamp;
 
 public class Reply {
     private String rid;
-    private Short type;
+    private String type; //top,inner
     private String content;
     private String goal;
     private Integer likeAmount;
@@ -14,7 +14,7 @@ public class Reply {
     public Reply() {
     }
 
-    public Reply(String rid, Short type, String content, String goal, Integer likeAmount, Timestamp date, String uid) {
+    public Reply(String rid, String type, String content, String goal, Integer likeAmount, Timestamp date, String uid) {
         this.rid = rid;
         this.type = type;
         this.content = content;
@@ -22,19 +22,6 @@ public class Reply {
         this.likeAmount = likeAmount;
         this.date = date;
         this.uid = uid;
-    }
-
-    @Override
-    public String toString() {
-        return "Reply{" +
-                "rid='" + rid + '\'' +
-                ", type=" + type +
-                ", content='" + content + '\'' +
-                ", goal='" + goal + '\'' +
-                ", likeAmount=" + likeAmount +
-                ", date=" + date +
-                ", uid='" + uid + '\'' +
-                '}';
     }
 
     public String getRid() {
@@ -45,11 +32,11 @@ public class Reply {
         this.rid = rid;
     }
 
-    public Short getType() {
+    public String getType() {
         return type;
     }
 
-    public void setType(Short type) {
+    public void setType(String type) {
         this.type = type;
     }
 
