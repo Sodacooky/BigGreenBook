@@ -3,7 +3,6 @@ package main.biggreenbook.service;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import main.biggreenbook.entity.dao.UserMapper;
-import main.biggreenbook.entity.vo.Example;
 import main.biggreenbook.entity.vo.UserCard;
 import main.biggreenbook.utils.StaticMappingHelper;
 import main.biggreenbook.utils.UUIDGenerator;
@@ -17,6 +16,7 @@ import java.net.URL;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class WxUserService {
@@ -27,18 +27,19 @@ public class WxUserService {
     @Autowired
     private StaticMappingHelper staticMappingHelper;
 
-    public List<UserCard> getUserCards(int page, int queryId, Example example) {
+    public List<UserCard> getUserCards(int queryId, Map<String, Object> map) {
         ArrayList<UserCard> result = new ArrayList<>();
 
         //如果是第一页，那么需要解决多余的部分数据
-        if (page == 0 && PAGESiZE < queryId) {
-            result.addAll(userMapper.getUserBySearch(page, PAGESiZE, example));
+        if ((int) map.get("pageNum") == 0 && PAGESIZE < queryId) {
+            result.addAll(userMapper.getUserCardByAmount(map));
         }
-
         //计算逆序页，获得数据
-        int pageAmount = queryId < PAGESiZE ? 1 : queryId / PAGESiZE;
-        int actualPage = pageAmount - 1 - page;
-        result.addAll(userMapper.getUserBySearch(actualPage, PAGESiZE, example));
+        int pageAmount = queryId < PAGESIZE ? 1 : queryId / PAGESIZE;
+        int actualPage = pageAmount - 1 - (int) map.get("pageNum");
+
+        map.replace("pageNum", actualPage);
+        result.addAll(userMapper.getUserCardBySearch(map));
 
         //路径映射
         result.forEach(one -> {
@@ -53,7 +54,7 @@ public class WxUserService {
 
     public int getPageAmount(int queryId) {
         //计算逆序页，获得数据
-        return queryId < PAGESiZE ? 1 : queryId / PAGESiZE;
+        return queryId < PAGESIZE ? 1 : queryId / PAGESIZE;
     }
 
     /**
@@ -100,7 +101,7 @@ public class WxUserService {
     }
 
     //默认获取8个卡片
-    private static final int PAGESiZE = 8;
+    private static final int PAGESIZE = 8;
 
     @Autowired
     private WxInfoContainer wxInfoContainer;

@@ -5,7 +5,9 @@ import main.biggreenbook.service.WxContentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 //微信小程序内容相关控制器
 @RestController
@@ -23,12 +25,20 @@ public class WxContentController {
      * @return 预览页卡片们
      */
     @GetMapping("/get")
-    public List<PreviewCard> getPreviewCards(@RequestParam(required = true) int page, @RequestParam(required = true) int query_id) {
+    public List<PreviewCard> getPreviewCards(@RequestParam(required = true) int page, @RequestParam(required = true) int query_id,String sort,String search) {
         //page parameter check
         if (page < 0) page = 0;
         if (page >= getHomePageAmount(query_id)) page = getHomePageAmount(query_id) - 1;
+
+        Map<String, Object> map = new HashMap<>();
+        //封装参数：页数、排序方式、搜索内容、最新的若干条；    页面容量由Service层封装
+        map.put("pageNum",page);
+        map.put("sort",sort);
+        map.put("search",search);
+        map.put("amount",query_id % 8);
+
         //to service
-        return wxContentService.getPreviewCards(page, query_id);
+        return wxContentService.getPreviewCards(query_id,map);
     }
 
     /***
