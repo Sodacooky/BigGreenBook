@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
  * 微信用户相关控制器
  */
 @RestController
-@RequestMapping("/user")
+@RequestMapping("/usr")
 public class WxUserController {
 
     @GetMapping("/login")

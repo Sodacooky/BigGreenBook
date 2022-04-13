@@ -35,7 +35,7 @@ build/
 
 ### private key ###
 src/main/resources/bgb.p12
-src/main/resources/wx.yml
+src/main/resources/wxInfo.yml
 
 ### frontend ####
 ManagerWebClientProject/node_modules/**
