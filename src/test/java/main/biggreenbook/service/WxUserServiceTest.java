@@ -18,15 +18,15 @@ public class WxUserServiceTest {
 
     @Test
     public void getUserCards(){
-        int queryId = wxUserService.getQueryId("布里");
+        int queryId = wxUserService.getQueryId("");
 
         Map<String, Object> map = new HashMap<>();
         map.put("pageNum",0);
-        map.put("pageSize",2);
+        map.put("pageSize",8);
         map.put("sort",null);
-        map.put("search","布里");
+        //map.put("search","布里");
         map.put("follower","1");
-        map.put("amount",queryId % 2);
+        map.put("amount",queryId % 8);
 
         List<UserCard> userCards = wxUserService.getUserCards(queryId,map);
         userCards.forEach(System.out::println);

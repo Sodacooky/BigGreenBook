@@ -22,16 +22,28 @@ public class ContentMapperTest {
 
     @Test
     public void getContentByPageTest() {
-        Map<String, Object> map = new HashMap<>();
-        List<PreviewCard> contentByPage = contentMapper.getContentByPage(map);
+        List<PreviewCard> contentByPage = contentMapper.getContentByPage(0,8);
         contentByPage.forEach(System.out::println);
     }
 
     @Test
     public void getLatestContentTest() {
-        Map<String, Object> map = new HashMap<>();
-        List<PreviewCard> latestContent = contentMapper.getLatestContent(map);
+        List<PreviewCard> latestContent = contentMapper.getLatestContent(2);
         latestContent.forEach(System.out::println);
+    }
+
+    @Test
+    public void getContentBySearchTest(){
+        Map<String, Object> map = new HashMap<>();
+        map.put("pageNum",0);
+        map.put("pageSize",8);
+        map.put("sort","HOT");
+
+        //map.put("amount",2);
+        map.put("amount",8);
+        List<PreviewCard> cards = contentMapper.getContentBySearch(map);
+
+        cards.forEach(System.out::println);
     }
 
 }
