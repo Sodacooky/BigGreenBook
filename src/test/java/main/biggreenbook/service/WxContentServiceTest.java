@@ -18,24 +18,27 @@ public class WxContentServiceTest {
     @Test
     public void getPreviewCardsTest() {
         int queryId = wxContentService.getQueryId(null);
-        Map<String, Object> map = new HashMap<>();
-        List<PreviewCard> previewCards = wxContentService.getPreviewCards(queryId,map);
+        List<PreviewCard> previewCards = wxContentService.getPreviewCards(0,queryId);
         previewCards.forEach(System.out::println);
     }
 
     @Test
     public void getPreviewCards(){
-        int queryId = wxContentService.getQueryId(null);
+        int page = 0;
+        int pageSize = 8;
+        String search = "";
+        String sort = "HOT";
+        int queryId = wxContentService.getQueryId(search);
+
 
         Map<String, Object> map = new HashMap<>();
-        map.put("pageNum",0);
-        map.put("pageSize", 8);
-        map.put("sort","LATEST");
-        map.put("search",null);
-        map.put("amount",queryId % 8);
+        map.put("pageNum",page);
+        map.put("pageSize",pageSize);
+        map.put("amount",queryId % pageSize);
+        map.put("search",search);
+        map.put("sort",sort);
 
-        List<PreviewCard> cards = wxContentService.getPreviewCards(queryId, map);
-
+        List<PreviewCard> cards = wxContentService.getPreviewCardsBySearch(queryId,map);
         cards.forEach(System.out::println);
     }
 

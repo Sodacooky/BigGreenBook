@@ -24,8 +24,8 @@
         <result property="userNickname" column="nickname"/>
     </resultMap>
 
-    <!--获取内容，含搜索-->
-    <select id="getContentByPage" resultMap="previewCardMap" parameterType="map">
+    <!--获取内容-->
+    <select id="getContentByPage" resultMap="previewCardMap">
         select `content`.`cid`                                        as cid,
                `content`.`like_amount`                                as like_amount,
                `content`.`title`                                      as title,
@@ -36,21 +36,11 @@
         from `content`
                  inner join `user` on `user`.`uid` = `content`.`uid`
                  inner join `resource` on `resource`.`sid` = `content`.`sid`
-        <if test="search != null and search != ''">
-            where `content`.`title` like '%${search}%'
-            or `content`.`main_text` like '%${search}%'
-        </if>
-        <choose>
-            <when test="sort == 'HOT'">
-                order by `content`.`like_amount` asc limit ${pageSize*pageNum}, #{pageSize}
-            </when>
-            <when test="sort == 'LATEST'">
-                order by `content`.`date` asc limit ${pageSize*pageNum}, #{pageSize}
-            </when>
-        </choose>
+        order by `content`.`date` asc
+            limit ${pageSize*pageNum}, #{pageSize}
     </select>
-    <!--获取最新/最热内容，含搜索-->
-    <select id="getLatestContent" resultMap="previewCardMap" parameterType="map">
+    <!--获取最新的若干条-->
+    <select id="getLatestContent" resultMap="previewCardMap">
         select `content`.`cid`                                        as cid,
                `content`.`like_amount`                                as like_amount,
                `content`.`title`                                      as title,
@@ -61,16 +51,45 @@
         from `content`
                  inner join `user` on `user`.`uid` = `content`.`uid`
                  inner join `resource` on `resource`.`sid` = `content`.`sid`
+        order by `content`.`date` desc
+            limit 0,#{amount}
+    </select>
+    <!--通过搜索获取内容-->
+    <select id="getContentBySearch" resultMap="previewCardMap" parameterType="map">
+        select `content`.`cid`                                        as cid,
+        `content`.`like_amount`                                as like_amount,
+        `content`.`title`                                      as title,
+        `resource`.`type`                                      as type,
+        JSON_UNQUOTE(JSON_EXTRACT(`resource`.`paths`, '$[0]')) as first_path,
+        `user`.`avatar_path`                                   as avatar,
+        `user`.`nickname`                                      as nickname
+        from `content`
+        inner join `user` on `user`.`uid` = `content`.`uid`
+        inner join `resource` on `resource`.`sid` = `content`.`sid`
         <if test="search != null and search != ''">
             where `content`.`title` like '%${search}%'
             or `content`.`main_text` like '%${search}%'
         </if>
         <choose>
             <when test="sort == 'HOT'">
-                order by `content`.`like_amount` desc limit 0,#{amount}
+                <choose>
+                    <when test="pageNum == 0 and amount != pageSize">
+                        order by `content`.`like_amount` desc limit 0,#{amount}
+                    </when>
+                    <when test="amount == pageSize">
+                        order by `content`.`like_amount` asc limit ${pageSize*pageNum}, #{pageSize}
+                    </when>
+                </choose>
             </when>
             <when test="sort == 'LATEST'">
-                order by `content`.`date` desc limit 0,#{amount}
+                <choose>
+                    <when test="pageNum == 0 and amount != pageSize">
+                        order by `content`.`date` desc limit 0,#{amount}
+                    </when>
+                    <when test="amount == pageSize">
+                        order by `content`.`date` asc limit ${pageSize*pageNum}, #{pageSize}
+                    </when>
+                </choose>
             </when>
         </choose>
     </select>

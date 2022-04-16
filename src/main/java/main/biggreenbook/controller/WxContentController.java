@@ -25,20 +25,29 @@ public class WxContentController {
      * @return 预览页卡片们
      */
     @GetMapping("/get")
-    public List<PreviewCard> getPreviewCards(@RequestParam(required = true) int page, @RequestParam(required = true) int query_id,String sort,String search) {
+    public List<PreviewCard> getPreviewCards(@RequestParam(required = true) int page, @RequestParam(required = true) int query_id) {
+        //page parameter check
+        if (page < 0) page = 0;
+        if (page >= getHomePageAmount(query_id)) page = getHomePageAmount(query_id) - 1;
+        //to service
+        return wxContentService.getPreviewCards(page,query_id);
+    }
+
+    @GetMapping("/get_search")
+    public List<PreviewCard> getPreviewCardsBySearch(@RequestParam(required = true) int page, @RequestParam(required = true) int query_id,String search,String sort){
         //page parameter check
         if (page < 0) page = 0;
         if (page >= getHomePageAmount(query_id)) page = getHomePageAmount(query_id) - 1;
 
         Map<String, Object> map = new HashMap<>();
-        //封装参数：页数、排序方式、搜索内容、最新的若干条；    页面容量由Service层封装
         map.put("pageNum",page);
-        map.put("sort",sort);
-        map.put("search",search);
+        map.put("pageSize",8);
         map.put("amount",query_id % 8);
+        map.put("search",search);
+        map.put("sort",sort);
 
         //to service
-        return wxContentService.getPreviewCards(query_id,map);
+        return wxContentService.getPreviewCardsBySearch(query_id,map);
     }
 
     /***

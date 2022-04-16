@@ -28,18 +28,19 @@ public class UserMapperTest {
 
         /*      int pageNum 页数
          *      int pageSize 页面容量
+         *      int amount 最新的若干条
          *      String sort 排序方式；  FANS:粉丝数量
          *      String search 搜索内容
          *      String follower 关注者uid
-         *      int amount 最新的若干条
+         *
          */
         Map<String, Object> map = new HashMap<>();
         map.put("pageNum",0);
-        map.put("pageSize",10);
+        map.put("pageSize",6);
         map.put("sort","FANS");
         map.put("search",null);
         map.put("follower","1");
-        //map.put("amount",2);
+        map.put("amount",2);
 
         List<UserCard> userByPage = mapper.getUserCardBySearch(map);
         userByPage.forEach(System.out::println);
