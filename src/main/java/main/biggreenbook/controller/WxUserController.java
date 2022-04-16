@@ -72,6 +72,7 @@ public class WxUserController {
      * @param page 页
      * @return 当前页的收藏内容预览卡片
      */
+    @GetMapping("/get_collections")
     public List<PreviewCard> getCollections(@RequestParam("uid") String uid, @RequestParam("page") int page) {
         int collectionPageAmount = wxUserService.getCollectionPageAmount(uid);
         if (page >= collectionPageAmount) page = collectionPageAmount - 1;
@@ -85,6 +86,7 @@ public class WxUserController {
      * @param uid 谁的收藏夹，用户id
      * @return 页数，显然，当没有收藏内容时为0
      */
+    @GetMapping("/get_collections_page_amount")
     public int getCollectionPageAmount(@RequestParam("uid") String uid) {
         return wxUserService.getCollectionPageAmount(uid);
     }
