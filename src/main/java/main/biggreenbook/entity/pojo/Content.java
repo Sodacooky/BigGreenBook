@@ -8,7 +8,7 @@ public class Content {
     private String title;
     private String mainText;
     private Timestamp date;
-    private Integer type; //0: picture, 1: video
+    private String type; //picture/video
     private Integer likeAmount;
     private String uid;
     private String sid;
@@ -16,7 +16,7 @@ public class Content {
     public Content() {
     }
 
-    public Content(String cid, String title, String mainText, Timestamp date, Integer type, Integer likeAmount, String uid, String sid) {
+    public Content(String cid, String title, String mainText, Timestamp date, String type, Integer likeAmount, String uid, String sid) {
         this.cid = cid;
         this.title = title;
         this.mainText = mainText;
@@ -25,20 +25,6 @@ public class Content {
         this.likeAmount = likeAmount;
         this.uid = uid;
         this.sid = sid;
-    }
-
-    @Override
-    public String toString() {
-        return "Content{" +
-                "cid='" + cid + '\'' +
-                ", title='" + title + '\'' +
-                ", mainText='" + mainText + '\'' +
-                ", date=" + date +
-                ", type=" + type +
-                ", likeAmount=" + likeAmount +
-                ", uid='" + uid + '\'' +
-                ", sid='" + sid + '\'' +
-                '}';
     }
 
     public String getCid() {
@@ -73,11 +59,11 @@ public class Content {
         this.date = date;
     }
 
-    public Integer getType() {
+    public String getType() {
         return type;
     }
 
-    public void setType(Integer type) {
+    public void setType(String type) {
         this.type = type;
     }
 

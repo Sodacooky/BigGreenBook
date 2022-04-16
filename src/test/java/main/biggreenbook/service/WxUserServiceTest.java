@@ -1,12 +1,15 @@
 package main.biggreenbook.service;
 
 import main.biggreenbook.entity.vo.Example;
+import main.biggreenbook.entity.vo.PreviewCard;
 import main.biggreenbook.entity.vo.UserCard;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @SpringBootTest
 public class WxUserServiceTest {
@@ -15,17 +18,17 @@ public class WxUserServiceTest {
 
     @Test
     public void getUserCards(){
-        int queryId = wxUserService.getQueryId(null);
-        int page = 0;
+        int queryId = wxUserService.getQueryId("");
 
-        Example example = new Example();
-        example.setAmount(queryId % 8);
-        example.setSearch(null);
-        example.setSort("FANS");
+        Map<String, Object> map = new HashMap<>();
+        map.put("pageNum",0);
+        map.put("pageSize",8);
+        map.put("sort",null);
+        //map.put("search","布里");
+        map.put("follower","1");
+        map.put("amount",queryId % 8);
 
-        List<UserCard> userCards = wxUserService.getUserCards(page, queryId, example);
-
+        List<UserCard> userCards = wxUserService.getUserCards(queryId,map);
         userCards.forEach(System.out::println);
-
     }
 }
