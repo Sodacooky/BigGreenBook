@@ -23,8 +23,8 @@ public class ContentManageService {
         return list;
     }
 
-    public int countAllContents() {
-        return contentMapper.countAllContents();
+    public int countAllContents(Map<?, ?> map) {
+        return contentMapper.countAllContents(map);
     }
 
     public int deleteSelect(List<?> list) {
@@ -41,7 +41,20 @@ public class ContentManageService {
     public int countQueryContents(Map<?, ?> map) {
         return contentMapper.countQueryContents(map);
     }
-    
+
+    public List<ContentMessage> getNextContents(Map<?, ?> map) {
+        List<ContentMessage> list = contentMapper.getNextContents(map);
+        switchJson(list);
+
+        return list;
+    }
+
+    public List<ContentMessage> getPreviousContents(Map<?, ?> map) {
+        List<ContentMessage> list = contentMapper.getPreviousContents(map);
+        switchJson(list);
+
+        return list;
+    }
 
 //    public int deleteContent(String cid) {
 //        return contentMapper.deleteContent(cid);
@@ -51,15 +64,16 @@ public class ContentManageService {
         ContentMessage contentMessage = contentMapper.checkContent(map);
         ObjectMapper mapper = new ObjectMapper();
         List<String> jsonList = new ArrayList<>();
-        try {
-            jsonList = mapper.readValue(contentMessage.getPath(), TypeFactory.defaultInstance().constructCollectionType(List.class, String.class));
+        if (contentMessage != null) {
+            try {
+                jsonList = mapper.readValue(contentMessage.getPath(), TypeFactory.defaultInstance().constructCollectionType(List.class, String.class));
 
-        } catch (JsonProcessingException e) {
+            } catch (JsonProcessingException e) {
 
-            e.printStackTrace();
+                e.printStackTrace();
+            }
+            contentMessage.setPaths(jsonList);
         }
-        contentMessage.setPaths(jsonList);
-
         return contentMessage;
     }
 

@@ -48,12 +48,15 @@
         <el-button type="primary" size="small" icon="el-icon-edit" @click="openDescription(scope.row.uid)">修改</el-button>
       </el-table-column>
 
-      <el-table-column
+      <el-table-column v-slot="scope"
         prop="state"
         label="封禁状态"
         width="80">
+        <el-tag v-if="scope.row.state === '正常'">正常</el-tag>
+        <el-tag type="danger" v-if="scope.row.state === '封禁中'">封禁中</el-tag>
       </el-table-column>
       <el-table-column v-slot="scope" width="80">
+
         <el-button v-if="scope.row.state === '正常'" type="danger" size="small"  @click="openSuspend(scope.row.uid, scope.row.nickname)">封禁</el-button>
         <el-button v-if="scope.row.state === '封禁中'" type="danger" size="small" disabled="disabled">封禁</el-button>
       </el-table-column>

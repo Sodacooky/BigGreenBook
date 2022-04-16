@@ -32,7 +32,6 @@
 
     <el-row><br/>
     <el-table
-      align="center"
       ref="multipleTable"
       :data="tableData"
       tooltip-effect="dark"
@@ -40,11 +39,11 @@
       border
       @selection-change="handleSelectionChange">
 
-        <el-table-column
+        <el-table-column align="center"
            type="selection"
            width="50">
         </el-table-column>
-        <el-table-column
+        <el-table-column align="center"
           prop="cover_path"
           label="内容封面"
           row-style="height:200px"
@@ -56,19 +55,19 @@
           </template>
         </el-table-column>
 
-            <el-table-column
+            <el-table-column align="center"
               prop="title"
               label="标题">
             </el-table-column>
 
-          <el-table-column
+          <el-table-column align="center"
             prop="author"
             label="作者"
             width="120"
             show-overflow-tooltip>
           </el-table-column>
 
-            <el-table-column
+            <el-table-column align="center"
               prop="like_amount"
               label="点赞数"
               width="90"
@@ -76,7 +75,7 @@
               show-overflow-tooltip>
             </el-table-column>
 
-          <el-table-column
+          <el-table-column align="center"
             prop="date"
             label="发布时间"
             width="300"
@@ -84,7 +83,7 @@
             show-overflow-tooltip>
           </el-table-column>
 
-          <el-table-column
+          <el-table-column align="center"
             label="操作"
             width="150"
             show-overflow-tooltip>
@@ -136,7 +135,7 @@ export default {
         },
         {
           value: '选项3',
-          label: '用内容标题'
+          label: '内容标题'
         }
       ],
       value: '',
@@ -185,9 +184,10 @@ export default {
     loadPage: function (currentPage) {
       let _this = this;
       _this.tableData = [];
+      let date = _this.dateIsNull(_this.dateValue);
       axios({
         method: 'get',
-        url: 'http://localhost:8080/manage/getContents/' + JSON.stringify(currentPage),
+        url: 'http://localhost:8080/manage/getContents/' + JSON.stringify(currentPage) + '/' + date,
         contentType:"application/json;charset=UTF-8",
       }).then(function (res) {
         let obj = JSON.parse(JSON.stringify(res.data));
@@ -195,7 +195,7 @@ export default {
         _this.totalPage = Math.ceil(obj.totalContents / _this.pageSize)*10;
         console.log(list);
         for (let i = 0; i < list.length; i++) {
-          if (list[i].type === 1) {
+          if (list[i].type === 'video') {
             _this.findvideocover("/api/" +list[i].paths[0], list[i], i);
           }
           else {
@@ -211,19 +211,20 @@ export default {
     handleCurrentChange: function(currentPage){
       var _this = this;
       this.currentPage = currentPage;
-      if (_this.value === "选项1") {
+      if (_this.value === "选项1" && _this.input !== '') {
         _this.queryUserId(_this.input);
       }
-      else if (_this.value === '选项2') {
+      else if (_this.value === '选项2' && _this.input !== '') {
         _this.queryNickname(_this.input);
+      }
+      else if (_this.input === '') {
+        _this.loadPage(currentPage);
       }
       else if (_this.value === '选项3' || _this.input !== '') {
         _this.queryContent(_this.input);
       }
 
-      else if (_this.input === '') {
-        _this.loadPage(currentPage);
-      }
+
       console.log(this.currentPage)  //点击第几页
     },
 
@@ -276,7 +277,7 @@ export default {
         _this.totalPage = Math.ceil(obj.totalContents / _this.pageSize)*10;
 
         for (let i = 0; i < list.length; i++) {
-          if (list[i].type === 1) {
+          if (list[i].type === 'video') {
             _this.findvideocover("/api/" +list[i].paths[0], list[i], i);
           }
           else {
@@ -305,7 +306,7 @@ export default {
         _this.totalPage = Math.ceil(obj.totalContents / _this.pageSize)*10;
 
         for (let i = 0; i < list.length; i++) {
-          if (list[i].type === 1) {
+          if (list[i].type === 'video') {
             _this.findvideocover("/api/" +list[i].paths[0], list[i], i);
           }
           else {
@@ -333,7 +334,7 @@ export default {
         _this.totalPage = Math.ceil(obj.totalContents / _this.pageSize)*10;
 
         for (let i = 0; i < list.length; i++) {
-          if (list[i].type === 1) {
+          if (list[i].type === 'video') {
             _this.findvideocover("/api/" +list[i].paths[0], list[i], i);
           }
           else {
@@ -403,7 +404,7 @@ export default {
         contentType:"application/json;charset=UTF-8",
       }).then(function (res) {
         let content = res.data;
-        console.log(content);
+        console.log("goto: " + content.date);
         _this.$router.push({path: '/contentManage/ContentCheck/', query: {content: content}});
       })
     },

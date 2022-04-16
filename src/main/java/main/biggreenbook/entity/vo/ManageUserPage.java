@@ -13,6 +13,10 @@ public class ManageUserPage {
         this.totalUsers = totalUsers;
     }
 
+    public ManageUserPage(List<User> list) {
+        this.list = list;
+    }
+
     public ManageUserPage() {
     }
 

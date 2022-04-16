@@ -9,7 +9,7 @@ public class ContentMessage {
     private String text;
     private String author;
     private Date date;
-    private Integer type; //0: picture, 1: video
+    private String type; //0: picture, 1: video
     private Integer likeAmount;
     private String uid;
     private String path;
@@ -18,7 +18,7 @@ public class ContentMessage {
     public ContentMessage() {
     }
 
-    public ContentMessage(String cid, String title, String text, String author, Date date, Integer type, Integer likeAmount, String uid, String path, List<String> paths) {
+    public ContentMessage(String cid, String title, String text, String author, Date date, String type, Integer likeAmount, String uid, String path, List<String> paths) {
         this.cid = cid;
         this.title = title;
         this.text = text;
@@ -71,11 +71,11 @@ public class ContentMessage {
         this.date = date;
     }
 
-    public Integer getType() {
+    public String getType() {
         return type;
     }
 
-    public void setType(Integer type) {
+    public void setType(String type) {
         this.type = type;
     }
 

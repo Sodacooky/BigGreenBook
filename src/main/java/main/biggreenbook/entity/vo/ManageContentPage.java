@@ -17,6 +17,10 @@ public class ManageContentPage {
         this.totalContents = totalContents;
     }
 
+    public ManageContentPage(List<ContentMessage> list) {
+        this.list = list;
+    }
+
     public List<ContentMessage> getList() {
         return list;
     }
