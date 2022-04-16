@@ -41,7 +41,7 @@ public interface ContentMapper {
     List<ContentMessage> getContents(Map<?, ?> map);
 
     //获取Content数量？若是则与getQueryId()相等
-    int countAllContents();
+    int countAllContents(Map<?, ?> map);
 
     //删除所选的若干项，应该是传入cid
     int deleteSelect(List<?> list);
@@ -59,6 +59,10 @@ public interface ContentMapper {
 
     //似乎只是查找
     ContentMessage checkContent(Map<?, ?> map);
+
+    List<ContentMessage> getNextContents(Map<?, ?> map);
+
+    List<ContentMessage> getPreviousContents(Map<?, ?> map);
 
     /**
      * @param sort   排序条件：LAST:最新 / HOT:最热

@@ -5,12 +5,16 @@
       </el-page-header>
       <el-col :span="1.5" :offset="8">
       <el-input size="medium" style="width: 180px" v-model="input" placeholder="请输入cid"></el-input>
-      <el-button type="primary" size="small" @click="query(input)" icon="el-icon-search">搜索</el-button>
+      <el-button type="primary" size="small" @click="queryContent(input)" icon="el-icon-search" >搜索</el-button>
       </el-col>
 
-      <el-col :span="1.5" :offset="9">
-      <el-button type="danger" size="small" icon="el-icon-delete">删除</el-button>
+      <el-col :span="1.5" :offset="2" style="box-shadow: 0 0 0, 0 0 0;">
+      <el-button type="primary" size="small" @click="previousContent">上一篇</el-button>
+      <el-button type="primary" size="small" @click="nextContent">下一篇</el-button>
       </el-col>
+      <el-button type="warning" size="small" icon="el-icon-warning-outline" @click="openSuspend(content.uid, content.author)">封禁用户</el-button>
+      <el-button type="danger" size="small" icon="el-icon-delete" @click="openDelete(content.cid, content.text)">删除</el-button>
+
       <div>
       <br/>
       </div>
@@ -18,7 +22,14 @@
     <el-main>
     <!-- 内容 -->
       <el-row>
-        <el-col :span="1.5" :offset="10" style=" padding: 0; padding-right: 6px">
+        <el-col :span="1.5" :offset="2" style=" padding: 0; padding-right: 6px">
+          <div>
+            <el-tag>发布时间</el-tag>
+            {{content.date}}
+          </div>
+        </el-col>
+
+        <el-col :span="1.5" :offset="4" style=" padding: 0; padding-right: 6px">
           <div>
           <el-tag>作者</el-tag>
           {{content.author}}
@@ -40,16 +51,16 @@
         </el-col>
       </el-row>
 
-      <el-row gutter="20">
+      <el-row>
         <el-row>
-          <el-col v-if="content.type === 0" :span="0.8" :offset="1" style="height: 12px"><el-tag type="info">图片</el-tag></el-col>
-          <el-col v-if="content.type === 1" :span="0.8" :offset="1" style="height: 12px"><el-tag type="info">视频</el-tag></el-col>
+          <el-col v-if="content.type === 'picture'" :span="0.8" :offset="1" style="height: 12px"><el-tag type="info">图片</el-tag></el-col>
+          <el-col v-if="content.type === 'video'" :span="0.8" :offset="1" style="height: 12px"><el-tag type="info">视频</el-tag></el-col>
           <el-col :span="0.8" :offset="12" style="height: 12px"><el-tag>正文</el-tag></el-col>
         </el-row>
 
         <el-col :span="12" :offset="1" style="width: 612px">
           <br/>
-          <div v-if="content.type === 0" class="grid-content bg-purple">
+          <div v-if="content.type === 'picture'" class="grid-content bg-purple">
             <div class="block" v-model="content">
               <el-carousel trigger="click" arrow="always" indicator-position="outside"
                            :interval="2000" style="width:592px" height="335px">
@@ -62,7 +73,7 @@
           <br/>
 
           <!--视频-->
-          <div v-if="content.type === 1" class="grid-content bg-purple">
+          <div v-if="content.type === 'video'" class="grid-content bg-purple">
             <div class="block">
               <video width="592" height="335" controls>
                 <source :src="'/api/' + content.paths[0]" type="video/mp4">
@@ -80,12 +91,16 @@
 </template>
 
 <script>
+import axios from "axios";
+import Vue from "vue";
+
 export default {
   name: "ContentCheck",
   data() {
     return {
       input: '',
       content: '',
+      contentList: '',
       test: "对于一个在北平住惯的人，像我，冬天要是不刮风，便觉得是奇迹；济南的冬天是没有风声的。对于一个刚由伦敦回来的人，像我，冬天要能看得见日光，便觉得是怪事；济南的冬天是响晴的。自然，在热带的地方，日光是永远那么毒，响亮的天气，反有点叫人害怕。可是，在北中国的冬天，而能有温晴的天气，济南真得算个宝地。 [1]设若单单是有阳光，那也算不了出奇。请闭上眼睛想：一个老城，有山有水，全在天底下晒着阳光，暖和安适地睡着，只等春风来把它们唤醒，这是不是个理想的境界？\n" +
         "          小山整把济南围了个圈儿，只有北边缺着点口儿。这一圈小山在冬天特别可爱，好像是把济南放在一个小摇篮里，它们安静不动地低声地说：“你们放心吧，这儿准保暖和。”真的，济南的人们在冬天是面上含笑的。他们一看那些小山，心中便觉得有了着落，有了依靠。他们由天上看到山上，便不知不觉地想起：“明天也许就是春天了吧？这样的温暖，今天夜里山草也许就绿起来了吧？”就是这点幻想不能一时实现，他们也并不着急，因为有这样慈善的冬天，干啥还希望别的呢！\n" +
         "最妙的是下点小雪呀。看吧，山上的矮松越发的青黑，树尖上顶着一髻儿白花，好像日本看护妇。山尖全白了，给蓝天镶上一道银边。山坡上，有的地方雪厚点，有的地方草色还露着，这样，一道儿白，一道儿暗黄，给山们穿上一件带水纹的花衣；看着看着，这件花衣好像被风儿吹动，叫你希望看见一点更美的山的肌肤。等到快日落的时候，微黄的阳光斜射在山腰上，那点薄雪好像忽然害了羞，微微露出点粉色。就是下小雪吧，济南是受不住大雪的，那些小山太秀气！\n" +
@@ -99,16 +114,134 @@ export default {
       this.$router.go(-1);
     },
 
+    openDelete(cid, title) {
+      this.$confirm('是否删除标题为 ' + title + ' 的文章?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning',
+        center: true
+      }).then(() => {
+        this.$message({
+          type: 'success',
+          message: '删除成功!'
+        });
+        this.deleteContent(cid);
+      })
+    },
+
+    deleteContent: function (cid) {
+      let _this = this;
+      let select = [];
+      select.push(cid);
+      axios({
+        method: 'get',
+        url: 'http://localhost:8080/manage/deleteSelect/' + select,
+        contentType:"application/json;charset=UTF-8",
+      }).then(function (res) {
+        _this.goBack();
+      })
+    },
+
+    queryContent: function (cid) {
+      let _this= this;
+      axios({
+        method: 'get',
+        url: 'http://localhost:8080/manage/check/' + cid,
+        contentType:"application/json;charset=UTF-8",
+      }).then(function (res) {
+        console.log(res.data);
+        if (res.data !== '') {
+          // _this.$router.push({path: '/contentManage/ContentCheck/', query: {content: content}});
+          _this.content = res.data;
+        }
+        else {
+          _this.$message("内容不存在！");
+        }
+      })
+    },
+
+    nextContent: function (cid) {
+      let _this = this;
+      console.log("cid: " + _this.content.cid);
+      axios({
+        method: 'get',
+        url: 'http://localhost:8080/manage/nextContent/' + _this.content.cid + '/' + _this.content.date,
+        contentType:"application/json;charset=UTF-8",
+      }).then(function (res) {
+        let obj = JSON.parse(JSON.stringify(res.data));
+        let list = obj.list;
+        if (list[0] !== undefined) {
+          _this.contentList = list;
+          _this.content = list[0];
+          _this.content.date = _this.$moment(_this.content.date).format('YYYY-MM-DD HH:mm:ss');
+          console.log("date: " + list[0].date);
+        }
+        else {
+          _this.$message("已经是最后一个了！");
+        }
+      })
+    },
+
+    previousContent: function (cid) {
+      let _this = this;
+      console.log("cid: " + _this.content.cid);
+      axios({
+        method: 'get',
+        url: 'http://localhost:8080/manage/previousContent/' + _this.content.cid + '/' + _this.content.date,
+        contentType:"application/json;charset=UTF-8",
+      }).then(function (res) {
+        let obj = JSON.parse(JSON.stringify(res.data));
+        let list = obj.list;
+        if (list[0] !== undefined) {
+          _this.contentList = list;
+          _this.content = list[0];
+          _this.content.date = _this.$moment(_this.content.date).format('YYYY-MM-DD HH:mm:ss');
+          console.log("date: " + list[0].date);
+        }
+        else {
+          _this.$message("已经是第一个了！");
+        }
+      })
+    },
+
+    openSuspend(uid, nickname) {
+      this.$confirm('是否封禁用户 ' + nickname + ' ?', '提示', {
+        confirmButtonText: '确定',
+        cancelButtonText: '取消',
+        type: 'warning',
+        center: true
+      }).then(() => {
+        this.$message({
+          type: 'success',
+          message: '用户 ' + nickname +' 已被封禁!'
+        });
+        this.suspendUser(uid);
+      })
+    },
+
+    suspendUser: function (uid) {
+      let _this = this;
+      _this.inputId = uid;
+      axios({
+        method: 'get',
+        url: 'http://localhost:8080/manage/suspend/' + uid,
+        contentType:"application/json;charset=UTF-8",
+      }).then(function (res) {
+      })
+    }
+
   },
 
   created() {
     let _this = this;
     this.content = this.$route.query.content;
-    console.log(_this.content);
+    console.log(_this.content.type);
     for (let i = 0; i < _this.content.paths.length; i++) {
       _this.srcList[i] = 'https://sodacooky.plus:8080/static/' + _this.content.paths[i];
+      _this.content.date = _this.$moment(_this.content.date).format('YYYY-MM-DD HH:mm:ss')
     }
   },
+
 
   computed: {
 

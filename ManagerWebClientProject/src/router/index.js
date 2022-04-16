@@ -6,7 +6,7 @@ import UserMessage from "../views/userManage/UserMessage";
 import Login from "../views/Login";
 import ContentMessage from "../views/contentManage/ContentMessage";
 import ContentCheck from "../views/contentManage/ContentCheck";
-import ImageShow from "../views/contentManage/ImageShow";
+import ContentList from "../views/reportManage/ReportList";
 
 Vue.use(Router)
 
@@ -24,7 +24,8 @@ export default new Router({
       children: [
         {path: '/userManage/UserMessage', name: 'UserMessage', component: UserMessage},
         {path: '/contentManage/contentMessage', name: 'ContentMessage', component: ContentMessage},
-        {path: '/contentManage/contentCheck', name: 'ContentCheck', component: ContentCheck}
+        {path: '/contentManage/contentCheck', name: 'ContentCheck', component: ContentCheck},
+        {path: '/reportManage/ContentList', name: 'ContentList', component: ContentList}
       ]
     },
     {
@@ -36,13 +37,7 @@ export default new Router({
       name: 'Login',
       component: Login
     },
-    {path: '/contentManage/contentCheck',
-      name: 'ContentCheck',
-      component: ContentCheck,
-      children: [
-        {path: '/contentManage/ImageShow', name: ImageShow, component: ImageShow}
-      ]
-    }
+
 
   ]
 })

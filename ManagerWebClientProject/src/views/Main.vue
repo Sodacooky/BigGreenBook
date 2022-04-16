@@ -36,18 +36,16 @@
                 <!--插入的地方-->
                 <router-link to="/contentManage/contentMessage"></router-link>内容列表
               </el-menu-item>
-              <el-menu-item index="/contentManage/contentCheck">
-                <router-link to="/contentManage/contentMessage"></router-link>内容审查
-              </el-menu-item>
+
             </el-menu-item-group>
           </el-submenu>
 
           <el-submenu index="3" style="height: 600px">
             <template slot="title"><i class="el-icon-message-solid"></i>举报处理</template>
             <el-menu-item-group>
-              <el-menu-item index="">
+              <el-menu-item index="/reportManage/ContentList">
                 <!--插入的地方-->
-                <router-link to="/contentManage/contentMessage"></router-link>消息列表
+                <router-link to="/reportManage/ContentList"></router-link>消息列表
               </el-menu-item>
               <el-menu-item index="3-2">
                 <router-link to="/goHome"></router-link>回到首页

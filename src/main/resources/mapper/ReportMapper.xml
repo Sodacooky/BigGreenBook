@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="main.biggreenbook.entity.dao.ReportMapper">
+    
+    <resultMap id="ReportMap" type="main.biggreenbook.entity.pojo.ReportMessage">
+        <result property="uid" column="uid"/>
+        <result property="authorName" column="nickname"/>
+        <result property="cid" column="cid"/>
+        <result property="title" column="title"/>
+        <result property="reason" column="reason"/>
+        <result property="date" column="date"/>
+        <result property="solved" column="solved"/>
+    </resultMap>
+
+    <select id="getReports" parameterType="map" resultMap="ReportMap">
+<!--        select r.uid, u.nickname, c.cid, c.title, r.reason, r.date, r.solved-->
+<!--        from report r, content c join user u on c.uid = u.uid where r.cid = c.cid and r.solved != 1 order by r.date desc-->
+<!--        <if test="index != null">-->
+<!--            limit #{index}, #{target}-->
+<!--        </if>-->
+        select r.uid, u.nickname, c.cid, c.title, r.reason, r.date, r.solved
+        from report r, content c join user u on c.uid = u.uid
+         <where>
+        r.cid = c.cid and
+         <if test="solved != null">
+             r.solved = #{solved}
+         </if>
+        </where>
+        order by r.date desc
+        <if test="index != null">
+            limit #{index}, #{target}
+        </if>
+    </select>
+
+    <select id="countAllReports" parameterType="int" resultType="int">
+        select count(*) from bgb.report where report.solved = 0
+
+
+    </select>
+
+    <update id="handleReports" parameterType="map">
+        update bgb.report set solved = 1 where cid = #{cid} and uid = #{uid}
+    </update>
+
+    <update id="ignoreReport" parameterType="map">
+        update bgb.report set bgb.report.solved = 1 where cid = #{cid} and uid = #{uid}
+    </update>
+
+
+    
+</mapper>

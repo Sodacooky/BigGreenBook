@@ -1,11 +1,14 @@
 package main.biggreenbook.controller;
 
 import main.biggreenbook.entity.pojo.ContentMessage;
+import main.biggreenbook.entity.pojo.ReportMessage;
 import main.biggreenbook.entity.pojo.User;
 import main.biggreenbook.entity.vo.ManageContentPage;
+import main.biggreenbook.entity.vo.ManageReportPage;
 import main.biggreenbook.entity.vo.ManageUserPage;
 import main.biggreenbook.service.ContentManageService;
 import main.biggreenbook.service.ManagerPageService;
+import main.biggreenbook.service.ReportService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,6 +22,8 @@ public class ManagerPageController {
     private ManagerPageService managerPageService;
     @Autowired
     private ContentManageService contentManageService;
+    @Autowired
+    private ReportService reportService;
 
     @GetMapping(value = "/query/{uid}")
     public User queryUserById(@PathVariable String uid) {
@@ -107,8 +112,8 @@ public class ManagerPageController {
 
 
     // 进入页面时初始加载的内容
-    @GetMapping(value = "/getContents/{pageIndex}")
-    public ManageContentPage getContents(@PathVariable int pageIndex) {
+    @GetMapping(value = "/getContents/{pageIndex}/{dateValue}")
+    public ManageContentPage getContents(@PathVariable int pageIndex, @PathVariable Date[] dateValue) {
         int index;
         int target;
         if (pageIndex == 1) {
@@ -117,17 +122,20 @@ public class ManagerPageController {
             index = (pageIndex - 1) * 8;
         }
         target = index + 8;
-        Map<String, Integer> map = new HashMap<>();
+        Map<String, Object> map = new HashMap<>();
         map.put("index", index);
         map.put("target", target);
+        map.put("start", dateValue[0]);
+        map.put("end", dateValue[1]);
         List<ContentMessage> list = contentManageService.getContents(map);
-        int totalContents = contentManageService.countAllContents();
+        int totalContents = contentManageService.countAllContents(map);
 
         return new ManageContentPage(list, totalContents);
     }
 
     @GetMapping(value = "/deleteSelect/{select}")
     public int deleteSelect(@PathVariable List<Integer> select) {
+
         return contentManageService.deleteSelect(select);
     }
 
@@ -204,6 +212,81 @@ public class ManagerPageController {
         map.put("cid", cid);
 
         return contentManageService.checkContent(map);
+    }
+
+    @GetMapping(value = "/nextContent/{cid}/{date}")
+    public ManageContentPage getNextContents(@PathVariable String cid, @PathVariable String date) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("cid", cid);
+        map.put("end", date);
+        System.out.println("------------------------------------------------------");
+        System.out.println("next: " + contentManageService.getNextContents(map));
+        System.out.println("------------------------------------------------------");
+
+        return new ManageContentPage(contentManageService.getNextContents(map));
+    }
+
+    @GetMapping(value = "/previousContent/{cid}/{date}")
+    public ManageContentPage getPreviousContents(@PathVariable String cid, @PathVariable String date) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("cid", cid);
+        map.put("start", date);
+        System.out.println("------------------------------------------------------");
+        System.out.println("privious: " + contentManageService.getPreviousContents(map));
+        System.out.println("------------------------------------------------------");
+
+        return new ManageContentPage(contentManageService.getPreviousContents(map));
+    }
+
+    // 获得举报消息
+    @GetMapping(value = "/getReports/{pageIndex}")
+    public ManageReportPage getReports(@PathVariable int pageIndex) {
+        int index;
+        int target;
+        if (pageIndex == 1) {
+            index = 0;
+        } else {
+            index = (pageIndex - 1) * 12;
+        }
+        target = index + 12;
+        Map<String, Integer> map = new HashMap<>();
+        map.put("index", index);
+        map.put("target", target);
+        map.put("solved", 0);
+        List<ReportMessage> list = reportService.getReports(map);
+        int totalReports = reportService.countAllReports(0);
+
+        return new ManageReportPage(list, totalReports);
+    }
+
+    // 忽略举报
+    @GetMapping(value = "/ignore/{uid}/{cid}")
+    public int handleReports(@PathVariable String uid, @PathVariable String cid) {
+        Map<String, String> map = new HashMap<>();
+        map.put("uid", uid);
+        map.put("cid", cid);
+
+        return reportService.handleReports(map);
+    }
+
+    @GetMapping(value = "/getIgnore/{pageIndex}")
+    public ManageReportPage getIgnoreReports(@PathVariable int pageIndex) {
+        int index;
+        int target;
+        if (pageIndex == 1) {
+            index = 0;
+        } else {
+            index = (pageIndex - 1) * 12;
+        }
+        target = index + 12;
+        Map<String, Integer> map = new HashMap<>();
+        map.put("index", index);
+        map.put("target", target);
+        map.put("solved", 1);
+        List<ReportMessage> list = reportService.getReports(map);
+        int totalReports = reportService.countAllReports(1);
+
+        return new ManageReportPage(list, totalReports);
     }
 
 

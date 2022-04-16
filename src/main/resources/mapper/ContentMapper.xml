@@ -87,14 +87,26 @@
                u.uid
         from resource r,
              content c
-                 join user u on u.uid = c.uid
-        where c.sid = r.sid limit #{index}
-            , #{target};
+             join user u on u.uid = c.uid
+        <where>
+            <if test="start != null">
+                c.date between #{start} and #{end} and
+            </if>
+            c.sid = r.sid
+        </where>
+        order by c.date desc
+        <if test="index != null">
+        limit #{index}, #{target}
+        </if>
     </select>
 
-    <select id="countAllContents" resultType="int">
-        select count(*)
-        from bgb.content;
+    <select id="countAllContents" parameterType="map" resultType="int">
+        select count(*) from bgb.content
+        <where>
+            <if test="start != null">
+                date between #{start} and #{end}
+            </if>
+        </where>
     </select>
 
     <delete id="deleteSelect" parameterType="java.util.List">
@@ -183,6 +195,30 @@
                  join user u on u.uid = c.uid
         where c.sid = r.sid
           and c.cid = #{cid};
+    </select>
+
+    <select id="getNextContents" parameterType="map" resultMap="ContentMap">
+        select c.cid, c.title, c.main_text, c.date, c.like_amount, c.type, r.paths, u.nickname, u.uid from resource r,
+        content c join user u on u.uid = c.uid
+        <where>
+        c.sid = r.sid and c.cid != #{cid}
+        <if test="end != null">
+           and c.date between '2022-04-01T16:00:00.000+00:00' and #{end}
+        </if>
+        </where>
+        order by c.date desc
+    </select>
+
+    <select id="getPreviousContents" parameterType="map" resultMap="ContentMap">
+        select c.cid, c.title, c.main_text, c.date, c.like_amount, c.type, r.paths, u.nickname, u.uid from resource r,
+        content c join user u on u.uid = c.uid
+        <where>
+            c.sid = r.sid and c.cid != #{cid}
+            <if test="start != null">
+                and c.date between #{start} and '2050-04-01T16:00:00.000+00:00'
+            </if>
+        </where>
+        order by c.date
     </select>
 
     <select id="getContentBySearch" resultMap="previewCardMap">
