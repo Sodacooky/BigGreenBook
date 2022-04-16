@@ -2,7 +2,10 @@ package main.biggreenbook.service;
 
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import main.biggreenbook.entity.dao.ContentMapper;
 import main.biggreenbook.entity.dao.UserMapper;
+import main.biggreenbook.entity.pojo.User;
+import main.biggreenbook.entity.vo.PreviewCard;
 import main.biggreenbook.entity.vo.UserCard;
 import main.biggreenbook.utils.StaticMappingHelper;
 import main.biggreenbook.utils.UUIDGenerator;
@@ -21,25 +24,19 @@ import java.util.Map;
 @Service
 public class WxUserService {
 
-    @Autowired
-    private UserMapper userMapper;
-
-    @Autowired
-    private StaticMappingHelper staticMappingHelper;
-
-    public List<UserCard> getUserCards(int queryId, Map<String,Object> map) {
+    public List<UserCard> getUserCards(int queryId, Map<String, Object> map) {
         ArrayList<UserCard> result = new ArrayList<>();
 
         //如果是第一页，那么需要解决多余的部分数据
-        if ((int)map.get("pageNum") == 0 && PAGESIZE < queryId) {
+        if ((int) map.get("pageNum") == 0 && PAGESIZE < queryId) {
             result.addAll(userMapper.getUserCardBySearch(map));
         }
         //计算逆序页，获得数据
         int pageAmount = queryId < PAGESIZE ? 1 : queryId / PAGESIZE;
-        int actualPage = pageAmount - 1 - (int)map.get("pageNum");
+        int actualPage = pageAmount - 1 - (int) map.get("pageNum");
 
-        map.replace("amount",PAGESIZE);
-        map.replace("pageNum",actualPage);
+        map.replace("amount", PAGESIZE);
+        map.replace("pageNum", actualPage);
 
         result.addAll(userMapper.getUserCardBySearch(map));
 
@@ -81,33 +78,97 @@ public class WxUserService {
             e.printStackTrace();
             return null;
         }
-        //将sessionKey储存到redis中
-        redisTemplate.opsForValue().set("sessionKey_" + resultOpenId, resultSessionKey, Duration.ofDays(1));
-        //生成登录自定义状态码
+        //生成
         String customCode = UUIDGenerator.generate();
-        //储存到redis中
-        redisTemplate.opsForValue().set("customCode_" + customCode, resultOpenId, Duration.ofDays(1));
+        //填充
+        redisTemplate.opsForValue().set("customCode_" + customCode, resultOpenId + "_" + resultSessionKey, Duration.ofDays(1));
         //
         return customCode;
     }
 
     /**
-     * 使用登录记录进行自动登录
+     * 判断自定义登录记录可用性（是否过期
      *
-     * @param customCode 自定义状态码
-     * @return 是否存在该记录，是否登录成功
+     * @param customCode 自定义登录记录
+     * @return 是否存在该记录
      */
-    public boolean tryLoginWithCustomCode(String customCode) {
+    public boolean checkCustomCodeState(String customCode) {
         //查找是否存在
         return Boolean.TRUE.equals(redisTemplate.hasKey("customCode_" + customCode));
     }
 
+    /**
+     * 获取登录用户自己的个人信息
+     *
+     * @param customCode 自定义登录记录
+     * @return 用户信息POJO类
+     */
+    public User getMyInfo(String customCode) {
+        //从redis中获取uid
+        String value = (String) redisTemplate.opsForValue().get("customCode_" + customCode);
+        String[] vals = value.split("_");
+        String uid = vals[0];
+        //通过uid获取用户
+        return userMapper.getUserByUid(uid);
+    }
+
+    /**
+     * 获取指定用户的信息
+     *
+     * @param uid 要获取的用户的uid
+     * @return 用户信息pojo类
+     */
+    public User getInfo(String uid) {
+        return userMapper.getUserByUid(uid);
+    }
+
+    /**
+     * 获取用户的收藏夹
+     *
+     * @param uid  用户的uid
+     * @param page 页
+     * @return 预览卡片
+     */
+    public List<PreviewCard> getCollections(String uid, int page) {
+        return contentMapper.getUserCollections(uid, page, COLLECTION_PAGE_SIZE);
+    }
+
+    /**
+     * 获取用户的收藏夹的页数
+     *
+     * @param uid 用户的uid
+     * @return 页数
+     */
+    public int getCollectionPageAmount(String uid) {
+        int amount = contentMapper.getUserCollectionAmount(uid);
+        if (amount == 0) {
+            return 0;
+        } else if (amount < COLLECTION_PAGE_SIZE) {
+            return 1;
+        } else {
+            return (amount / COLLECTION_PAGE_SIZE) + (amount % COLLECTION_PAGE_SIZE == 0 ? 1 : 0);
+        }
+    }
+
+
     //默认获取8个卡片
     private static final int PAGESIZE = 8;
+
+    //用户收藏夹每页的卡片数量
+    private static final int COLLECTION_PAGE_SIZE = 16;
 
     @Autowired
     private WxInfoContainer wxInfoContainer;
 
     @Autowired
     private RedisTemplate<String, Object> redisTemplate;
+
+    @Autowired
+    private UserMapper userMapper;
+
+    @Autowired
+    private ContentMapper contentMapper;
+
+    @Autowired
+    private StaticMappingHelper staticMappingHelper;
 }

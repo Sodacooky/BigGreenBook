@@ -51,18 +51,17 @@
         from `content`
                  inner join `user` on `user`.`uid` = `content`.`uid`
                  inner join `resource` on `resource`.`sid` = `content`.`sid`
-        order by `content`.`date` desc
-            limit 0,#{amount}
+        order by `content`.`date` desc limit 0,#{amount}
     </select>
     <!--通过搜索获取内容-->
     <select id="getContentBySearch" resultMap="previewCardMap" parameterType="map">
-        select `content`.`cid`                                        as cid,
-        `content`.`like_amount`                                as like_amount,
-        `content`.`title`                                      as title,
-        `resource`.`type`                                      as type,
+        select `content`.`cid` as cid,
+        `content`.`like_amount` as like_amount,
+        `content`.`title` as title,
+        `resource`.`type` as type,
         JSON_UNQUOTE(JSON_EXTRACT(`resource`.`paths`, '$[0]')) as first_path,
-        `user`.`avatar_path`                                   as avatar,
-        `user`.`nickname`                                      as nickname
+        `user`.`avatar_path` as avatar,
+        `user`.`nickname` as nickname
         from `content`
         inner join `user` on `user`.`uid` = `content`.`uid`
         inner join `resource` on `resource`.`sid` = `content`.`sid`
@@ -93,7 +92,6 @@
             </when>
         </choose>
     </select>
-
 
 
     <!--    &lt;!&ndash;    在当前Mapper.xml中使用二级缓存&ndash;&gt;-->
@@ -142,9 +140,9 @@
 
     <delete id="deleteSelect" parameterType="java.util.List">
         delete from bgb.content where
-            <foreach collection="list" item="cid" separator="or">
-                cid = #{cid}
-            </foreach>
+        <foreach collection="list" item="cid" separator="or">
+            cid = #{cid}
+        </foreach>
     </delete>
 
     <!--    <select id="queryContents" parameterType="map" resultMap="ContentMap">-->
@@ -226,6 +224,29 @@
                  join user u on u.uid = c.uid
         where c.sid = r.sid
           and c.cid = #{cid};
+    </select>
+
+    <select id="getUserCollections" resultMap="previewCardMap">
+        select `content`.`cid`                                        as cid,
+               `content`.`like_amount`                                as like_amount,
+               `content`.`title`                                      as title,
+               `resource`.`type`                                      as type,
+               JSON_UNQUOTE(JSON_EXTRACT(`resource`.`paths`, '$[0]')) as first_path,
+               `user`.`avatar_path`                                   as avatar,
+               `user`.`nickname`                                      as nickname
+        from `collection`
+                 inner join `content` on `content`.`cid` = `collection`.`cid`
+                 inner join `user` on `user`.`uid` = `content`.`uid`
+                 inner join `resource` on `resource`.`sid` = `content`.`sid`
+        where `collection`.`uid` = #{uid}
+        order by `collection`.`date` desc
+            limit ${pageSize*pageNum}, #{pageSize}
+    </select>
+
+    <select id="getUserCollectionAmount" resultType="java.lang.Integer">
+        select count(*)
+        from `collection`
+        where `uid` = #{uid}
     </select>
 
 </mapper>

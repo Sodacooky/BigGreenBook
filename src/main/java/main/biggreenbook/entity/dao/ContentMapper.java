@@ -13,6 +13,8 @@ import java.util.Map;
 @Repository
 public interface ContentMapper {
 
+    // ############## 首页瀑布流
+
     /***
      * 获取当前的查询Id，实际上就是这一时刻的数据库数量
      * @return query_id
@@ -20,30 +22,50 @@ public interface ContentMapper {
     int getQueryId(String search);
 
     /**
-     *
-     * @param pageNum    页数
-     * @param pageSize   页面容量
+     * @param pageNum  页数
+     * @param pageSize 页面容量
      * @return java.util.List<main.biggreenbook.entity.vo.PreviewCard>
      */
     List<PreviewCard> getContentByPage(@Param("pageNum") int pageNum, @Param("pageSize") int pageSize);
 
     /**
-     *
      * @param amount 最新的若干条
      * @return java.util.List<main.biggreenbook.entity.vo.PreviewCard>
      */
-    List<PreviewCard> getLatestContent(@Param("amount")int amount);
+    List<PreviewCard> getLatestContent(@Param("amount") int amount);
 
     /**
-     * @param map
-     *        int pageNum    当前页数
-     *        int pageSize   页面容量
-     *        int amount     amount != pageSize，则获取最新的若干条；否则为正常获取内容
-     *        String search  搜索内容
-     *        String sort    排序方式
+     * @param map int pageNum    当前页数
+     *            int pageSize   页面容量
+     *            int amount     amount != pageSize，则获取最新的若干条；否则为正常获取内容
+     *            String search  搜索内容
+     *            String sort    排序方式
      * @return java.util.List<main.biggreenbook.entity.vo.PreviewCard>
      */
-    List<PreviewCard> getContentBySearch(Map<String,Object> map);
+    List<PreviewCard> getContentBySearch(Map<String, Object> map);
+
+    // ################### 用户收藏夹
+
+    /**
+     * 获取指定uid的用户的收藏夹的某一页内容的预览卡片
+     * 按收藏的时间倒序，新收藏的在头部
+     *
+     * @param uid      user uid
+     * @param pageNum  page index
+     * @param pageSize page size
+     * @return 预览卡片
+     */
+    List<PreviewCard> getUserCollections(@Param("uid") String uid, @Param("pageNum") int pageNum, @Param("pageSize") int pageSize);
+
+    /**
+     * 获取用户的收藏夹收藏数
+     *
+     * @param uid user uid
+     * @return collect amount
+     */
+    int getUserCollectionAmount(@Param("uid") String uid);
+
+    // ################### 后台
 
     //什么玩意？
     List<ContentMessage> getContents(Map<?, ?> map);
