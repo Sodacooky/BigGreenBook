@@ -5,6 +5,7 @@ import main.biggreenbook.entity.vo.PreviewCard;
 import main.biggreenbook.service.WxUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.util.List;
 
@@ -101,7 +102,7 @@ public class WxUserController {
      * @return 是否成功
      */
     public boolean doFollow(@RequestParam("customCode") String customCode, @RequestParam("goal") String goal_uid) {
-        //todo: 
+        throw new NotImplementedException();
     }
 
     /**
@@ -112,7 +113,7 @@ public class WxUserController {
      * @return 是否成功
      */
     public boolean doUnFollow(@RequestParam("customCode") String customCode, @RequestParam("goal") String goal_uid) {
-        //todo:
+        throw new NotImplementedException();
     }
 
     /**
@@ -123,7 +124,7 @@ public class WxUserController {
      * @return 是否关注
      */
     public boolean doIsFollowed(@RequestParam("customCode") String customCode, @RequestParam("goal") String goal_uid) {
-        //todo:
+        throw new NotImplementedException();
     }
 
 

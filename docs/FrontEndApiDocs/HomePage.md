@@ -5,7 +5,7 @@
 ## 获取首页瀑布流卡片
 
 ```http request
-GET /home/get
+GET /ctn/get_home_page
 ```
 
 参数：
@@ -34,7 +34,7 @@ PreviewCard数组，PreviewCard类型如下：
 ## 获得首页瀑布流卡片获取检索ID
 
 ```http request
-GET /home/get_query_id
+GET /ctn/get_home_query_id
 ```
 
 返回：
@@ -46,7 +46,7 @@ GET /home/get_query_id
 ## 获得首页瀑布流页数
 
 ```http request
-GET /home/get_page_amount
+GET /ctn/get_home_page_amount
 ```
 
 *没什么意义，实际上可以前端通过queryId < pageSize ? 1 : queryId / pageSize 计算获得，只有当pageSize日后不是常量时有用*

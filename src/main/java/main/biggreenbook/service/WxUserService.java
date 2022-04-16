@@ -28,14 +28,14 @@ public class WxUserService {
         ArrayList<UserCard> result = new ArrayList<>();
 
         //如果是第一页，那么需要解决多余的部分数据
-        if ((int) map.get("pageNum") == 0 && PAGESIZE < queryId) {
+        if ((int) map.get("pageNum") == 0 && USER_RESULT_PAGE_SIZE < queryId) {
             result.addAll(userMapper.getUserCardBySearch(map));
         }
         //计算逆序页，获得数据
-        int pageAmount = queryId < PAGESIZE ? 1 : queryId / PAGESIZE;
+        int pageAmount = queryId < USER_RESULT_PAGE_SIZE ? 1 : queryId / USER_RESULT_PAGE_SIZE;
         int actualPage = pageAmount - 1 - (int) map.get("pageNum");
 
-        map.replace("amount", PAGESIZE);
+        map.replace("amount", USER_RESULT_PAGE_SIZE);
         map.replace("pageNum", actualPage);
 
         result.addAll(userMapper.getUserCardBySearch(map));
@@ -53,8 +53,9 @@ public class WxUserService {
 
     public int getPageAmount(int queryId) {
         //计算逆序页，获得数据
-        return queryId < PAGESIZE ? 1 : queryId / PAGESIZE;
+        return queryId < USER_RESULT_PAGE_SIZE ? 1 : queryId / USER_RESULT_PAGE_SIZE;
     }
+
 
     /**
      * 处理登录
@@ -86,6 +87,7 @@ public class WxUserService {
         return customCode;
     }
 
+
     /**
      * 判断自定义登录记录可用性（是否过期
      *
@@ -96,6 +98,7 @@ public class WxUserService {
         //查找是否存在
         return Boolean.TRUE.equals(redisTemplate.hasKey("customCode_" + customCode));
     }
+
 
     /**
      * 获取登录用户自己的个人信息
@@ -112,6 +115,7 @@ public class WxUserService {
         return userMapper.getUserByUid(uid);
     }
 
+
     /**
      * 获取指定用户的信息
      *
@@ -121,6 +125,7 @@ public class WxUserService {
     public User getInfo(String uid) {
         return userMapper.getUserByUid(uid);
     }
+
 
     /**
      * 获取用户的收藏夹
@@ -132,6 +137,7 @@ public class WxUserService {
     public List<PreviewCard> getCollections(String uid, int page) {
         return contentMapper.getUserCollections(uid, page, COLLECTION_PAGE_SIZE);
     }
+
 
     /**
      * 获取用户的收藏夹的页数
@@ -150,9 +156,19 @@ public class WxUserService {
         }
     }
 
+    /**
+     * 用户关注操作
+     *
+     * @param customCode 用户的登录CustomCode
+     * @param goal_uid   用户要关注的目标用户UID
+     * @return 如果本身就关注了，那么返回false（在前端的控制下这不应该发生
+     */
+    public boolean doFollow(String customCode, String goal_uid) {
+        
+    }
 
-    //默认获取8个卡片
-    private static final int PAGESIZE = 8;
+    //用户搜索结果每页展示的数量？//todo:
+    private static final int USER_RESULT_PAGE_SIZE = 8;
 
     //用户收藏夹每页的卡片数量
     private static final int COLLECTION_PAGE_SIZE = 16;
