@@ -2,8 +2,8 @@
 spring:
   profiles:
     # 当前激活的配置文件
-    active: dev
-    #active: product
+    #active: dev
+    active: product
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
   mvc:
@@ -33,8 +33,6 @@ spring:
     url: jdbc:mysql://sodacooky.plus:3306/bgb
     username: bgb
     password: 114514
-    hikari:
-      max-lifetime: 90000
   web:
     resources:
       static-locations: file:D:\Workspace\GreenBook\big-green-book
@@ -54,8 +52,6 @@ spring:
     url: jdbc:mysql://localhost:3306/bgb
     username: bgb
     password: 114514
-    hikari:
-      max-lifetime: 90000
   web:
     resources:
       static-locations: file:/root/bgb_test/res

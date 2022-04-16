@@ -72,3 +72,12 @@
 | birthday, date            | 用户的生日          |
 | state, tinyint(1)         | 用户的状态，0正常，1被封禁 |
 | avatar_path, varchar(256) | 用户的头像的路径       |
+
+## 点赞记录表 likes
+
+| column             | description                  |
+|--------------------|------------------------------|
+| goal, varchar(256) | 点赞的目标，可以是内容cid或评论rid         |
+| type, varchar(32)  | 点赞的目标类型，可以是"content"或"reply" |
+| uid, varchar(256)  | 点赞的人的uid                     |
+
