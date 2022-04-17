@@ -90,7 +90,6 @@ public interface ContentMapper {
     //似乎只是查找
     ContentMessage checkContent(Map<?, ?> map);
 
-<<<<<<< HEAD
     List<ContentMessage> getNextContents(Map<?, ?> map);
 
     List<ContentMessage> getPreviousContents(Map<?, ?> map);
@@ -104,6 +103,4 @@ public interface ContentMapper {
                                          @Param("pageNum") int pageNum, @Param("pageSize") int pageSize,
                                          @Param("amount") int amount);
 
-=======
->>>>>>> 925eb2414e4298111867eff3bed3169eb14ef8ef
 }

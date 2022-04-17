@@ -47,9 +47,6 @@
                 <!--插入的地方-->
                 <router-link to="/reportManage/ContentList"></router-link>消息列表
               </el-menu-item>
-              <el-menu-item index="3-2">
-                <router-link to="/goHome"></router-link>回到首页
-              </el-menu-item>
             </el-menu-item-group>
           </el-submenu>
 

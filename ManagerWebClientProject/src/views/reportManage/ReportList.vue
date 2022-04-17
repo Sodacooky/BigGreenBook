@@ -139,8 +139,11 @@ export default {
       let _this = this;
       axios({
         method: 'get',
-        url: 'http://localhost:8080/manage/getReports/' + currentPage,
+        url: '/product/manage/getReports/' + currentPage,
         contentType:"application/json;charset=UTF-8",
+        headers: { // 设置请求头
+          token: this.cookie.get("token")
+        }
       }).then(function (res) {
         let obj = JSON.parse(JSON.stringify(res.data));
         _this.totalPage = Math.ceil(obj.totalReports / _this.pageSize)*10;
@@ -165,8 +168,11 @@ export default {
       select.push(cid);
       axios({
         method: 'get',
-        url: 'http://localhost:8080/manage/deleteSelect/' + select,
+        url: '/product/manage/deleteSelect/' + select,
         contentType:"application/json;charset=UTF-8",
+        headers: { // 设置请求头
+          token: this.cookie.get("token")
+        }
       }).then(function (res) {
         _this.handleCurrentChange(_this.currentPage);
       })
@@ -191,8 +197,11 @@ export default {
       let _this= this;
       axios({
         method: 'get',
-        url: 'http://localhost:8080/manage/check/' + cid,
+        url: '/product/manage/check/' + cid,
         contentType:"application/json;charset=UTF-8",
+        headers: { // 设置请求头
+          token: this.cookie.get("token")
+        }
       }).then(function (res) {
         let content = res.data;
         console.log("goto: " + content.date);
@@ -204,8 +213,11 @@ export default {
       let _this = this;
       axios({
         method: 'get',
-        url: 'http://localhost:8080/manage/ignore/' + uid + '/' + cid,
+        url: '/product/manage/ignore/' + uid + '/' + cid,
         contentType:"application/json;charset=UTF-8",
+        headers: { // 设置请求头
+          token: this.cookie.get("token")
+        }
       }).then(function (res) {
         _this.handleCurrentChange(_this.currentPage);
       })
@@ -247,8 +259,11 @@ export default {
       let _this = this;
       axios({
         method: 'get',
-        url: 'http://localhost:8080/manage/getIgnore/' + currentPage,
+        url: '/product/manage/getIgnore/' + currentPage,
         contentType:"application/json;charset=UTF-8",
+        headers: { // 设置请求头
+          token: this.cookie.get("token")
+        }
       }).then(function (res) {
         let obj = JSON.parse(JSON.stringify(res.data));
         _this.totalPage = Math.ceil(obj.totalReports / _this.pageSize)*10;

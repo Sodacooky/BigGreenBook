@@ -7,15 +7,17 @@ import Login from "../views/Login";
 import ContentMessage from "../views/contentManage/ContentMessage";
 import ContentCheck from "../views/contentManage/ContentCheck";
 import ContentList from "../views/reportManage/ReportList";
+import ElementUI from "element-ui";
 
 Vue.use(Router)
+import cookies from 'vue-cookies'
 
-export default new Router({
+const router = new Router({
   mode: 'history',
 
   routes: [
     {
-      path: '/',
+      path: '/main',
       name: 'Main',
       meta: {
         title: '后台管理'
@@ -30,14 +32,24 @@ export default new Router({
     },
     {
       path: '/goHome',
-      redirect: '/'
+      redirect: '/main'
     },
     {
-      path: '/login',
+      path: '/',
       name: 'Login',
       component: Login
     },
-
-
   ]
 })
+
+router.beforeEach((to, from, next) => {
+  localStorage.effectiveTime = 10;
+  let token = localStorage.getItem('token');
+  console.log("index: " + token);
+  if (to.name !== 'Login' && token == null) {
+    ElementUI.Message("请先登录！");
+    next({name: 'Login'})
+  }
+  else next()
+})
+export default router

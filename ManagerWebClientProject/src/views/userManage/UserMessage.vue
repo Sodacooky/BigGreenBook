@@ -1,8 +1,9 @@
 <template>
   <div>
+
     <el-page-header @back="goBack">
     </el-page-header>
-    <el-input size="medium" style="width: 180px" v-model="inputId" placeholder="请输入uid"></el-input>
+    <el-input size="medium" style="width: 180px" v-model="inputId" @keyup.enter.native="query(inputId)" placeholder="请输入uid"></el-input>
     <el-button type="primary" size="small" @click="query(inputId)" icon="el-icon-search">搜索</el-button>
 
     <br></br>
@@ -73,6 +74,7 @@
                    layout="prev, pager, next"
                    :total="totalPage">
     </el-pagination>
+
   </div>
 </template>
 
@@ -150,8 +152,11 @@ export default {
       _this.tableData = [];
       axios({
         method: 'get',
-        url: 'http://localhost:8080/manage/query/' + uid,
+        url: '/product/manage/query/' + uid,
         contentType:"application/json;charset=UTF-8",
+        headers: { // 设置请求头
+          token: _this.cookie.get("token")
+        }
       }).then(function (res) {
           let obj = JSON.parse(JSON.stringify(res.data));
           console.log(res.data)
@@ -174,8 +179,11 @@ export default {
 
       axios({
         method: 'get',
-        url: 'http://localhost:8080/manage/reset/' + uid,
+        url: '/product/manage/reset/' + uid,
         contentType:"application/json;charset=UTF-8",
+        headers: { // 设置请求头
+          token: _this.cookie.get("token")
+        }
       }).then(function (res) {
         let obj = JSON.parse(JSON.stringify(res.data));
         let state = "正常";
@@ -218,7 +226,7 @@ export default {
       _this.tableData = [];
       axios({
         method: 'get',
-        url: 'http://localhost:8080/manage/allUser',
+        url: '/product/manage/allUser',
         contentType:"application/json;charset=UTF-8",
       }).then(function (res) {
         let obj = JSON.parse(JSON.stringify(res.data));
@@ -239,8 +247,11 @@ export default {
       _this.inputId = uid;
       axios({
         method: 'get',
-        url: 'http://localhost:8080/manage/updateDesc/' + uid + '/' + value,
+        url: '/product/manage/updateDesc/' + uid + '/' + value,
         contentType:"application/json;charset=UTF-8",
+        headers: { // 设置请求头
+          token: _this.cookie.get("token")
+        }
       }).then(function (res) {
           let obj = JSON.parse(JSON.stringify(res.data));
           let state = "正常";
@@ -261,8 +272,11 @@ export default {
       _this.inputId = uid;
       axios({
         method: 'get',
-        url: 'http://localhost:8080/manage/updateName/' + uid + '/' + value,
+        url: '/product/manage/updateName/' + uid + '/' + value,
         contentType:"application/json;charset=UTF-8",
+        headers: { // 设置请求头
+          token: _this.cookie.get("token")
+        }
       }).then(function (res) {
         let obj = JSON.parse(JSON.stringify(res.data));
         let state = "正常";
@@ -298,8 +312,11 @@ export default {
       _this.inputId = uid;
       axios({
         method: 'get',
-        url: 'http://localhost:8080/manage/suspend/' + uid,
+        url: '/product/manage/suspend/' + uid,
         contentType:"application/json;charset=UTF-8",
+        headers: { // 设置请求头
+          token: _this.cookie.get("token")
+        }
       }).then(function (res) {
           let obj = JSON.parse(JSON.stringify(res.data));
 
@@ -334,8 +351,11 @@ export default {
       _this.inputId = uid;
       axios({
         method: 'get',
-        url: 'http://localhost:8080/manage/restore/' + uid,
+        url: '/product/manage/restore/' + uid,
         contentType:"application/json;charset=UTF-8",
+        headers: { // 设置请求头
+          token: _this.cookie.get("token")
+        }
       }).then(function (res) {
         let obj = JSON.parse(JSON.stringify(res.data));
 
@@ -355,15 +375,17 @@ export default {
       _this.tableData = [];
       axios({
         method: 'get',
-        url: 'http://localhost:8080/manage/getUsers/' + currentPage,
+        url: '/product/manage/getUsers/' + currentPage,
         contentType:"application/json;charset=UTF-8",
+        headers: { // 设置请求头
+          token: this.cookie.get("token")
+        }
       }).then(function (res) {
           let obj = JSON.parse(JSON.stringify(res.data));
           let list = obj.list;
           _this.totalPage = Math.ceil(obj.totalUsers / _this.pageSize)*10;
 
           console.log(list);
-
           for (let i = 0; i < list.length; i++) {
             let state = "正常";
             if (list[i].state === 1) {
@@ -388,6 +410,8 @@ export default {
   mounted() {
     // this.loadAllUser();
     this.handleCurrentChange(this.currentPage);
+
+    console.log("usertoken: " + this.cookie.get("token"));
   }
 }
 </script>
