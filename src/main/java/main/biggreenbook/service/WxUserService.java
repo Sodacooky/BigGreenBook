@@ -4,21 +4,23 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import main.biggreenbook.entity.dao.ContentMapper;
 import main.biggreenbook.entity.dao.UserMapper;
+import main.biggreenbook.entity.pojo.Follow;
 import main.biggreenbook.entity.pojo.User;
 import main.biggreenbook.entity.vo.PreviewCard;
 import main.biggreenbook.entity.vo.UserCard;
+import main.biggreenbook.utils.RedisHelper;
 import main.biggreenbook.utils.StaticMappingHelper;
 import main.biggreenbook.utils.UUIDGenerator;
 import main.biggreenbook.utils.WxInfoContainer;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.io.IOException;
 import java.net.URL;
+import java.sql.Timestamp;
 import java.time.Duration;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Map;
 
@@ -82,7 +84,7 @@ public class WxUserService {
         //生成
         String customCode = UUIDGenerator.generate();
         //填充
-        redisTemplate.opsForValue().set("customCode_" + customCode, resultOpenId + "_" + resultSessionKey, Duration.ofDays(1));
+        redisHelper.setCustomCode(customCode, resultOpenId, resultSessionKey, Duration.ofDays(1));
         //
         return customCode;
     }
@@ -96,7 +98,7 @@ public class WxUserService {
      */
     public boolean checkCustomCodeState(String customCode) {
         //查找是否存在
-        return Boolean.TRUE.equals(redisTemplate.hasKey("customCode_" + customCode));
+        return redisHelper.hasKey(customCode);
     }
 
 
@@ -108,9 +110,7 @@ public class WxUserService {
      */
     public User getMyInfo(String customCode) {
         //从redis中获取uid
-        String value = (String) redisTemplate.opsForValue().get("customCode_" + customCode);
-        String[] vals = value.split("_");
-        String uid = vals[0];
+        String uid = redisHelper.getUidFromCustomCode(customCode);
         //通过uid获取用户
         return userMapper.getUserByUid(uid);
     }
@@ -164,7 +164,10 @@ public class WxUserService {
      * @return 如果本身就关注了，那么返回false（在前端的控制下这不应该发生
      */
     public boolean doFollow(String customCode, String goal_uid) {
-        throw new NotImplementedException();
+        if (getFollowState(customCode, goal_uid)) return false;
+        String uid = redisHelper.getUidFromCustomCode(customCode);
+        userMapper.addFollow(uid, goal_uid, new Timestamp(Calendar.getInstance().getTimeInMillis()));
+        return true;
     }
 
     /**
@@ -175,7 +178,10 @@ public class WxUserService {
      * @return 如果本身就没关注，那么返回false（在前端的控制下这不应该发生
      */
     public boolean doUnFollow(String customCode, String goal_uid) {
-        throw new NotImplementedException();
+        if (!getFollowState(customCode, goal_uid)) return false;
+        String uid = redisHelper.getUidFromCustomCode(customCode);
+        userMapper.deleteFollow(uid, goal_uid);
+        return true;
     }
 
     /**
@@ -186,7 +192,9 @@ public class WxUserService {
      * @return 是否已经关注
      */
     public boolean getFollowState(String customCode, String goal_uid) {
-        throw new NotImplementedException();
+        String uid = redisHelper.getUidFromCustomCode(customCode);
+        List<Follow> followStateBetween = userMapper.getFollowStateBetween(uid, goal_uid);
+        return followStateBetween.size() != 0;
     }
 
     //用户搜索结果每页展示的数量？//todo:
@@ -199,7 +207,7 @@ public class WxUserService {
     private WxInfoContainer wxInfoContainer;
 
     @Autowired
-    private RedisTemplate<String, Object> redisTemplate;
+    private RedisHelper redisHelper;
 
     @Autowired
     private UserMapper userMapper;
