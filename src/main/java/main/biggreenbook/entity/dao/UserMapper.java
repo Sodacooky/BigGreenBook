@@ -1,10 +1,8 @@
 package main.biggreenbook.entity.dao;
 
 import main.biggreenbook.entity.pojo.User;
-import main.biggreenbook.entity.vo.Example;
 import main.biggreenbook.entity.vo.UserCard;
 import org.apache.ibatis.annotations.Mapper;
-import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -36,6 +34,5 @@ public interface UserMapper {
      * @return java.util.List<main.biggreenbook.entity.vo.UserCard>
      */
     List<UserCard> getUserCardBySearch(Map<String,Object> map);
-
 
 }
