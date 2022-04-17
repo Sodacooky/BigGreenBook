@@ -2,7 +2,6 @@ package main.biggreenbook.entity.dao;
 
 import main.biggreenbook.entity.pojo.User;
 import main.biggreenbook.entity.vo.UserCard;
-import main.biggreenbook.entity.vo.Example;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;

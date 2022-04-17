@@ -5,7 +5,6 @@ import main.biggreenbook.entity.vo.PreviewCard;
 import main.biggreenbook.service.WxUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.util.List;
 
@@ -101,8 +100,9 @@ public class WxUserController {
      * @param goal_uid   要关注的认的uid
      * @return 是否成功
      */
+    @GetMapping("/follow")
     public boolean doFollow(@RequestParam("customCode") String customCode, @RequestParam("goal") String goal_uid) {
-        throw new NotImplementedException();
+        return wxUserService.doFollow(customCode, goal_uid);
     }
 
     /**
@@ -112,8 +112,9 @@ public class WxUserController {
      * @param goal_uid   要取消关注的认的uid
      * @return 是否成功
      */
+    @GetMapping("/unfollow")
     public boolean doUnFollow(@RequestParam("customCode") String customCode, @RequestParam("goal") String goal_uid) {
-        throw new NotImplementedException();
+        return wxUserService.doUnFollow(customCode, goal_uid);
     }
 
     /**
@@ -123,8 +124,9 @@ public class WxUserController {
      * @param goal_uid   目标用户的uid
      * @return 是否关注
      */
+    @GetMapping("/get_follow_state")
     public boolean doIsFollowed(@RequestParam("customCode") String customCode, @RequestParam("goal") String goal_uid) {
-        throw new NotImplementedException();
+        return wxUserService.getFollowState(customCode, goal_uid);
     }
 
 
