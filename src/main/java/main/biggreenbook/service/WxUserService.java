@@ -14,6 +14,7 @@ import main.biggreenbook.utils.UUIDGenerator;
 import main.biggreenbook.utils.WxInfoContainer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.io.IOException;
 import java.net.URL;
@@ -164,6 +165,9 @@ public class WxUserService {
      * @return 如果本身就关注了，那么返回false（在前端的控制下这不应该发生
      */
     public boolean doFollow(String customCode, String goal_uid) {
+<<<<<<< HEAD
+        throw new NotImplementedException();
+=======
         if (getFollowState(customCode, goal_uid)) return false;
         String uid = redisHelper.getUidFromCustomCode(customCode);
         userMapper.addFollow(uid, goal_uid, new Timestamp(Calendar.getInstance().getTimeInMillis()));
@@ -195,6 +199,7 @@ public class WxUserService {
         String uid = redisHelper.getUidFromCustomCode(customCode);
         List<Follow> followStateBetween = userMapper.getFollowStateBetween(uid, goal_uid);
         return followStateBetween.size() != 0;
+>>>>>>> 203ba0548511855bd0bda5c8f863c87b14dd968d
     }
 
     //用户搜索结果每页展示的数量？//todo:

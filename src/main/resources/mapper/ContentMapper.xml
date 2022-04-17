@@ -346,7 +346,7 @@
           and c.cid = #{cid};
     </select>
 
-<<<<<<< HEAD
+
     <select id="getNextContents" parameterType="map" resultMap="ContentMap">
         select c.cid, c.title, c.main_text, c.date, c.like_amount, c.type, r.paths, u.nickname, u.uid from resource r,
         content c join user u on u.uid = c.uid
@@ -371,18 +371,6 @@
         order by c.date
     </select>
 
-    <select id="getContentBySearch" resultMap="previewCardMap">
-        select `content`.`cid` as cid,
-        `content`.`like_amount` as like_amount,
-        `content`.`title` as title,
-        `resource`.`type` as type,
-        JSON_EXTRACT(`resource`.`paths`, '$[0]') as first_path,
-        `user`.`avatar_path` as avatar,
-        `user`.`nickname` as nickname
-        from `content`
-        inner join `user` on `user`.`uid` = `content`.`uid`
-        inner join `resource` on `resource`.`sid` = `content`.`sid`
-=======
     <select id="getUserCollections" resultMap="previewCardMap">
         select `content`.`cid`                                        as cid,
                `content`.`like_amount`                                as like_amount,
@@ -399,7 +387,7 @@
         order by `collection`.`date` desc
             limit ${pageSize*pageNum}, #{pageSize}
     </select>
->>>>>>> 925eb2414e4298111867eff3bed3169eb14ef8ef
+
 
     <select id="getUserCollectionAmount" resultType="java.lang.Integer">
         select count(*)

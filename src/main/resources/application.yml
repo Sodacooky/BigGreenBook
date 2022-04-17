@@ -3,7 +3,7 @@ spring:
   profiles:
     # 当前激活的配置文件
     #active: dev
-    active: product
+    active: dev
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
   mvc:

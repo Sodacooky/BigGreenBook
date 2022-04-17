@@ -9,6 +9,7 @@ import main.biggreenbook.entity.vo.ManageUserPage;
 import main.biggreenbook.service.ContentManageService;
 import main.biggreenbook.service.ManagerPageService;
 import main.biggreenbook.service.ReportService;
+import main.biggreenbook.utils.JWTUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -292,7 +293,22 @@ public class ManagerPageController {
 
     // 管理员登录
     @GetMapping(value = "/manageLogin/{username}/{password}")
-    public boolean ManageLogin(@PathVariable String username, @PathVariable String password) {
-        return username.equals("admin") && password.equals("12345");
+    public Map<String, String> ManageLogin(@PathVariable String username, @PathVariable String password) {
+        System.out.println("-----------------------------------------------------");
+        System.out.println("已接收到请求！");
+        System.out.println("-----------------------------------------------------");
+        Map<String, String> map = new HashMap<>();
+        String state = "认证失败！";
+        if (username.equals("admin") && password.equals("12345")) {
+            state = "认证通过";
+            String token = JWTUtils.getToken(map);
+            map.put("token", token);
+            System.out.println(token);
+            System.out.println("-----------------------------------------------------");
+        }
+        map.put("state", state);
+        map.put("id", username);
+
+        return map;
     }
 }

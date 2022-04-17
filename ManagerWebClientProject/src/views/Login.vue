@@ -17,7 +17,7 @@
       title="温馨提示"
       :visible.sync="dialogVisible"
       width="30%"
-      :before-close="handleClose">
+                >
       <span>请输入账号和密码</span>
       <span slot="footer" class="dialog-footer">
         <el-button type="primary" @click="dialogVisible = false">确 定</el-button>
@@ -28,6 +28,9 @@
 
 <script charset="utf-8">
 import axios from "axios";
+import cookies from 'vue-cookies'
+import Vue from "vue";
+Vue.prototype.cookie = cookies
 
 export default {
   name: "Login",
@@ -56,34 +59,25 @@ export default {
       var _this = this;
       axios({
         method: 'get',
-        url: 'http://localhost:8081/user/manageLogin/' + this.form.username + '/' + this.form.password,
+        url: '/product/manage/manageLogin/' + this.form.username + '/' + this.form.password,
         contentType:"application/json;charset=UTF-8",
         params: {
           username: this.form.username,
           password: this.form.password
         }
       }).then(function (res) {
-        if (res.data === true) {
-          _this.$router.push({path: '/'});
+        console.log("login: " + res.data.state);
+        if (res.data.state === "认证通过") {
+          _this.cookie.set("token", res.data.token);
+          localStorage.setItem("token", res.data.token);
+          localStorage.getItem("token");
+          _this.$router.push("/main");
         }
         else {
-          alert("用户名或密码错误！");
-          _this.$router.push('/login');
+          _this.$message("账号名或密码错误！");
         }
-
       })
 
-      // //为表单绑定验证功能
-      // this.$refs[formName].validate((valid) => {
-      //   if (valid) {
-      //     //使用vue-router路由到指定页面，该方式称之为编程式导航
-      //     //   this.$router.push("/main/" + this.form.username);
-      //     this.$router.push("/main");
-      //   } else {
-      //     this.dialogVisible = true;
-      //     return false;
-      //   }
-      // })
     }
   }
 }
