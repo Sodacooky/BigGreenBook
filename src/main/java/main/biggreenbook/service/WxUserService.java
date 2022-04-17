@@ -57,7 +57,6 @@ public class WxUserService {
         return queryId < USER_RESULT_PAGE_SIZE ? 1 : queryId / USER_RESULT_PAGE_SIZE;
     }
 
-
     /**
      * 处理登录
      *

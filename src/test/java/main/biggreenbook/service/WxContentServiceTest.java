@@ -1,5 +1,6 @@
 package main.biggreenbook.service;
 
+import main.biggreenbook.entity.vo.ContentInfo;
 import main.biggreenbook.entity.vo.PreviewCard;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,23 +24,25 @@ public class WxContentServiceTest {
     }
 
     @Test
-    public void getPreviewCards(){
-        int page = 0;
-        int pageSize = 8;
-        String search = "";
-        String sort = "HOT";
-        int queryId = wxContentService.getQueryId(search);
-
-
-        Map<String, Object> map = new HashMap<>();
-        map.put("pageNum",page);
-        map.put("pageSize",pageSize);
-        map.put("amount",queryId % pageSize);
-        map.put("search",search);
-        map.put("sort",sort);
-
-        List<PreviewCard> cards = wxContentService.getPreviewCardsBySearch(queryId,map);
-        cards.forEach(System.out::println);
+    public void getContentInfoTest(){
+        ContentInfo contentInfo = wxContentService.getContentInfo("1", "1");
+        System.out.println(contentInfo.getPaths());
+        System.out.println(contentInfo);
     }
 
+    @Test
+    public void giveLikeTest(){
+        //取消点赞
+        System.out.println(wxContentService.giveLike(0, null, "1", "1"));
+        //点赞
+        System.out.println(wxContentService.giveLike(1, "content", "1", "1"));
+    }
+
+    @Test
+    public void collectionContentTest(){
+        //取消收藏
+        wxContentService.collectionContent(0,"1","1");
+        //添加收藏
+        wxContentService.collectionContent(1,"1","1");
+    }
 }
