@@ -13,6 +13,7 @@ import main.biggreenbook.utils.WxInfoContainer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Service;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.io.IOException;
 import java.net.URL;
@@ -164,7 +165,29 @@ public class WxUserService {
      * @return 如果本身就关注了，那么返回false（在前端的控制下这不应该发生
      */
     public boolean doFollow(String customCode, String goal_uid) {
-        
+        throw new NotImplementedException();
+    }
+
+    /**
+     * 用户取消关注操作
+     *
+     * @param customCode 用户的登录CustomCode
+     * @param goal_uid   用户要取关的目标用户UID
+     * @return 如果本身就没关注，那么返回false（在前端的控制下这不应该发生
+     */
+    public boolean doUnFollow(String customCode, String goal_uid) {
+        throw new NotImplementedException();
+    }
+
+    /**
+     * 返回是否已经关注
+     *
+     * @param customCode 用户的登录CustomCode
+     * @param goal_uid   目标用户UID
+     * @return 是否已经关注
+     */
+    public boolean getFollowState(String customCode, String goal_uid) {
+        throw new NotImplementedException();
     }
 
     //用户搜索结果每页展示的数量？//todo:
