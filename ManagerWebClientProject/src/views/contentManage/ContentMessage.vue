@@ -22,10 +22,10 @@
           :value="item.value">
         </el-option>
       </el-select>
-        <el-input v-if="value === ''" size="medium" style="width: 180px" v-model="input" placeholder="请输入"></el-input>
-        <el-input v-if="value === '选项1'" size="medium" style="width: 180px" v-model="input" placeholder="请输入uid"></el-input>
-        <el-input v-if="value === '选项2'" size="medium" style="width: 180px" v-model="input" placeholder="请输入用户昵称"></el-input>
-        <el-input v-if="value === '选项3'" size="medium" style="width: 180px" v-model="input" placeholder="请输入标题"></el-input>
+        <el-input v-if="value === ''" size="medium" style="width: 180px" v-model="input" @keyup.enter.native="query(value, input)" placeholder="请输入"></el-input>
+        <el-input v-if="value === '选项1'" size="medium" style="width: 180px" v-model="input" @keyup.enter.native="query(value, input)" placeholder="请输入uid"></el-input>
+        <el-input v-if="value === '选项2'" size="medium" style="width: 180px" v-model="input" @keyup.enter.native="query(value, input)" placeholder="请输入用户昵称"></el-input>
+        <el-input v-if="value === '选项3'" size="medium" style="width: 180px" v-model="input" @keyup.enter.native="query(value, input)" placeholder="请输入标题"></el-input>
         <el-button type="primary" size="small" @click="query(value, input)" icon="el-icon-search">搜索</el-button>
       </el-col>
     </el-row>
@@ -187,8 +187,11 @@ export default {
       let date = _this.dateIsNull(_this.dateValue);
       axios({
         method: 'get',
-        url: 'http://localhost:8080/manage/getContents/' + JSON.stringify(currentPage) + '/' + date,
+        url: '/product/manage/getContents/' + JSON.stringify(currentPage) + '/' + date,
         contentType:"application/json;charset=UTF-8",
+        headers: { // 设置请求头
+          token: this.cookie.get("token")
+        }
       }).then(function (res) {
         let obj = JSON.parse(JSON.stringify(res.data));
         let list = obj.list;
@@ -239,8 +242,11 @@ export default {
       }
       axios({
         method: 'get',
-        url: 'http://localhost:8080/manage/deleteSelect/' + select,
+        url: '/product/manage/deleteSelect/' + select,
         contentType:"application/json;charset=UTF-8",
+        headers: { // 设置请求头
+          token: this.cookie.get("token")
+        }
       }).then(function () {
         _this.handleCurrentChange(_this.currentPage);
 
@@ -268,8 +274,11 @@ export default {
       let date = _this.dateIsNull(_this.dateValue);
       axios({
         method: 'get',
-        url: 'http://localhost:8080/manage/queryContents/' + inputName  + '/' + _this.currentPage + '/' + date,
+        url: '/product/manage/queryContents/' + inputName  + '/' + _this.currentPage + '/' + date,
         contentType:"application/json;charset=UTF-8",
+        headers: { // 设置请求头
+          token: this.cookie.get("token")
+        }
       }).then(function (res) {
         let obj = JSON.parse(JSON.stringify(res.data));
         let list = obj.list;
@@ -297,8 +306,11 @@ export default {
       let date = _this.dateIsNull(_this.dateValue);
       axios({
         method: 'get',
-        url: 'http://localhost:8080/manage/queryUid/' + uid  + '/' + _this.currentPage + '/' + date,
+        url: '/product/manage/queryUid/' + uid  + '/' + _this.currentPage + '/' + date,
         contentType:"application/json;charset=UTF-8",
+        headers: { // 设置请求头
+          token: this.cookie.get("token")
+        }
       }).then(function (res) {
         let obj = JSON.parse(JSON.stringify(res.data));
         let list = obj.list;
@@ -325,8 +337,11 @@ export default {
       let date = _this.dateIsNull(_this.dateValue);
       axios({
         method: 'get',
-        url: 'http://localhost:8080/manage/queryNickname/' + nickname  + '/' + _this.currentPage + '/' + date,
+        url: '/product/manage/queryNickname/' + nickname  + '/' + _this.currentPage + '/' + date,
         contentType:"application/json;charset=UTF-8",
+        headers: { // 设置请求头
+          token: this.cookie.get("token")
+        }
       }).then(function (res) {
         let obj = JSON.parse(JSON.stringify(res.data));
         let list = obj.list;
@@ -389,8 +404,11 @@ export default {
       select.push(cid);
       axios({
         method: 'get',
-        url: 'http://localhost:8080/manage/deleteSelect/' + select,
+        url: '/product/manage/deleteSelect/' + select,
         contentType:"application/json;charset=UTF-8",
+        headers: { // 设置请求头
+          token: this.cookie.get("token")
+        }
       }).then(function (res) {
           _this.handleCurrentChange(_this.currentPage);
       })
@@ -400,11 +418,15 @@ export default {
       let _this= this;
       axios({
         method: 'get',
-        url: 'http://localhost:8080/manage/check/' + cid,
+        url: '/product/manage/check/' + cid,
         contentType:"application/json;charset=UTF-8",
+        headers: { // 设置请求头
+          token: this.cookie.get("token")
+        }
       }).then(function (res) {
         let content = res.data;
         console.log("goto: " + content.date);
+        _this.cookie.set('content', content);
         _this.$router.push({path: '/contentManage/ContentCheck/', query: {content: content}});
       })
     },

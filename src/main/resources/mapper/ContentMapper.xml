@@ -385,18 +385,6 @@
         order by c.date
     </select>
 
-    <select id="getContentBySearch" resultMap="previewCardMap">
-    select `content`.`cid` as cid,
-    `content`.`like_amount` as like_amount,
-    `content`.`title` as title,
-    `resource`.`type` as type,
-    JSON_EXTRACT(`resource`.`paths`, '$[0]') as first_path,
-    `user`.`avatar_path` as avatar,
-    `user`.`nickname` as nickname
-    from `content`
-    inner join `user` on `user`.`uid` = `content`.`uid`
-    inner join `resource` on `resource`.`sid` = `content`.`sid`
-
     <select id="getUserCollections" resultMap="previewCardMap">
         select `content`.`cid`                                        as cid,
                `content`.`like_amount`                                as like_amount,
