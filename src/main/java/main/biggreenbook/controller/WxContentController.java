@@ -18,6 +18,8 @@ import java.util.Map;
 @RequestMapping("/ctn")
 public class WxContentController {
 
+    // 首页瀑布流
+
     /**
      * 获取首页瀑布流检索ID
      */
@@ -38,8 +40,10 @@ public class WxContentController {
         if (page < 0) page = 0;
         if (page >= getHomePageAmount(query_id)) page = getHomePageAmount(query_id) - 1;
         //to service
-        return wxContentService.getPreviewCards(page, query_id);
+        return wxContentService.getHomePageContent(page, query_id);
     }
+
+    //搜索
 
 
     @GetMapping("/get_search_query_id")

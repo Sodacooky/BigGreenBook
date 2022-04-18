@@ -22,11 +22,11 @@ public class WxSearchService {
     @Autowired
     ContentMapper contentMapper;
 
-    public List<PreviewCard> getPreviewCardsBySearch(int queryId, Map<String,Object> map){
+    public List<PreviewCard> getPreviewCardsBySearch(int queryId, Map<String, Object> map) {
         ArrayList<PreviewCard> result = new ArrayList<>();
 
         //如果是第一页，那么需要解决多余的部分数据
-        if ( (int) map.get("pageNum") == 0 && PAGESIZE < queryId) {
+        if ((int) map.get("pageNum") == 0 && PAGESIZE < queryId) {
             result.addAll(contentMapper.getContentBySearch(map));
         }
         //计算逆序页，获得数据
@@ -34,8 +34,8 @@ public class WxSearchService {
         int actualPage = pageAmount - 1 - (int) map.get("pageNum");
 
         //amount == PAGESIZE 正常获取内容
-        map.replace("amount",PAGESIZE);
-        map.replace("pageNum",actualPage);
+        map.replace("amount", PAGESIZE);
+        map.replace("pageNum", actualPage);
 
         result.addAll(contentMapper.getContentBySearch(map));
 
@@ -60,7 +60,7 @@ public class WxSearchService {
     }
 
     public int getPreviewCardQueryId(String search) {
-        return contentMapper.getQueryId(search);
+        return contentMapper.getSearchQueryId(search);
     }
 
     public int getPreviewCardPageAmount(int queryId) {
@@ -69,26 +69,22 @@ public class WxSearchService {
     }
 
 
-
-
-
-
     @Autowired
     UserMapper userMapper;
 
-    public List<UserCard> getUserCardsBySearch(int queryId, Map<String,Object> map) {
+    public List<UserCard> getUserCardsBySearch(int queryId, Map<String, Object> map) {
         ArrayList<UserCard> result = new ArrayList<>();
 
         //如果是第一页，那么需要解决多余的部分数据
-        if ((int)map.get("pageNum") == 0 && PAGESIZE < queryId) {
+        if ((int) map.get("pageNum") == 0 && PAGESIZE < queryId) {
             result.addAll(userMapper.getUserCardBySearch(map));
         }
         //计算逆序页，获得数据
         int pageAmount = queryId < PAGESIZE ? 1 : queryId / PAGESIZE;
-        int actualPage = pageAmount - 1 - (int)map.get("pageNum");
+        int actualPage = pageAmount - 1 - (int) map.get("pageNum");
 
-        map.replace("amount",PAGESIZE);
-        map.replace("pageNum",actualPage);
+        map.replace("amount", PAGESIZE);
+        map.replace("pageNum", actualPage);
 
         result.addAll(userMapper.getUserCardBySearch(map));
 
@@ -98,7 +94,7 @@ public class WxSearchService {
         });
 
         //按sort方式 逆序排序
-        if (map.get("sort").equals("FANS")){
+        if (map.get("sort").equals("FANS")) {
             Comparator<UserCard> comparator = new Comparator<UserCard>() {
                 @Override
                 public int compare(UserCard p1, UserCard p2) {

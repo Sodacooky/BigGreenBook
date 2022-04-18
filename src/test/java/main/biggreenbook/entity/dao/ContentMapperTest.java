@@ -10,85 +10,113 @@ import java.sql.Timestamp;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @SpringBootTest
 public class ContentMapperTest {
 
+    // 首页瀑布流 //
+    // 首页瀑布流 //
+    // 首页瀑布流 //
+
+    @Test
+    public void getHomePageQueryIdTest() {
+        System.out.println(contentMapper.getHomePageQueryId());
+    }
+
+    @Test
+    public void getHomePageContentTest() {
+        List<PreviewCard> homePageContent = contentMapper.getHomePageContent(0, 8);
+        homePageContent.forEach(System.out::println);
+    }
+
+    @Test
+    public void getHomePageLatestPartTest() {
+        List<PreviewCard> homePageContent = contentMapper.getHomePageLatestPart(2);
+        homePageContent.forEach(System.out::println);
+    }
+
+    // 搜索内容 //
+    // 搜索内容 //
+    // 搜索内容 //
+
+    @Test
+    public void getSearchQueryIdTest() {
+        System.out.println(contentMapper.getSearchQueryId("布里"));
+    }
+
+    @Test
+    public void getContentBySearchTest() {
+        HashMap<String, Object> paramMap = new HashMap<>();
+        paramMap.put("pageNum", 0);
+        paramMap.put("pageSize", 8);
+        paramMap.put("amount", 8);
+        paramMap.put("search", "布里");
+        paramMap.put("sort", "LATEST");
+        List<PreviewCard> contentBySearch = contentMapper.getContentBySearch(paramMap);
+        contentBySearch.forEach(System.out::println);
+    }
+
+    // 用户收藏夹 //
+    // 用户收藏夹 //
+    // 用户收藏夹 //
+
+    @Test
+    public void getUserCollectionAmountTest() {
+        System.out.println(contentMapper.getUserCollectionAmount("0"));
+    }
+
+    @Test
+    public void getUserCollectionsTest() {
+        List<PreviewCard> userCollections = contentMapper.getUserCollections("0", 0, 8);
+        userCollections.forEach(System.out::println);
+    }
+
+    //contentMapper of the testing
     @Autowired
     ContentMapper contentMapper;
 
-    @Test
-    public void getQueryIdTest() {
-        System.out.println("query_id=" + contentMapper.getQueryId(null));
-    }
 
     @Test
-    public void getContentByPageTest() {
-        List<PreviewCard> contentByPage = contentMapper.getContentByPage(0,8);
-        contentByPage.forEach(System.out::println);
-    }
-
-    @Test
-    public void getLatestContentTest() {
-        List<PreviewCard> latestContent = contentMapper.getLatestContent(2);
-        latestContent.forEach(System.out::println);
-    }
-
-    @Test
-    public void getContentBySearchTest(){
-        Map<String, Object> map = new HashMap<>();
-        map.put("pageNum",0);
-        map.put("pageSize",8);
-        map.put("sort","HOT");
-
-        //map.put("amount",2);
-        map.put("amount",8);
-        List<PreviewCard> cards = contentMapper.getContentBySearch(map);
-
-        cards.forEach(System.out::println);
-    }
-
-    @Test
-    public void getContentInfoTest(){
+    public void getContentInfoTest() {
         ContentInfo contentInfo = contentMapper.getContentInfo("1", "1");
         System.out.println(contentInfo);
     }
 
 
     @Test
-    public void updateLikeAmountTest(){}
-
-    @Test
-    public void addLikesTest(){
-        contentMapper.addLikes("content","1","1");
+    public void updateLikeAmountTest() {
     }
 
     @Test
-    public void subLikesTest(){
-        contentMapper.subLikes("1","1");
+    public void addLikesTest() {
+        contentMapper.addLikes("content", "1", "1");
     }
 
     @Test
-    public void queryLikeAmountTest(){
+    public void subLikesTest() {
+        contentMapper.subLikes("1", "1");
+    }
+
+    @Test
+    public void queryLikeAmountTest() {
         contentMapper.queryLikeAmount("1");
     }
 
     @Test
-    public void addReportContentTest(){
-        Timestamp date= new Timestamp(new Date().getTime());
-        contentMapper.addReportContent("1","1","不可奉告",date);
+    public void addReportContentTest() {
+        Timestamp date = new Timestamp(new Date().getTime());
+        contentMapper.addReportContent("1", "1", "不可奉告", date);
     }
 
     @Test
-    public void addConllectionTest(){
-        Timestamp date= new Timestamp(System.currentTimeMillis());
-        contentMapper.addCollection("1","1",date);
+    public void addConllectionTest() {
+        Timestamp date = new Timestamp(System.currentTimeMillis());
+        contentMapper.addCollection("1", "1", date);
     }
 
     @Test
-    public void deleteCollectionTest(){
-        contentMapper.deleteCollection("1","1");
+    public void deleteCollectionTest() {
+        contentMapper.deleteCollection("1", "1");
     }
 
 

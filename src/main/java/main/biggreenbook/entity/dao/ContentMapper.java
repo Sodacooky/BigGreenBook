@@ -15,7 +15,9 @@ import java.util.Map;
 @Repository
 public interface ContentMapper {
 
-    // ############## 首页瀑布流
+    // 首页瀑布流 //
+    // 首页瀑布流 //
+    // 首页瀑布流 //
 
     /**
      * 获取当前首页瀑布流的QueryID，，实际上就是这一时刻的数据库数量
@@ -24,24 +26,34 @@ public interface ContentMapper {
      */
     int getHomePageQueryId();
 
-    /***
-     * 获取当前的查询Id，实际上就是这一时刻的数据库数量
-     * @return query_id
+    /**
+     * 获取首页瀑布流的内容
+     *
+     * @param pageNum  页，按时间顺序，新内容在最后页
+     * @param pageSize 页大小
+     * @return 内容预览卡片
      */
-    int getQueryId(String search);
+    List<PreviewCard> getHomePageContent(@Param("pageNum") int pageNum, @Param("pageSize") int pageSize);
 
     /**
-     * @param pageNum  页数
-     * @param pageSize 页面容量
-     * @return java.util.List<main.biggreenbook.entity.vo.PreviewCard>
-     */
-    List<PreviewCard> getContentByPage(@Param("pageNum") int pageNum, @Param("pageSize") int pageSize);
-
-    /**
+     * 获取首页瀑布流中，分页剩余的部分
+     *
      * @param amount 最新的若干条
      * @return java.util.List<main.biggreenbook.entity.vo.PreviewCard>
      */
-    List<PreviewCard> getLatestContent(@Param("amount") int amount);
+    List<PreviewCard> getHomePageLatestPart(@Param("amount") int amount);
+
+    // 搜索内容 //
+    // 搜索内容 //
+    // 搜索内容 //
+
+    /**
+     * 获取当前搜索的检索ID
+     *
+     * @param search 搜索的内容
+     * @return 在当前搜索内容下的数量
+     */
+    int getSearchQueryId(String search);
 
     /**
      * @param map int pageNum    当前页数
@@ -53,7 +65,9 @@ public interface ContentMapper {
      */
     List<PreviewCard> getContentBySearch(Map<String, Object> map);
 
-    // ################### 用户收藏夹
+    // 用户收藏夹 //
+    // 用户收藏夹 //
+    // 用户收藏夹 //
 
     /**
      * 获取指定uid的用户的收藏夹的某一页内容的预览卡片
@@ -181,24 +195,8 @@ public interface ContentMapper {
     //似乎只是查找
     ContentMessage checkContent(Map<?, ?> map);
 
-<<<<<<< HEAD
-=======
 
->>>>>>> 203ba0548511855bd0bda5c8f863c87b14dd968d
     List<ContentMessage> getNextContents(Map<?, ?> map);
 
     List<ContentMessage> getPreviousContents(Map<?, ?> map);
-
-    /**
-     * @param sort   排序条件：LAST:最新 / HOT:最热
-     * @param search 搜索内容
-     * @return PreviewCard
-     */
-    List<PreviewCard> getContentBySearch(@Param("sort") String sort, @Param("search") String search,
-                                         @Param("pageNum") int pageNum, @Param("pageSize") int pageSize,
-                                         @Param("amount") int amount);
-<<<<<<< HEAD
-
-=======
->>>>>>> 203ba0548511855bd0bda5c8f863c87b14dd968d
 }
