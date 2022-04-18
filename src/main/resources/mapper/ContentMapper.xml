@@ -3,16 +3,6 @@
 
 <mapper namespace="main.biggreenbook.entity.dao.ContentMapper">
 
-    <!--获取内容数量（含搜索）-->
-    <select id="getQueryId" resultType="java.lang.Integer">
-        select count(*)
-        from `content`
-        <if test="search != null and search != ''">
-            where `content`.`title` like '%${search}%'
-            or `content`.`main_text` like '%${search}%'
-        </if>
-    </select>
-
     <resultMap id="previewCardMap" type="main.biggreenbook.entity.vo.PreviewCard">
         <id property="contentCid" column="cid"/>
         <result property="contentCid" column="cid"/>
@@ -24,182 +14,125 @@
         <result property="userNickname" column="nickname"/>
     </resultMap>
     <resultMap id="contentInfoMap" type="main.biggreenbook.entity.vo.ContentInfo">
-            <result property="cid" column="cid"/>
-            <result property="title" column="title"/>
-            <result property="text" column="text"/>
-            <result property="date" column="date"/>
-            <result property="likeAmount" column="likeAmount"/>
-            <result property="sid" column="sid"/>
-            <result property="paths" column="paths"/>
-            <result property="uid" column="uid"/>
-            <result property="userNickname" column="nickname"/>
-            <result property="userAvatarPath" column="avatar_path"/>
+        <result property="cid" column="cid"/>
+        <result property="title" column="title"/>
+        <result property="text" column="text"/>
+        <result property="date" column="date"/>
+        <result property="likeAmount" column="likeAmount"/>
+        <result property="sid" column="sid"/>
+        <result property="paths" column="paths"/>
+        <result property="uid" column="uid"/>
+        <result property="userNickname" column="nickname"/>
+        <result property="userAvatarPath" column="avatar_path"/>
 
-            <result property="status" column="status"/>
-            <result property="like" column="islike"/>
-            <result property="collection" column="iscollection"/>
+        <result property="status" column="status"/>
+        <result property="like" column="islike"/>
+        <result property="collection" column="iscollection"/>
     </resultMap>
 
 
-    <!--获取内容-->
-    <select id="getContentByPage" resultMap="previewCardMap">
-        select `content`.`cid`                                        as cid,
-               `content`.`like_amount`                                as like_amount,
-               `content`.`title`                                      as title,
-               `resource`.`type`                                      as type,
-               JSON_UNQUOTE(JSON_EXTRACT(`resource`.`paths`, '$[0]')) as first_path,
-               `user`.`avatar_path`                                   as avatar,
-               `user`.`nickname`                                      as nickname
-        from `content`
-                 inner join `user` on `user`.`uid` = `content`.`uid`
-                 inner join `resource` on `resource`.`sid` = `content`.`sid`
-        order by `content`.`date` asc
-            limit ${pageSize*pageNum}, #{pageSize}
-    </select>
-
-    <!--获取最新的若干条-->
-    <select id="getLatestContent" resultMap="previewCardMap">
-        select `content`.`cid`                                        as cid,
-               `content`.`like_amount`                                as like_amount,
-               `content`.`title`                                      as title,
-               `resource`.`type`                                      as type,
-               JSON_UNQUOTE(JSON_EXTRACT(`resource`.`paths`, '$[0]')) as first_path,
-               `user`.`avatar_path`                                   as avatar,
-               `user`.`nickname`                                      as nickname
-        from `content`
-                 inner join `user` on `user`.`uid` = `content`.`uid`
-                 inner join `resource` on `resource`.`sid` = `content`.`sid`
-        order by `content`.`date` desc limit 0,#{amount}
-    </select>
-
-    <!--通过搜索获取内容-->
-    <select id="getContentBySearch" resultMap="previewCardMap" parameterType="map">
-        select `content`.`cid` as cid,
-        `content`.`like_amount` as like_amount,
-        `content`.`title` as title,
-        `resource`.`type` as type,
-        JSON_UNQUOTE(JSON_EXTRACT(`resource`.`paths`, '$[0]')) as first_path,
-        `user`.`avatar_path` as avatar,
-        `user`.`nickname` as nickname
-        from `content`
-        inner join `user` on `user`.`uid` = `content`.`uid`
-        inner join `resource` on `resource`.`sid` = `content`.`sid`
-        <if test="search != null and search != ''">
-            where `content`.`title` like '%${search}%'
-            or `content`.`main_text` like '%${search}%'
-        </if>
-        <choose>
-            <when test="sort == 'HOT'">
-                <choose>
-                    <when test="pageNum == 0 and amount != pageSize">
-                        order by `content`.`like_amount` desc limit 0,#{amount}
-                    </when>
-                    <when test="amount == pageSize">
-                        order by `content`.`like_amount` asc limit ${pageSize*pageNum}, #{pageSize}
-                    </when>
-                </choose>
-            </when>
-            <when test="sort == 'LATEST'">
-                <choose>
-                    <when test="pageNum == 0 and amount != pageSize">
-                        order by `content`.`date` desc limit 0,#{amount}
-                    </when>
-                    <when test="amount == pageSize">
-                        order by `content`.`date` asc limit ${pageSize*pageNum}, #{pageSize}
-                    </when>
-                </choose>
-            </when>
-        </choose>
-    </select>
-
     <!--获取内容详情-->
     <select id="getContentInfo" resultMap="contentInfoMap">
-        SELECT `t`.`cid` as `cid`,
-        `t`.`title` as `title`,
-        `t`.`text` as `text`,
-        `t`.`date` as `date`,
-        `t`.`likeAmount` as `likeAmount`,
-        `t`.`sid` as `sid`,
-        `t`.`paths` as `paths`,
-        `t`.`uid` as `uid`,
-        `t`.`nickname` as `nickname`,
-        `t`.`avatar_path` as `avatar_path`,
-        `t`.`status` as `status`,
-		count(`likes`.`goal`) as islike,
-		count(`collection`.`cid`) as iscollection
- 		from(select `r`.`cid` as `cid`,
-					`r`.`title` as `title`,
-					`r`.`text` as `text`,
-					`r`.`date` as `date`,
-					`r`.`likeAmount` as `likeAmount`,
-					`r`.`sid` as `sid`,
-					`r`.`paths` as `paths`,
-					`u`.`uid` as `uid`,
-					`u`.`nickname` as `nickname`,
-					`u`.`avatar_path` as `avatar_path`,
-					`u`.`status` as `status`
-			from(select `c`.`cid` as `cid`,
-						`c`.`title` as `title`,
-                        `c`.`text` as `text`,
-                        `c`.`date` as `date`,
-                        `c`.`likeAmount` as `likeAmount`,
-                        `c`.`uid` as `uid`,
-                        `resource`.`sid` as `sid`,
-                        `resource`.`paths` as `paths`
-                from(select `content`.`cid` as `cid`,
-                            `content`.`title` as `title`,
-                            `content`.`main_text` as `text`,
-                            `content`.`date` as `date`,
-                            `content`.`like_amount` as `likeAmount`,
-                            `content`.`uid` as `uid`,
-					        `content`.`sid` as `sid`
-                    from `content`
-                    where `content`.`cid` = ${cid})`c`,`resource`
-            where `c`.`sid` = `resource`.`sid`)`r`,
-            (select `user`.`uid` as uid,
-                    `user`.`nickname` as nickname,
-                    `user`.`avatar_path` as avatar_path,
-                    count(`follow`.`uid`) as status
-            from `user`,`follow`
-            where `follow`.`uid` = `user`.`uid` and `follow`.`follower` = ${uid}
-            group by `user`.`uid`)u
-        where `r`.`uid` = `u`.`uid`)`t`
-		left join `likes` on `likes`.`goal` = `t`.`cid` and `likes`.`uid` = `t`.`uid`
-		LEFT JOIN `collection` on `collection`.`cid` = `t`.`cid` and `collection`.`uid` = `t`.`uid`
-		GROUP BY `t`.`cid`
+        SELECT `t`.`cid`                 as `cid`,
+               `t`.`title`               as `title`,
+               `t`.`text`                as `text`,
+               `t`.`date`                as `date`,
+               `t`.`likeAmount`          as `likeAmount`,
+               `t`.`sid`                 as `sid`,
+               `t`.`paths`               as `paths`,
+               `t`.`uid`                 as `uid`,
+               `t`.`nickname`            as `nickname`,
+               `t`.`avatar_path`         as `avatar_path`,
+               `t`.`status`              as `status`,
+               count(`likes`.`goal`)     as islike,
+               count(`collection`.`cid`) as iscollection
+        from (select `r`.`cid`         as `cid`,
+                     `r`.`title`       as `title`,
+                     `r`.`text`        as `text`,
+                     `r`.`date`        as `date`,
+                     `r`.`likeAmount`  as `likeAmount`,
+                     `r`.`sid`         as `sid`,
+                     `r`.`paths`       as `paths`,
+                     `u`.`uid`         as `uid`,
+                     `u`.`nickname`    as `nickname`,
+                     `u`.`avatar_path` as `avatar_path`,
+                     `u`.`status`      as `status`
+              from (select `c`.`cid`          as `cid`,
+                           `c`.`title`        as `title`,
+                           `c`.`text`         as `text`,
+                           `c`.`date`         as `date`,
+                           `c`.`likeAmount`   as `likeAmount`,
+                           `c`.`uid`          as `uid`,
+                           `resource`.`sid`   as `sid`,
+                           `resource`.`paths` as `paths`
+                    from (select `content`.`cid`         as `cid`,
+                                 `content`.`title`       as `title`,
+                                 `content`.`main_text`   as `text`,
+                                 `content`.`date`        as `date`,
+                                 `content`.`like_amount` as `likeAmount`,
+                                 `content`.`uid`         as `uid`,
+                                 `content`.`sid`         as `sid`
+                          from `content`
+                          where `content`.`cid` = ${cid}) `c`,
+                         `resource`
+                    where `c`.`sid` = `resource`.`sid`) `r`,
+                   (select `user`.`uid`          as uid,
+                           `user`.`nickname`     as nickname,
+                           `user`.`avatar_path`  as avatar_path,
+                           count(`follow`.`uid`) as status
+                    from `user`,
+                         `follow`
+                    where `follow`.`uid` = `user`.`uid`
+                      and `follow`.`follower` = ${uid}
+                    group by `user`.`uid`) u
+              where `r`.`uid` = `u`.`uid`) `t`
+                 left join `likes` on `likes`.`goal` = `t`.`cid` and `likes`.`uid` = `t`.`uid`
+                 LEFT JOIN `collection` on `collection`.`cid` = `t`.`cid` and `collection`.`uid` = `t`.`uid`
+        GROUP BY `t`.`cid`
     </select>
 
     <!--修改点赞数-->
     <update id="updateLikeAmount">
-        update `content` set `like_amount` = `like_amount` + ${isLike}
+        update `content`
+        set `like_amount` = `like_amount` + ${isLike}
         where `content`.`cid` = ${cid}
     </update>
     <!--查询点赞数-->
     <select id="queryLikeAmount" resultType="int">
-        select `like_amount` from `content`
+        select `like_amount`
+        from `content`
         where `content`.`cid` = ${cid}
     </select>
     <!--新增点赞-->
     <insert id="addLikes">
-        insert into `likes` values(${goal},'${likeType}',${uid})
+        insert into `likes`
+        values (${goal}, '${likeType}', ${uid})
     </insert>
     <!--取消点赞-->
     <delete id="subLikes">
-        delete from `likes` where `likes`.`goal` = ${goal} and `likes`.`uid` = ${uid}
+        delete
+        from `likes`
+        where `likes`.`goal` = ${goal}
+          and `likes`.`uid` = ${uid}
     </delete>
 
     <!--添加收藏-->
     <insert id="addCollection">
-        insert into `collection` values(${uid},${cid},'${date}')
+        insert into `collection`
+        values (${uid}, ${cid}, '${date}')
     </insert>
     <!--取消收藏-->
     <delete id="deleteCollection">
-        delete from `collection` where `collection`.`uid` = ${uid} and `collection`.`cid` = ${cid}
+        delete
+        from `collection`
+        where `collection`.`uid` = ${uid}
+          and `collection`.`cid` = ${cid}
     </delete>
 
     <!--添加举报-->
     <insert id="addReportContent">
-        insert into `report` values(${uid},${cid},'${date}',0,'${reason}')
+        insert into `report`
+        values (${uid}, ${cid}, '${date}', 0, '${reason}')
     </insert>
 
     <!--    &lt;!&ndash;    在当前Mapper.xml中使用二级缓存&ndash;&gt;-->
@@ -226,17 +159,17 @@
 
     <select id="getContents" parameterType="map" resultMap="ContentMap">
         select c.cid,
-               c.title,
-               c.main_text,
-               c.date,
-               c.like_amount,
-               c.type,
-               r.paths,
-               u.nickname,
-               u.uid
+        c.title,
+        c.main_text,
+        c.date,
+        c.like_amount,
+        c.type,
+        r.paths,
+        u.nickname,
+        u.uid
         from resource r,
-             content c
-             join user u on u.uid = c.uid
+        content c
+        join user u on u.uid = c.uid
         <where>
             <if test="start != null">
                 c.date between #{start} and #{end} and
@@ -245,7 +178,7 @@
         </where>
         order by c.date desc
         <if test="index != null">
-        limit #{index}, #{target}
+            limit #{index}, #{target}
         </if>
     </select>
 
@@ -351,10 +284,10 @@
         select c.cid, c.title, c.main_text, c.date, c.like_amount, c.type, r.paths, u.nickname, u.uid from resource r,
         content c join user u on u.uid = c.uid
         <where>
-        c.sid = r.sid and c.cid != #{cid}
-        <if test="end != null">
-           and c.date between '2022-04-01T16:00:00.000+00:00' and #{end}
-        </if>
+            c.sid = r.sid and c.cid != #{cid}
+            <if test="end != null">
+                and c.date between '2022-04-01T16:00:00.000+00:00' and #{end}
+            </if>
         </where>
         order by c.date desc
     </select>
@@ -370,6 +303,92 @@
         </where>
         order by c.date
     </select>
+
+    <!-- HOMEPAGE -->
+
+    <select id="getHomePageQueryId" resultType="java.lang.Integer">
+        select count(*)
+        from `content`;
+    </select>
+
+    <select id="getHomePageLatestPart" resultMap="previewCardMap">
+        select `content`.`cid`                                        as cid,
+               `content`.`like_amount`                                as like_amount,
+               `content`.`title`                                      as title,
+               `resource`.`type`                                      as type,
+               JSON_UNQUOTE(JSON_EXTRACT(`resource`.`paths`, '$[0]')) as first_path,
+               `user`.`avatar_path`                                   as avatar,
+               `user`.`nickname`                                      as nickname
+        from `content`
+                 inner join `user` on `user`.`uid` = `content`.`uid`
+                 inner join `resource` on `resource`.`sid` = `content`.`sid`
+        order by `content`.`date` desc limit 0,#{amount}
+    </select>
+
+    <select id="getHomePageContent" resultMap="previewCardMap">
+        select `content`.`cid`                                        as cid,
+               `content`.`like_amount`                                as like_amount,
+               `content`.`title`                                      as title,
+               `resource`.`type`                                      as type,
+               JSON_UNQUOTE(JSON_EXTRACT(`resource`.`paths`, '$[0]')) as first_path,
+               `user`.`avatar_path`                                   as avatar,
+               `user`.`nickname`                                      as nickname
+        from `content`
+                 inner join `user` on `user`.`uid` = `content`.`uid`
+                 inner join `resource` on `resource`.`sid` = `content`.`sid`
+        order by `content`.`date` asc
+            limit ${pageSize*pageNum}, #{pageSize}
+    </select>
+
+    <!-- SEARCHING -->
+
+    <select id="getSearchQueryId" resultType="java.lang.Integer">
+        select count(*)
+        from `content`
+        where `content`.`title` like '%${search}%'
+           or `content`.`main_text` like '%${search}%'
+    </select>
+
+    <select id="getContentBySearch" resultMap="previewCardMap" parameterType="map">
+        select `content`.`cid` as cid,
+        `content`.`like_amount` as like_amount,
+        `content`.`title` as title,
+        `resource`.`type` as type,
+        JSON_UNQUOTE(JSON_EXTRACT(`resource`.`paths`, '$[0]')) as first_path,
+        `user`.`avatar_path` as avatar,
+        `user`.`nickname` as nickname
+        from `content`
+        inner join `user` on `user`.`uid` = `content`.`uid`
+        inner join `resource` on `resource`.`sid` = `content`.`sid`
+        <if test="search != null and search != ''">
+            where `content`.`title` like '%${search}%'
+            or `content`.`main_text` like '%${search}%'
+        </if>
+        <choose>
+            <when test="sort == 'HOT'">
+                <choose>
+                    <when test="pageNum == 0 and amount != pageSize">
+                        order by `content`.`like_amount` desc limit 0,#{amount}
+                    </when>
+                    <when test="amount == pageSize">
+                        order by `content`.`like_amount` asc limit ${pageSize*pageNum}, #{pageSize}
+                    </when>
+                </choose>
+            </when>
+            <when test="sort == 'LATEST'">
+                <choose>
+                    <when test="pageNum == 0 and amount != pageSize">
+                        order by `content`.`date` desc limit 0,#{amount}
+                    </when>
+                    <when test="amount == pageSize">
+                        order by `content`.`date` asc limit ${pageSize*pageNum}, #{pageSize}
+                    </when>
+                </choose>
+            </when>
+        </choose>
+    </select>
+
+    <!-- USER COLLECTION -->
 
     <select id="getUserCollections" resultMap="previewCardMap">
         select `content`.`cid`                                        as cid,

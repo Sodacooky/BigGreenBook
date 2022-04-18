@@ -16,7 +16,9 @@ import java.util.List;
 @RequestMapping("/usr")
 public class WxUserController {
 
-    // ############# 登录 ###############
+    // 微信小程序登录 //
+    // 微信小程序登录 //
+    // 微信小程序登录 //
 
     /**
      * 登录
@@ -40,7 +42,9 @@ public class WxUserController {
         return wxUserService.checkCustomCodeState(customCode);
     }
 
-    // ############# 个人信息相关 ###############
+    // 个人信息相关 //
+    // 个人信息相关 //
+    // 个人信息相关 //
 
     /**
      * 通过登录时获取的自定义登录记录，获得自己的用户信息
@@ -63,6 +67,10 @@ public class WxUserController {
     public User getInfo(@RequestParam("uid") String uid) {
         return wxUserService.getInfo((uid));
     }
+
+    // 用户收藏夹相关 //
+    // 用户收藏夹相关 //
+    // 用户收藏夹相关 //
 
     /**
      * 获取用户的收藏夹内容
@@ -91,7 +99,9 @@ public class WxUserController {
         return wxUserService.getCollectionPageAmount(uid);
     }
 
-    // ############# 个人信息页关注互动 ###############
+    // 个人信息页关注互动 //
+    // 个人信息页关注互动 //
+    // 个人信息页关注互动 //
 
     /**
      * 进行用户关注

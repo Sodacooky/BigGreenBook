@@ -6,9 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @SpringBootTest
 public class WxContentServiceTest {
@@ -18,20 +16,20 @@ public class WxContentServiceTest {
 
     @Test
     public void getPreviewCardsTest() {
-        int queryId = wxContentService.getQueryId(null);
-        List<PreviewCard> previewCards = wxContentService.getPreviewCards(0,queryId);
+        int queryId = wxContentService.getSearchQueryId(null);
+        List<PreviewCard> previewCards = wxContentService.getHomePageContent(0, queryId);
         previewCards.forEach(System.out::println);
     }
 
     @Test
-    public void getContentInfoTest(){
+    public void getContentInfoTest() {
         ContentInfo contentInfo = wxContentService.getContentInfo("1", "1");
         System.out.println(contentInfo.getPaths());
         System.out.println(contentInfo);
     }
 
     @Test
-    public void giveLikeTest(){
+    public void giveLikeTest() {
         //取消点赞
         System.out.println(wxContentService.giveLike(0, null, "1", "1"));
         //点赞
@@ -39,10 +37,10 @@ public class WxContentServiceTest {
     }
 
     @Test
-    public void collectionContentTest(){
+    public void collectionContentTest() {
         //取消收藏
-        wxContentService.collectionContent(0,"1","1");
+        wxContentService.collectionContent(0, "1", "1");
         //添加收藏
-        wxContentService.collectionContent(1,"1","1");
+        wxContentService.collectionContent(1, "1", "1");
     }
 }

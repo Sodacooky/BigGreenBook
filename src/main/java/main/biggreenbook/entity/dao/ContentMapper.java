@@ -15,26 +15,45 @@ import java.util.Map;
 @Repository
 public interface ContentMapper {
 
-    // ############## 首页瀑布流
+    // 首页瀑布流 //
+    // 首页瀑布流 //
+    // 首页瀑布流 //
 
-    /***
-     * 获取当前的查询Id，实际上就是这一时刻的数据库数量
+    /**
+     * 获取当前首页瀑布流的QueryID，，实际上就是这一时刻的数据库数量
+     *
      * @return query_id
      */
-    int getQueryId(String search);
+    int getHomePageQueryId();
 
     /**
-     * @param pageNum  页数
-     * @param pageSize 页面容量
-     * @return java.util.List<main.biggreenbook.entity.vo.PreviewCard>
+     * 获取首页瀑布流的内容
+     *
+     * @param pageNum  页，按时间顺序，新内容在最后页
+     * @param pageSize 页大小
+     * @return 内容预览卡片
      */
-    List<PreviewCard> getContentByPage(@Param("pageNum") int pageNum, @Param("pageSize") int pageSize);
+    List<PreviewCard> getHomePageContent(@Param("pageNum") int pageNum, @Param("pageSize") int pageSize);
 
     /**
+     * 获取首页瀑布流中，分页剩余的部分
+     *
      * @param amount 最新的若干条
      * @return java.util.List<main.biggreenbook.entity.vo.PreviewCard>
      */
-    List<PreviewCard> getLatestContent(@Param("amount") int amount);
+    List<PreviewCard> getHomePageLatestPart(@Param("amount") int amount);
+
+    // 搜索内容 //
+    // 搜索内容 //
+    // 搜索内容 //
+
+    /**
+     * 获取当前搜索的检索ID
+     *
+     * @param search 搜索的内容
+     * @return 在当前搜索内容下的数量
+     */
+    int getSearchQueryId(String search);
 
     /**
      * @param map int pageNum    当前页数
@@ -46,7 +65,9 @@ public interface ContentMapper {
      */
     List<PreviewCard> getContentBySearch(Map<String, Object> map);
 
-    // ################### 用户收藏夹
+    // 用户收藏夹 //
+    // 用户收藏夹 //
+    // 用户收藏夹 //
 
     /**
      * 获取指定uid的用户的收藏夹的某一页内容的预览卡片
@@ -174,6 +195,7 @@ public interface ContentMapper {
     //似乎只是查找
     ContentMessage checkContent(Map<?, ?> map);
 
+<<<<<<< HEAD
     List<ContentMessage> getNextContents(Map<?, ?> map);
 
     List<ContentMessage> getPreviousContents(Map<?, ?> map);
@@ -186,4 +208,10 @@ public interface ContentMapper {
     List<PreviewCard> getContentBySearch(@Param("sort") String sort, @Param("search") String search,
                                          @Param("pageNum") int pageNum, @Param("pageSize") int pageSize,
                                          @Param("amount") int amount);
+=======
+
+    List<ContentMessage> getNextContents(Map<?, ?> map);
+
+    List<ContentMessage> getPreviousContents(Map<?, ?> map);
+>>>>>>> 91d4fc78022e824967a2a37ac454e119208347ac
 }
