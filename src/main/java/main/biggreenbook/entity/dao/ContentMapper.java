@@ -174,10 +174,6 @@ public interface ContentMapper {
     //似乎只是查找
     ContentMessage checkContent(Map<?, ?> map);
 
-<<<<<<< HEAD
-=======
-
->>>>>>> 203ba0548511855bd0bda5c8f863c87b14dd968d
     List<ContentMessage> getNextContents(Map<?, ?> map);
 
     List<ContentMessage> getPreviousContents(Map<?, ?> map);
@@ -190,8 +186,4 @@ public interface ContentMapper {
     List<PreviewCard> getContentBySearch(@Param("sort") String sort, @Param("search") String search,
                                          @Param("pageNum") int pageNum, @Param("pageSize") int pageSize,
                                          @Param("amount") int amount);
-<<<<<<< HEAD
-
-=======
->>>>>>> 203ba0548511855bd0bda5c8f863c87b14dd968d
 }

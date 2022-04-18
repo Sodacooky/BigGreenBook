@@ -14,7 +14,7 @@
             end-placeholder="结束日期">
           </el-date-picker>
 
-      <el-select size="medium" v-model="value" placeholder="请选择">
+      <el-select size="medium" v-model="value" placeholder="请选择" clearable>
         <el-option
           v-for="item in options"
           :key="item.value"

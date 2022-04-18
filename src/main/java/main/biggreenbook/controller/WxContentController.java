@@ -51,6 +51,7 @@ public class WxContentController {
 
         //to service
         return wxContentService.getPreviewCardsBySearch(query_id, map);
+    
     }
 
     @GetMapping("/get_contentInfo")
