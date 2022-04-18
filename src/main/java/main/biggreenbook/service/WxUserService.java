@@ -164,6 +164,7 @@ public class WxUserService {
      * @return 如果本身就关注了，那么返回false（在前端的控制下这不应该发生
      */
     public boolean doFollow(String customCode, String goal_uid) {
+        if (!redisHelper.hasKey(customCode)) return false;
         if (getFollowState(customCode, goal_uid)) return false;
         String uid = redisHelper.getUidFromCustomCode(customCode);
         userMapper.addFollow(uid, goal_uid, new Timestamp(Calendar.getInstance().getTimeInMillis()));
@@ -178,6 +179,7 @@ public class WxUserService {
      * @return 如果本身就没关注，那么返回false（在前端的控制下这不应该发生
      */
     public boolean doUnFollow(String customCode, String goal_uid) {
+        if (!redisHelper.hasKey(customCode)) return false;
         if (!getFollowState(customCode, goal_uid)) return false;
         String uid = redisHelper.getUidFromCustomCode(customCode);
         userMapper.deleteFollow(uid, goal_uid);
@@ -192,6 +194,7 @@ public class WxUserService {
      * @return 是否已经关注
      */
     public boolean getFollowState(String customCode, String goal_uid) {
+        if (!redisHelper.hasKey(customCode)) return false;
         String uid = redisHelper.getUidFromCustomCode(customCode);
         List<Follow> followStateBetween = userMapper.getFollowStateBetween(uid, goal_uid);
         return followStateBetween.size() != 0;

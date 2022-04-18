@@ -17,6 +17,13 @@ public interface ContentMapper {
 
     // ############## 首页瀑布流
 
+    /**
+     * 获取当前首页瀑布流的QueryID，，实际上就是这一时刻的数据库数量
+     *
+     * @return query_id
+     */
+    int getHomePageQueryId();
+
     /***
      * 获取当前的查询Id，实际上就是这一时刻的数据库数量
      * @return query_id

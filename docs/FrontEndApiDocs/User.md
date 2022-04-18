@@ -111,6 +111,8 @@ PreviewCard数组，PreviewCard类型如下：
 | userNickname      | String  | 该内容作者的昵称                 |
 | contentLikeAmount | Integer | 该内容的点赞数量                 |
 
+***
+
 ## 获取用户的收藏夹页数
 
 ```http request
@@ -128,3 +130,60 @@ GET /usr/get_collections_page_amount
 整数类型的页数。
 
 当为0时，没有收藏内容。
+
+***
+
+## 关注用户
+
+```http request
+GET /usr/follow
+```
+
+参数：
+
+| 参数名        | 说明                   |
+|------------|----------------------|
+| customCode | 发起人（用户自己）的自定义登录记录字符串 |
+| goal_uid   | 要关注的认的uid            | 
+
+返回：
+
+动作是否成功布尔值
+
+***
+
+## 取消关注用户
+
+```http request
+GET /usr/unfollow
+```
+
+参数：
+
+| 参数名        | 说明                   |
+|------------|----------------------|
+| customCode | 发起人（用户自己）的自定义登录记录字符串 |
+| goal_uid   | 要取消关注的认的uid          | 
+
+返回：
+
+动作是否成功布尔值
+
+***
+
+## 获取关注状态
+
+```http request
+GET /usr/get_follow_state
+```
+
+参数：
+
+| 参数名        | 说明                   |
+|------------|----------------------|
+| customCode | 发起人（用户自己）的自定义登录记录字符串 |
+| goal_uid   | 目标用户的uid             | 
+
+返回：
+
+是否已经关注布尔值

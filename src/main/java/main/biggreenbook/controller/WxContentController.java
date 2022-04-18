@@ -5,6 +5,7 @@ import main.biggreenbook.entity.vo.PreviewCard;
 import main.biggreenbook.service.WxContentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.sql.Timestamp;
 import java.util.HashMap;
@@ -17,8 +18,13 @@ import java.util.Map;
 @RequestMapping("/ctn")
 public class WxContentController {
 
-    @Autowired
-    WxContentService wxContentService;
+    /**
+     * 获取首页瀑布流检索ID
+     */
+    @GetMapping("/get_home_query_id")
+    public int getHomeQueryId() {
+        return wxContentService.getQueryId(null);
+    }
 
     /***
      * 获取首页瀑布流卡片
@@ -36,8 +42,22 @@ public class WxContentController {
     }
 
 
+    @GetMapping("/get_search_query_id")
+    public int getSearchQueryId(@RequestParam String search_words) {
+        throw new NotImplementedException();
+    }
+
+    /**
+     * 内容搜索
+     *
+     * @param page
+     * @param query_id
+     * @param search
+     * @param sort
+     * @return
+     */
     @GetMapping("/get_search")
-    public List<PreviewCard> getPreviewCardsBySearch(@RequestParam(required = true) int page, @RequestParam(required = true) int query_id, String search, String sort) {
+    public List<PreviewCard> getPreviewCardsBySearch(@RequestParam int page, @RequestParam int query_id, String search, String sort) {
         //page parameter check
         if (page < 0) page = 0;
         if (page >= getHomePageAmount(query_id)) page = getHomePageAmount(query_id) - 1;
@@ -50,7 +70,8 @@ public class WxContentController {
         map.put("sort", sort);
 
         //to service
-        return wxContentService.getPreviewCardsBySearch(query_id, map);
+        //return wxContentService.getPreviewCardsBySearch(query_id, map);
+        return null;
     }
 
     @GetMapping("/get_contentInfo")
@@ -100,15 +121,6 @@ public class WxContentController {
     }
 
 
-    /**
-     * 获取检索ID
-     */
-    @GetMapping("/get_home_query_id")
-    public int getHomeQueryId() {
-        return wxContentService.getQueryId(null);
-    }
-
-
     /***
      * 获取一共有多少页
      * @param query_id 检索ID
@@ -118,4 +130,9 @@ public class WxContentController {
     public int getHomePageAmount(@RequestParam(required = true) int query_id) {
         return wxContentService.getPageAmount(query_id);
     }
+
+
+    @Autowired
+    WxContentService wxContentService;
+
 }

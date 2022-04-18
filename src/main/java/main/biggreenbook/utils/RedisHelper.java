@@ -11,18 +11,20 @@ public class RedisHelper {
 
     public String getUidFromCustomCode(String customCode) {
         String value = (String) redisTemplate.opsForValue().get("customCode_" + customCode);
-        String[] vals = value.split("_");
-        return vals[0];
+        if (value == null) return "null";
+        String[] values = value.split("_");
+        return values[0];
     }
 
     public String getSessionKeyFromCustomCode(String customCode) {
         String value = (String) redisTemplate.opsForValue().get("customCode_" + customCode);
-        String[] vals = value.split("_");
-        return vals[1];
+        if (value == null) return "null";
+        String[] values = value.split("_");
+        return values[1];
     }
 
     public boolean hasKey(String key) {
-        return redisTemplate.hasKey(key);
+        return Boolean.TRUE.equals(redisTemplate.hasKey(key));
     }
 
     /**
