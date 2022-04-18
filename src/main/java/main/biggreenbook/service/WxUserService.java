@@ -59,6 +59,11 @@ public class WxUserService {
         return queryId < USER_RESULT_PAGE_SIZE ? 1 : queryId / USER_RESULT_PAGE_SIZE;
     }
 
+
+    // 微信小程序登录 //
+    // 微信小程序登录 //
+    // 微信小程序登录 //
+
     /**
      * 处理登录
      *
@@ -102,6 +107,10 @@ public class WxUserService {
     }
 
 
+    // 个人信息相关 //
+    // 个人信息相关 //
+    // 个人信息相关 //
+
     /**
      * 获取登录用户自己的个人信息
      *
@@ -115,7 +124,6 @@ public class WxUserService {
         return userMapper.getUserByUid(uid);
     }
 
-
     /**
      * 获取指定用户的信息
      *
@@ -126,6 +134,10 @@ public class WxUserService {
         return userMapper.getUserByUid(uid);
     }
 
+
+    // 用户收藏夹相关 //
+    // 用户收藏夹相关 //
+    // 用户收藏夹相关 //
 
     /**
      * 获取用户的收藏夹
@@ -155,6 +167,11 @@ public class WxUserService {
             return (amount / COLLECTION_PAGE_SIZE) + (amount % COLLECTION_PAGE_SIZE == 0 ? 1 : 0);
         }
     }
+
+    
+    // 个人信息页关注互动 //
+    // 个人信息页关注互动 //
+    // 个人信息页关注互动 //
 
     /**
      * 用户关注操作

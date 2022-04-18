@@ -5,12 +5,9 @@ import main.biggreenbook.entity.vo.PreviewCard;
 import main.biggreenbook.service.WxContentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.sql.Timestamp;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 //微信小程序内容相关控制器
 @RestController
@@ -18,14 +15,17 @@ import java.util.Map;
 @RequestMapping("/ctn")
 public class WxContentController {
 
-    // 首页瀑布流
+    // 首页瀑布流 //
+    // 首页瀑布流 //
+    // 首页瀑布流 //
+
 
     /**
      * 获取首页瀑布流检索ID
      */
     @GetMapping("/get_home_query_id")
     public int getHomeQueryId() {
-        return wxContentService.getQueryId(null);
+        return wxContentService.getHomePageQueryId();
     }
 
     /***
@@ -35,7 +35,7 @@ public class WxContentController {
      * @return 预览页卡片们
      */
     @GetMapping("/get_home_page")
-    public List<PreviewCard> getPreviewCards(@RequestParam(required = true) int page, @RequestParam(required = true) int query_id) {
+    public List<PreviewCard> getPreviewCards(@RequestParam int page, @RequestParam int query_id) {
         //page parameter check
         if (page < 0) page = 0;
         if (page >= getHomePageAmount(query_id)) page = getHomePageAmount(query_id) - 1;
@@ -43,39 +43,42 @@ public class WxContentController {
         return wxContentService.getHomePageContent(page, query_id);
     }
 
-    //搜索
+    // 搜索 //
+    // 搜索 //
+    // 搜索 //
 
-
+    /**
+     * 获取搜索的检索ID
+     *
+     * @param search 搜索的内容
+     * @return 检索ID
+     */
     @GetMapping("/get_search_query_id")
-    public int getSearchQueryId(@RequestParam String search_words) {
-        throw new NotImplementedException();
+    public int getSearchQueryId(@RequestParam("search") String search) {
+        return wxContentService.getSearchQueryId(search);
     }
 
     /**
      * 内容搜索
      *
-     * @param page
-     * @param query_id
-     * @param search
-     * @param sort
-     * @return
+     * @param page     页
+     * @param query_id 检索iD
+     * @param search   搜索内容
+     * @param sort     搜索结果的排序方式，LATEST/HOT
+     * @return 结果内容预览卡片
      */
     @GetMapping("/get_search")
-    public List<PreviewCard> getPreviewCardsBySearch(@RequestParam int page, @RequestParam int query_id, String search, String sort) {
+    public List<PreviewCard> getPreviewCardsBySearch(@RequestParam int page,
+                                                     @RequestParam int query_id,
+                                                     @RequestParam String search,
+                                                     @RequestParam String sort) {
         //page parameter check
         if (page < 0) page = 0;
         if (page >= getHomePageAmount(query_id)) page = getHomePageAmount(query_id) - 1;
-
-        Map<String, Object> map = new HashMap<>();
-        map.put("pageNum", page);
-        map.put("pageSize", 8);
-        map.put("amount", query_id % 8);
-        map.put("search", search);
-        map.put("sort", sort);
-
+        sort = sort.toUpperCase();
+        if (!sort.equals("HOT") && !sort.equals("LATEST")) sort = "HOT";
         //to service
-        //return wxContentService.getPreviewCardsBySearch(query_id, map);
-        return null;
+        return wxContentService.getSearchContent(page, query_id, search, sort);
     }
 
     @GetMapping("/get_contentInfo")

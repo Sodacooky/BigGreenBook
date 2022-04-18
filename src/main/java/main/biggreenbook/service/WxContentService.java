@@ -9,12 +9,16 @@ import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Service
 public class WxContentService {
 
-    //首页瀑布流
+    // 首页瀑布流 //
+    // 首页瀑布流 //
+    // 首页瀑布流 //
 
     /**
      * 获取首页瀑布流检索ID（这一刻数据库中Content的数量）
@@ -52,6 +56,64 @@ public class WxContentService {
 
         return result;
     }
+
+    // 搜索 //
+    // 搜索 //
+    // 搜索 //
+
+    /**
+     * 获取搜索的检索ID
+     *
+     * @param search 当前搜索内容
+     * @return 检索ID
+     */
+    public int getSearchQueryId(String search) {
+        return contentMapper.getSearchQueryId(search);
+    }
+
+    /**
+     * @param page     当前页数
+     * @param query_id 检索ID
+     * @param search   搜索内容
+     * @param sort     排序方式，LATEST/HOT
+     * @return 内容预览卡片
+     */
+    public List<PreviewCard> getSearchContent(int page, int query_id, String search, String sort) {
+        ArrayList<PreviewCard> result = new ArrayList<>();
+        //计算逆序页，获得数据
+        int pageAmount = query_id < PAGESIZE ? 1 : query_id / PAGESIZE;
+        int actualPage = pageAmount - 1 - page;
+        //填充搜索数据
+        //获取页头多余数据
+        if (query_id % PAGESIZE != 0 && page == 0) {
+            int amount = query_id % PAGESIZE;
+            Map<String, Object> paramsMap = new HashMap<>();
+            paramsMap.put("amount", amount);
+            paramsMap.put("pageNum", page);
+            paramsMap.put("pageSize", PAGESIZE);
+            paramsMap.put("search", search);
+            paramsMap.put("sort", sort);
+            result.addAll(contentMapper.getContentBySearch(paramsMap));
+        }
+        //获取页
+        {
+            Map<String, Object> paramsMap = new HashMap<>();
+            paramsMap.put("pageNum", page);
+            paramsMap.put("pageSize", PAGESIZE);
+            paramsMap.put("amount", PAGESIZE);
+            paramsMap.put("search", search);
+            paramsMap.put("sort", sort);
+            result.addAll(contentMapper.getContentBySearch(paramsMap));
+        }
+        //路径映射
+        result.forEach(one -> {
+            one.setUserAvatarPath(staticMappingHelper.doMapToDomain(one.getUserAvatarPath()));
+            one.setResourcePath(staticMappingHelper.doMapToDomain(one.getResourcePath()));
+        });
+        //
+        return result;
+    }
+
 
     public ContentInfo getContentInfo(String cid, String uid) {
         ContentInfo contentInfo = contentMapper.getContentInfo(cid, uid);
@@ -93,10 +155,6 @@ public class WxContentService {
         return contentMapper.addReportContent(uid, cid, reason, date);
     }
 
-
-    public int getQueryId(String search) {
-        return contentMapper.getSearchQueryId(search);
-    }
 
     public int getPageAmount(int queryId) {
         //计算逆序页，获得数据
