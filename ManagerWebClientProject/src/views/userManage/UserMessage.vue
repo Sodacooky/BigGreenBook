@@ -1,10 +1,21 @@
 <template>
   <div>
-
     <el-page-header @back="goBack">
     </el-page-header>
-    <el-input size="medium" style="width: 180px" v-model="inputId" @keyup.enter.native="query(inputId)" placeholder="请输入uid"></el-input>
-    <el-button type="primary" size="small" @click="query(inputId)" icon="el-icon-search">搜索</el-button>
+
+      <el-select size="medium" v-model="value" placeholder="请选择" clearable>
+        <el-option
+          v-for="item in options"
+          :key="item.value"
+          :label="item.label"
+          :value="item.value">
+        </el-option>
+      </el-select>
+
+    <el-input size="medium" v-if="value === '选项1'" style="width: 180px" v-model="inputId" @keyup.enter.native="query(inputId)" placeholder="请输入uid"></el-input>
+    <el-button type="primary" v-if="value === '选项1'" size="small" @click="query(inputId)" icon="el-icon-search">搜索uid</el-button>
+    <el-input size="medium" v-if="value === '选项2' || value === ''" style="width: 180px" v-model="input" @keyup.enter.native="queryNickname(input)" placeholder="请输入昵称"></el-input>
+    <el-button type="primary" v-if="value === '选项2' || value === ''"  size="small" @click="queryNickname(input)" icon="el-icon-search">搜索</el-button>
 
     <br></br>
 
@@ -93,6 +104,7 @@ export default {
       pageSize: 8,
       totalPage: 1,
       inputId:'',
+      input: '',
       tableData: [{
         uid: '',
         nickname: '',
@@ -100,7 +112,14 @@ export default {
         avatar_path: '',
         state: ''
       }],
-      defaultAvatar: "http://localhost:8080/static/avatar/default.png"
+      options: [{
+        value: '选项1',
+        label: '搜uid'
+      }, {
+        value: '选项2',
+        label: '搜昵称'
+      }],
+      value:''
     }
   },
 
@@ -149,6 +168,10 @@ export default {
 
     query: function (uid) {
       var _this = this;
+      if (uid === '') {
+        _this.currentPage = 1;
+       _this.loadPage(_this.currentPage);
+      }
       _this.tableData = [];
       axios({
         method: 'get',
@@ -171,6 +194,39 @@ export default {
             description: obj.description, avatar_path: "https://sodacooky.plus:8080/static/" + obj.avatarPath, state: state
           });
       })
+    },
+
+    queryNickname: function (input) {
+      var _this = this;
+      if (input === '') {
+        _this.currentPage = 1;
+        _this.loadPage(_this.currentPage);
+      }
+      _this.tableData = [];
+      axios({
+        method: 'get',
+        url: '/product/manage/queryName/'+ _this.currentPage + '/' + input,
+        contentType:"application/json;charset=UTF-8",
+        headers: { // 设置请求头
+          token: _this.cookie.get("token")
+        }
+      }).then(function (res) {
+        let obj = JSON.parse(JSON.stringify(res.data));
+        let list = obj.list;
+        _this.totalPage = Math.ceil(obj.totalUsers / _this.pageSize)*10;
+        console.log(list);
+        for (let i = 0; i < list.length; i++) {
+          let state = "正常";
+          if (list[i].state === 1) {
+            state = "封禁中";
+          }
+          console.log(state);
+          Vue.set(_this.tableData, i, {
+            uid: list[i].uid, nickname: list[i].nickname,
+            description: list[i].description, avatar_path: "https://sodacooky.plus:8080/static/" + list[i].avatarPath, state: state});
+        }
+      })
+
     },
 
     resetAvatar(uid) {

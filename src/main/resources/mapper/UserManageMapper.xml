@@ -57,12 +57,22 @@
     <select id="getUsers" parameterType="java.util.Map" resultType="main.biggreenbook.entity.pojo.User">
         select *
         from bgb.user
+        <where>
+            <if test="nickname != null">
+                nickname like concat('%', #{nickname}, '%')
+            </if>
+        </where>
         limit #{index}, #{target};
     </select>
 
     <select id="countAllUsers" resultType="int">
         select count(*)
         from bgb.user;
+    </select>
+
+    <select id="countQueryUser" parameterType="map" resultType="int">
+        select count(*)
+        from bgb.user where nickname like concat('%', #{nickname}, '%');;
     </select>
 
 </mapper>

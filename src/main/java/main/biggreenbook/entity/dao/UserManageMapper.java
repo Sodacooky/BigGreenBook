@@ -19,4 +19,6 @@ public interface UserManageMapper {
     public List<User> getUsers(Map<?, ?> map);
 
     public int countAllUsers();
+
+    public int countQueryUser(Map<?, ?> map);
 }

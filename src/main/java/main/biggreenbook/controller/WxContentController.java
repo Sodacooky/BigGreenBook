@@ -78,7 +78,9 @@ public class WxContentController {
         sort = sort.toUpperCase();
         if (!sort.equals("HOT") && !sort.equals("LATEST")) sort = "HOT";
         //to service
+
         return wxContentService.getSearchContent(page, query_id, search, sort);
+
     }
 
     @GetMapping("/get_contentInfo")
