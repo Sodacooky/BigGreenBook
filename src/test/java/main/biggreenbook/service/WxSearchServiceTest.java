@@ -16,7 +16,7 @@ public class WxSearchServiceTest {
     WxSearchService wxSearchService;
 
     @Test
-    public void getPreviewCardsBySearch(){
+    public void getPreviewCardsBySearch() {
         int query_id = wxSearchService.getPreviewCardQueryId(null);
         int page = 0;
         int PAGESIZE = 8;
@@ -25,18 +25,19 @@ public class WxSearchServiceTest {
         String follower = "1";
 
         Map<String, Object> map = new HashMap<>();
-        map.put("pageNum",page);
-        map.put("pageSize",PAGESIZE);
-        map.put("amount",query_id % PAGESIZE);
-        map.put("sort",sort);
-        map.put("search",search);
-        map.put("follower",follower);
+        map.put("pageNum", page);
+        map.put("pageSize", PAGESIZE);
+        map.put("amount", query_id % PAGESIZE);
+        map.put("sort", sort);
+        map.put("search", search);
+        map.put("follower", follower);
 
-        List<PreviewCard> cards = wxSearchService.getPreviewCardsBySearch(query_id, map);
+        List<PreviewCard> cards = wxSearchService.doSearchContent(query_id, map);
         cards.forEach(System.out::println);
     }
 
 
     @Test
-    public void getUserCardsTest(){}
+    public void getUserCardsTest() {
+    }
 }

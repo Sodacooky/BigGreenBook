@@ -31,7 +31,6 @@ public interface UserMapper {
      *            String search       搜索内容
      *            String follower     关注者uid
      * @return java.util.List<main.biggreenbook.entity.vo.UserCard>
-     * @date 2022/4/12 20:46
      */
     List<UserCard> getUserCardBySearch(Map<String, Object> map);
 

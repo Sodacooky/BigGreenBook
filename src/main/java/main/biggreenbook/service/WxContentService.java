@@ -115,6 +115,15 @@ public class WxContentService {
     }
 
 
+    // 内容详情 //
+    // 内容详情 //
+    // 内容详情 //
+
+    /**
+     * @param cid
+     * @param uid
+     * @return
+     */
     public ContentInfo getContentInfo(String cid, String uid) {
         ContentInfo contentInfo = contentMapper.getContentInfo(cid, uid);
 
