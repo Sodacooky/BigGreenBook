@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
+import java.sql.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -43,5 +44,19 @@ public class UserMapperTest {
 
         List<UserCard> userByPage = mapper.getUserCardBySearch(map);
         userByPage.forEach(System.out::println);
+    }
+
+    @Test
+    public void addUserTest(){
+        User user = new User("113","香菱","万民百味",1,new Date(new java.util.Date().getTime()),0,"avatar/xiangling.jpg");
+        mapper.addUser(user);
+    }
+
+    @Test
+    public void updateUserTest(){
+        User user = new User("111","香菱","万民百味",1,new Date(new java.util.Date().getTime()),0,"avatar/xiangling.jpg");
+
+        mapper.updateUser(user);
+
     }
 }

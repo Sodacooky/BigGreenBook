@@ -59,6 +59,10 @@ public class WxUserService {
         return queryId < USER_RESULT_PAGE_SIZE ? 1 : queryId / USER_RESULT_PAGE_SIZE;
     }
 
+    public int updateUser(User user){
+        return userMapper.addUser(user);
+    }
+
 
     // 微信小程序登录 //
     // 微信小程序登录 //
@@ -120,6 +124,13 @@ public class WxUserService {
     public User getMyInfo(String customCode) {
         //从redis中获取uid
         String uid = redisHelper.getUidFromCustomCode(customCode);
+        User user = userMapper.getUserByUid(uid);
+
+        if (user == null){
+            user = new User(uid,"新用户",null,null,null,0,"avatar/default.jpg");
+            userMapper.addUser(user);
+        }
+
         //通过uid获取用户
         return userMapper.getUserByUid(uid);
     }
