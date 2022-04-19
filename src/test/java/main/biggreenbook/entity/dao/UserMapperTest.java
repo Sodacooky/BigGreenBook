@@ -55,7 +55,6 @@ public class UserMapperTest {
     @Test
     public void updateUserTest(){
         User user = new User("111","香菱","万民百味",1,new Date(new java.util.Date().getTime()),0,"avatar/xiangling.jpg");
-
         mapper.updateUser(user);
 
     }

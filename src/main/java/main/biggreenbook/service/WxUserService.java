@@ -60,7 +60,7 @@ public class WxUserService {
     }
 
     public int updateUser(User user){
-        return userMapper.addUser(user);
+        return userMapper.updateUser(user);
     }
 
 
