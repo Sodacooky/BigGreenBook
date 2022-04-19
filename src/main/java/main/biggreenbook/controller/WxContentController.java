@@ -42,46 +42,7 @@ public class WxContentController {
         //to service
         return wxContentService.getHomePageContent(page, query_id);
     }
-
-    // 搜索 //
-    // 搜索 //
-    // 搜索 //
-
-    /**
-     * 获取搜索的检索ID
-     *
-     * @param search 搜索的内容
-     * @return 检索ID
-     */
-//    @GetMapping("/get_search_query_id")
-//    public int getSearchQueryId(@RequestParam("search") String search) {
-//        return wxContentService.getSearchQueryId(search);
-//    }
-
-    /**
-     * 内容搜索
-     *
-     * @param page     页
-     * @param query_id 检索iD
-     * @param search   搜索内容
-     * @param sort     搜索结果的排序方式，LATEST/HOT
-     * @return 结果内容预览卡片
-     */
-//    @GetMapping("/get_search")
-//    public List<PreviewCard> getPreviewCardsBySearch(@RequestParam int page,
-//                                                     @RequestParam int query_id,
-//                                                     @RequestParam String search,
-//                                                     @RequestParam String sort) {
-//        //page parameter check
-//        if (page < 0) page = 0;
-//        if (page >= getHomePageAmount(query_id)) page = getHomePageAmount(query_id) - 1;
-//        sort = sort.toUpperCase();
-//        if (!sort.equals("HOT") && !sort.equals("LATEST")) sort = "HOT";
-//        //to service
-//        return wxContentService.getSearchContent(page, query_id, search, sort);
-//    }
-
-
+    
     // 内容详情 //
     // 内容详情 //
     // 内容详情 //
@@ -116,7 +77,7 @@ public class WxContentController {
     public int giveLike(int isLike, String likeType, String goal, String uid) {
         return wxContentService.giveLike(isLike, likeType, goal, uid);
     }
-    
+
 
     /**
      * @param isCollection 收藏与否：  1表示已收藏，0表示未收藏（同点赞）

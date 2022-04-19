@@ -26,19 +26,50 @@ public class ManagerPageController {
     @Autowired
     private ReportService reportService;
 
+    /**
+    * 通过uid查询用户
+    * **/
     @GetMapping(value = "/query/{uid}")
     public User queryUserById(@PathVariable String uid) {
-
         return managerPageService.queryUserById(uid);
     }
 
+    /**
+     * 通过昵称查询用户
+     *
+     * @return**/
+    @GetMapping(value = "/queryName/{pageIndex}/{input}")
+    public ManageUserPage queryUserByName(@PathVariable int pageIndex, @PathVariable String input) {
+        int index;
+        int target;
+        if (pageIndex == 1) {
+            index = 0;
+        } else {
+            index = (pageIndex - 1) * 8;
+        }
+        target = index + 8;
+        Map<String, Object> map = new HashMap<>();
+        map.put("index", index);
+        map.put("target", target);
+        map.put("nickname", input);
+        List<User> list = managerPageService.getUsers(map);
+        int totalUsers = managerPageService.countQueryUser(map);
+
+        return new ManageUserPage(list, totalUsers);
+    }
+
+    /**
+     * 通过uid重置用户头像
+     * @param uid 用户uid
+     * @return user 返回用户
+     * **/
     @GetMapping(value = "/reset/{uid}")
     public User resetUserAvatar(@PathVariable String uid) {
         User user = managerPageService.queryUserById(uid);
-        String avatar_path = "http://localhost:8080/static/avatar/default.png";
+        String avatar_path = "avatar/default.jpg";
         Map<String, String> map = new HashMap<>();
         map.put("uid", user.getUid());
-        map.put("avatar_path", user.getAvatarPath());
+        map.put("avatar_path", avatar_path);
         managerPageService.updateUser(map);
 
         return user;
@@ -49,6 +80,13 @@ public class ManagerPageController {
         return managerPageService.queryAllUser();
     }
 
+
+    /**
+     * 修改用户签名
+     * @param uid 用户uid
+     * @param value 用户昵称
+     * @return user 返回用户
+     */
     @GetMapping(value = "/updateDesc/{uid}/{value}")
     public User updateDescription(@PathVariable String uid, @PathVariable String value) {
         Map<String, String> map = new HashMap<>();
@@ -59,6 +97,12 @@ public class ManagerPageController {
         return managerPageService.queryUserById(uid);
     }
 
+    /**
+     * 修改用户昵称
+     * @param uid 用户uid
+     * @param value 用户昵称
+     * @return user 返回用户
+     */
     @GetMapping(value = "/updateName/{uid}/{value}")
     public User updateNickName(@PathVariable String uid, @PathVariable String value) {
         Map<String, String> map = new HashMap<>();

@@ -17,6 +17,13 @@ public interface UserMapper {
     //通过uid获取用户的头像和昵称
     User getUserByUid(String uid);
 
+    //注册用户
+    int addUser(@Param("user") User user);
+
+    //修改用户信息
+    int updateUser(@Param("user") User user);
+
+
     /***
      * 获取当前的查询Id，实际上就是这一时刻的数据库数量
      * @return query_id

@@ -68,6 +68,10 @@ export default {
       }).then(function (res) {
         console.log("login: " + res.data.state);
         if (res.data.state === "认证通过") {
+          _this.$message({
+            message: '登录成功！',
+            type: 'success'
+          });
           _this.cookie.set("token", res.data.token);
           localStorage.setItem("token", res.data.token);
           localStorage.getItem("token");

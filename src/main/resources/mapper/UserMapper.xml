@@ -96,4 +96,17 @@
           and `follower` = #{follower}
     </select>
 
+    <!--添加用户-->
+    <insert id="addUser">
+        insert into `user`
+        values (#{user.uid},#{user.nickname},#{user.description},#{user.gender},#{user.birthday},0,#{user.avatarPath})
+    </insert>
+
+    <!--修改用户信息-->
+    <update id="updateUser">
+        update `user`
+        set `nickname`=#{user.nickname},`description`=#{user.description},`gender`=#{user.gender},`birthday`=#{user.birthday},`avatar_path`=#{user.avatarPath}
+        where uid = #{user.uid}
+    </update>
+
 </mapper>

@@ -40,4 +40,8 @@ public class ManagerPageService {
     public int countAllUsers() {
         return userManageMapper.countAllUsers();
     }
+
+    public int countQueryUser(Map<?, ?> map) {
+        return userManageMapper.countQueryUser(map);
+    }
 }

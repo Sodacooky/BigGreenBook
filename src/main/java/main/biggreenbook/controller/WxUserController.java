@@ -6,6 +6,7 @@ import main.biggreenbook.service.WxUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -140,6 +141,13 @@ public class WxUserController {
         return wxUserService.getFollowState(customCode, goal_uid);
     }
 
+
+    @GetMapping("/updateUser")
+    public int updateUser(User user,Date date){
+        //对前端的date参数转换成sql.date
+        user.setBirthday(new java.sql.Date(date.getTime()));
+        return   wxUserService.updateUser(user);
+    }
 
     @Autowired
     private WxUserService wxUserService;

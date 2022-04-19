@@ -57,9 +57,8 @@
         <el-header style="text-align: right; font-size: 12px">
           <el-dropdown>
             <i class="el-icon-setting" style="margin-right: 15px"></i>
-            <el-dropdown-menu slot="dropdown">
-              <el-dropdown-item>个人信息</el-dropdown-item>
-              <el-dropdown-item>退出登录</el-dropdown-item>
+            <el-dropdown-menu>
+              <el-dropdown-item @click.native="exit">退出登录</el-dropdown-item>
             </el-dropdown-menu>
           </el-dropdown>
           <!--          <span>{{name}}</span>-->
@@ -82,6 +81,10 @@ export default {
   methods: {
     flushCom: function () {
       this.$router.go(0);
+    },
+    exit: function () {
+      window.localStorage.clear();
+      window.location.reload()
     }
   },
   mounted() {
