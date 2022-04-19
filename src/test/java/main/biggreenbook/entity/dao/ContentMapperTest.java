@@ -110,7 +110,7 @@ public class ContentMapperTest {
 
     @Test
     public void addConllectionTest() {
-        Timestamp date = new Timestamp(System.currentTimeMillis());
+        Timestamp date = new Timestamp(new Date().getTime());
         contentMapper.addCollection("1", "1", date);
     }
 

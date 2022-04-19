@@ -100,8 +100,7 @@ public class WxContentController {
      */
     @GetMapping("/report")
     public int reportContent(String uid, String cid, String reason) {
-        Timestamp date = new Timestamp(System.currentTimeMillis());
-        return wxContentService.reportContent(uid, cid, reason, date);
+        return wxContentService.reportContent(uid, cid, reason);
     }
 
 
