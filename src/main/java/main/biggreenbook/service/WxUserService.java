@@ -127,12 +127,13 @@ public class WxUserService {
         User user = userMapper.getUserByUid(uid);
 
         if (user == null){
-            user = new User(uid,"新用户",null,null,null,0,"avatar/default.jpg");
+            user = new User(uid,"新用户","",null,null,0,"avatar/default.jpg");
             userMapper.addUser(user);
+            //通过uid获取用户
+            return userMapper.getUserByUid(uid);
+        }else{
+            return user;
         }
-
-        //通过uid获取用户
-        return userMapper.getUserByUid(uid);
     }
 
     /**

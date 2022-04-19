@@ -142,9 +142,7 @@ public class WxUserController {
 
 
     @GetMapping("/updateUser")
-    public int updateUser(User user,Date date){
-        //对前端的date参数转换成sql.date
-        user.setBirthday(new java.sql.Date(date.getTime()));
+    public int updateUser(User user){
         return   wxUserService.updateUser(user);
     }
 
