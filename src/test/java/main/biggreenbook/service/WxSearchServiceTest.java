@@ -1,12 +1,10 @@
 package main.biggreenbook.service;
 
-import main.biggreenbook.entity.vo.PreviewCard;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 @SpringBootTest
@@ -32,8 +30,8 @@ public class WxSearchServiceTest {
         map.put("search", search);
         map.put("follower", follower);
 
-        List<PreviewCard> cards = wxSearchService.doSearchContent(query_id, map);
-        cards.forEach(System.out::println);
+        //List<PreviewCard> cards = wxSearchService.doSearchContent(query_id, map);
+        //cards.forEach(System.out::println);
     }
 
 
