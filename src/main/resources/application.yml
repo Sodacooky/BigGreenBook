@@ -1,9 +1,7 @@
 # 通用部分配置
 spring:
   profiles:
-    # 当前激活的配置文件
-    #active: dev
-    active: product
+    active: product # 当前激活的配置文件
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
   mvc:
@@ -21,7 +19,6 @@ mybatis:
 #前端所使用的服务器地址 默认应http://localhost:8080/
 my-env:
   domain: https://sodacooky.plus:8080/
-
 
 ---
 # 开发环境

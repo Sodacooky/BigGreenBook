@@ -178,7 +178,7 @@ GET /usr/get_following_amount
 
 返回：
 
-整数关注者数量
+整数正在关注数量
 
 ***
 

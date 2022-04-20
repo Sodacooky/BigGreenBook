@@ -30,7 +30,6 @@ public class WxUserController {
      */
     @GetMapping("/login")
     public String login(@RequestParam("code") String code) {
-        System.out.println(code);
         return wxUserService.login(code);
     }
 
