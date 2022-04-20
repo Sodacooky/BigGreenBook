@@ -1,8 +1,10 @@
 package main.biggreenbook.service;
 
 import main.biggreenbook.entity.dao.ContentMapper;
+import main.biggreenbook.entity.pojo.Content;
 import main.biggreenbook.entity.vo.ContentInfo;
 import main.biggreenbook.entity.vo.PreviewCard;
+import main.biggreenbook.utils.RedisHelper;
 import main.biggreenbook.utils.StaticMappingHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -117,11 +119,12 @@ public class WxContentService {
     // 内容详情 //
 
     /**
-     * @param cid
-     * @param uid
-     * @return
+     * 获取内容详情
      */
-    public ContentInfo getContentInfo(String cid, String uid) {
+    public ContentInfo getContentInfo(String cid, String customCode) {
+        if (!redisHelper.hasKey(customCode)) return null;
+        String uid = redisHelper.getUidFromCustomCode(customCode);
+
         ContentInfo contentInfo = contentMapper.getContentInfo(cid, uid);
 
         //路径映射：图片组 未实现路径映射
@@ -131,34 +134,90 @@ public class WxContentService {
         return contentInfo;
     }
 
-    public int giveLike(int isLike, String likeType, String goal, String uid) {
-        if (isLike == 0) {
-            //取消点赞，点赞数减少
-            contentMapper.subLikes(goal, uid);
-            contentMapper.updateLikeAmount(-1, goal);
-        } else {
-            //点赞，点赞数增加
-            contentMapper.addLikes(likeType, goal, uid);
-            contentMapper.updateLikeAmount(1, goal);
-        }
+    // 内容互动 //
+    // 内容互动 //
+    // 内容互动 //
+
+    /**
+     * 添加点赞
+     */
+    public int giveLike(String goal, String customCode,String likeType) {
+        if (!redisHelper.hasKey(customCode))
+            return contentMapper.queryLikeAmount(goal);
+
+        String uid = redisHelper.getUidFromCustomCode(customCode);
+
+        contentMapper.addLikes(goal,uid,likeType);
+        contentMapper.updateLikeAmount(1, goal);
 
         return contentMapper.queryLikeAmount(goal);
     }
 
-    public int collectionContent(int isCollection, String cid, String uid) {
-        if (isCollection == 0) {
-            //取消收藏
-            return contentMapper.deleteCollection(cid, uid);
-        } else {
-            //添加收藏
-            Timestamp date = new Timestamp(new Date().getTime());
-            return contentMapper.addCollection(cid, uid, date);
-        }
+    /**
+     * 取消点赞
+     */
+    public int ungiveLike(String goal, String customCode){
+        if (!redisHelper.hasKey(customCode))
+            return contentMapper.queryLikeAmount(goal);
+
+        String uid = redisHelper.getUidFromCustomCode(customCode);
+
+        contentMapper.subLikes(goal, uid);
+        contentMapper.updateLikeAmount(-1, goal);
+
+        return contentMapper.queryLikeAmount(goal);
     }
 
-    public int reportContent(String uid, String cid, String reason) {
+    /**
+     * 添加收藏
+     */
+    public boolean collectionContent(String cid, String customCode) {
+        if (!redisHelper.hasKey(customCode)) return false;
+
+        String uid = redisHelper.getUidFromCustomCode(customCode);
+        //添加收藏
         Timestamp date = new Timestamp(new Date().getTime());
-        return contentMapper.addReportContent(uid, cid, reason, date);
+        return contentMapper.addCollection(cid, uid, date) > 0 ? true : false;
+    }
+
+    /**
+     * 取消收藏
+     */
+    public boolean uncollectionContent(String cid, String customCode) {
+        if (!redisHelper.hasKey(customCode)) return false;
+
+        String uid = redisHelper.getUidFromCustomCode(customCode);
+        return contentMapper.deleteCollection(cid,uid) > 0 ? true : false;
+    }
+
+    /**
+     * 举报内容
+     */
+    public boolean reportContent(String customCode, String cid, String reason) {
+        if (!redisHelper.hasKey(customCode)) return false;
+
+        String uid = redisHelper.getUidFromCustomCode(customCode);
+
+        Timestamp date = new Timestamp(new Date().getTime());
+        return contentMapper.addReportContent(uid, cid, reason, date) > 0 ? true : false;
+    }
+
+    /**
+     * 发布内容
+     */
+    public boolean publishContent(Content content) {
+        if (!redisHelper.hasKey(content.getUid())) return false;
+        String uid = redisHelper.getUidFromCustomCode(content.getUid());
+        content.setUid(uid);
+
+        return contentMapper.publishContent(content)>0?true:false;
+    }
+
+    /**
+     * 修改发布的内容
+     */
+    public boolean updateContent(Content content) {
+        return contentMapper.updateContent(content);
     }
 
 
@@ -175,4 +234,9 @@ public class WxContentService {
 
     @Autowired
     StaticMappingHelper staticMappingHelper;
+
+    @Autowired
+    private RedisHelper redisHelper;
+
+
 }

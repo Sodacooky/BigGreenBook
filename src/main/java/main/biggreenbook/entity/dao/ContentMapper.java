@@ -1,5 +1,6 @@
 package main.biggreenbook.entity.dao;
 
+import main.biggreenbook.entity.pojo.Content;
 import main.biggreenbook.entity.pojo.ContentMessage;
 import main.biggreenbook.entity.vo.ContentInfo;
 import main.biggreenbook.entity.vo.PreviewCard;
@@ -104,13 +105,13 @@ public interface ContentMapper {
     // ################### 后台
 
     /**
+     * 获取内容详情
      * @param cid 内容cid
      * @param uid 当前用户uid
      * @return main.biggreenbook.entity.vo.ContentInfo
      * @date 2022/4/16 7:01
      */
     ContentInfo getContentInfo(@Param("cid") String cid, @Param("uid") String uid);
-
 
     /**
      * 修改点赞数
@@ -173,8 +174,8 @@ public interface ContentMapper {
      */
     int deleteCollection(@Param("cid") String cid, @Param("uid") String uid);
 
-
     /**
+     * 举报内容
      * @param uid    举报者uid
      * @param cid    内容cid
      * @param reason 举报原因
@@ -184,6 +185,24 @@ public interface ContentMapper {
      */
     int addReportContent(@Param("uid") String uid, @Param("cid") String cid, @Param("reason") String reason, @Param("date") Timestamp date);
 
+    /**
+     * 发布内容
+     * @param content
+     * @date 2022/4/20 16:41
+     * @return int
+     */
+    int publishContent(@Param("content") Content content);
+
+    /**
+     * 修改发布的内容
+     * @param cid       内容id
+     * @param title     内容标题
+     * @param mainText  内容正文
+     * @param sid       资源id
+     * @date 2022/4/20 17:58
+     * @return boolean
+     */
+    boolean updateContent(@Param("content") Content content);
 
     //什么玩意？
     List<ContentMessage> getContents(Map<?, ?> map);
@@ -220,5 +239,6 @@ public interface ContentMapper {
     List<PreviewCard> getContentBySearch(@Param("sort") String sort, @Param("search") String search,
                                          @Param("pageNum") int pageNum, @Param("pageSize") int pageSize,
                                          @Param("amount") int amount);
+
 
 }
