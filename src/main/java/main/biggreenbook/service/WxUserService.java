@@ -23,42 +23,9 @@ import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
-import java.util.Map;
 
 @Service
 public class WxUserService {
-
-    public List<UserCard> getUserCards(int queryId, Map<String, Object> map) {
-        ArrayList<UserCard> result = new ArrayList<>();
-
-        //如果是第一页，那么需要解决多余的部分数据
-        if ((int) map.get("pageNum") == 0 && USER_RESULT_PAGE_SIZE < queryId) {
-            result.addAll(userMapper.getUserCardBySearch(map));
-        }
-        //计算逆序页，获得数据
-        int pageAmount = queryId < USER_RESULT_PAGE_SIZE ? 1 : queryId / USER_RESULT_PAGE_SIZE;
-        int actualPage = pageAmount - 1 - (int) map.get("pageNum");
-
-        map.replace("amount", USER_RESULT_PAGE_SIZE);
-        map.replace("pageNum", actualPage);
-
-        result.addAll(userMapper.getUserCardBySearch(map));
-
-        //路径映射
-        result.forEach(one -> {
-            one.setUserAvatarPath(staticMappingHelper.doMapToDomain(one.getUserAvatarPath()));
-        });
-        return result;
-    }
-
-    public int getQueryId(String search) {
-        return userMapper.getQueryId(search);
-    }
-
-    public int getPageAmount(int queryId) {
-        //计算逆序页，获得数据
-        return queryId < USER_RESULT_PAGE_SIZE ? 1 : queryId / USER_RESULT_PAGE_SIZE;
-    }
 
     // 微信小程序登录 //
     // 微信小程序登录 //
