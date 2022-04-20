@@ -8,6 +8,7 @@ import main.biggreenbook.entity.vo.ManageReportPage;
 import main.biggreenbook.entity.vo.ManageUserPage;
 import main.biggreenbook.service.ContentManageService;
 import main.biggreenbook.service.ManagerPageService;
+import main.biggreenbook.service.MessageService;
 import main.biggreenbook.service.ReportService;
 import main.biggreenbook.utils.JWTUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,6 +26,8 @@ public class ManagerPageController {
     private ContentManageService contentManageService;
     @Autowired
     private ReportService reportService;
+    @Autowired
+    private MessageService messageService;
 
     /**
     * 通过uid查询用户
@@ -113,24 +116,30 @@ public class ManagerPageController {
         return managerPageService.queryUserById(uid);
     }
 
-    @GetMapping(value = "/suspend/{uid}")
-    public User suspendUser(@PathVariable String uid) {
+    @GetMapping(value = "/suspend/{uid}/{reason}")
+    public User suspendUser(@PathVariable String uid, @PathVariable String reason) {
         int state = 1;
         Map<String, Object> map = new HashMap<>();
         map.put("uid", uid);
         map.put("state", state);
+        map.put("text", reason);
+        map.put("date", new Date());
         managerPageService.updateUser(map);
+        messageService.setMessage(map);
 
         return managerPageService.queryUserById(uid);
     }
 
-    @GetMapping(value = "/restore/{uid}")
-    public User restoreUser(@PathVariable String uid) {
+    @GetMapping(value = "/restore/{uid}/{reason}")
+    public User restoreUser(@PathVariable String uid, @PathVariable String reason) {
         int state = 0;
         Map<String, Object> map = new HashMap<>();
         map.put("uid", uid);
         map.put("state", state);
+        map.put("text", reason);
+        map.put("date", new Date());
         managerPageService.updateUser(map);
+        messageService.setMessage(map);
 
         return managerPageService.queryUserById(uid);
     }
@@ -178,9 +187,16 @@ public class ManagerPageController {
         return new ManageContentPage(list, totalContents);
     }
 
-    @GetMapping(value = "/deleteSelect/{select}")
-    public int deleteSelect(@PathVariable List<Integer> select) {
+    @GetMapping(value = "/deleteSelect/{select}/{uidList}/{titles}")
+    public int deleteSelect(@PathVariable List<Integer> select, @PathVariable List<String> uidList, @PathVariable List<String> titles) {
 
+        for (int i = 0; i < uidList.size(); i++) {
+            Map<String, Object> map = new HashMap<>();
+            map.put("uid", uidList.get(i));
+            map.put("text", "由于内容违规，您的创作《" + titles.get(i) + "》已被删除！");
+            map.put("date", new Date());
+            messageService.setMessage(map);
+        }
         return contentManageService.deleteSelect(select);
     }
 
@@ -264,9 +280,6 @@ public class ManagerPageController {
         Map<String, Object> map = new HashMap<>();
         map.put("cid", cid);
         map.put("end", date);
-        System.out.println("------------------------------------------------------");
-        System.out.println("next: " + contentManageService.getNextContents(map));
-        System.out.println("------------------------------------------------------");
 
         return new ManageContentPage(contentManageService.getNextContents(map));
     }
@@ -276,9 +289,6 @@ public class ManagerPageController {
         Map<String, Object> map = new HashMap<>();
         map.put("cid", cid);
         map.put("start", date);
-        System.out.println("------------------------------------------------------");
-        System.out.println("privious: " + contentManageService.getPreviousContents(map));
-        System.out.println("------------------------------------------------------");
 
         return new ManageContentPage(contentManageService.getPreviousContents(map));
     }
@@ -306,11 +316,25 @@ public class ManagerPageController {
 
     // 忽略举报
     @GetMapping(value = "/ignore/{uid}/{cid}")
-    public int handleReports(@PathVariable String uid, @PathVariable String cid) {
+    public int ignoreReports(@PathVariable String uid, @PathVariable String cid) {
         Map<String, String> map = new HashMap<>();
         map.put("uid", uid);
         map.put("cid", cid);
 
+        return reportService.handleReports(map);
+    }
+
+    @GetMapping(value = "/handle/{rUid}/{title}")
+    public int handleReports(@PathVariable String rUid, @PathVariable String title) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("uid", rUid);
+        map.put("cid", title);
+        map.put("text", "您举报的内容《" + title + "》已经被删除，感谢您对社区管理作出的贡献！");
+        map.put("date", new Date());
+        System.out.println("----------------------------------------------");
+        System.out.println("已处理举报！");
+        System.out.println("----------------------------------------------");
+        messageService.setMessage(map);
         return reportService.handleReports(map);
     }
 
@@ -334,6 +358,24 @@ public class ManagerPageController {
         return new ManageReportPage(list, totalReports);
     }
 
+    @GetMapping(value = "/systemMessage/{value}")
+    public int sendAllUser(@PathVariable String value) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("text", value);
+        map.put("date", new Date());
+
+        return messageService.sendAllUser(map);
+    }
+
+    @GetMapping(value = "/sendMessage/{uid}/{value}")
+    public int sendAllUser(@PathVariable String uid, @PathVariable String value) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("uid", uid);
+        map.put("text", value);
+        map.put("date", new Date());
+
+        return messageService.setMessage(map);
+    }
 
     // 管理员登录
     @GetMapping(value = "/manageLogin/{username}/{password}")

@@ -13,7 +13,7 @@
       <el-button type="primary" size="small" @click="nextContent">下一篇</el-button>
       </el-col>
       <el-button type="warning" size="small" icon="el-icon-warning-outline" @click="openSuspend(content.uid, content.author)">封禁用户</el-button>
-      <el-button type="danger" size="small" icon="el-icon-delete" @click="openDelete(content.cid, content.text)">删除</el-button>
+      <el-button type="danger" size="small" icon="el-icon-delete" @click="openDelete(content.uid, content.cid, content.title)">删除</el-button>
 
       <div>
       <br/>
@@ -110,7 +110,7 @@ export default {
       this.$router.go(-1);
     },
 
-    openDelete(cid, title) {
+    openDelete(uid, cid, title) {
       this.$confirm('是否删除标题为 ' + title + ' 的文章?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
@@ -121,17 +121,21 @@ export default {
           type: 'success',
           message: '删除成功!'
         });
-        this.deleteContent(cid);
+        this.deleteContent(uid, cid);
       })
     },
 
-    deleteContent: function (cid) {
+    deleteContent: function (uid, cid) {
       let _this = this;
       let select = [];
+      let uidList = [];
+      let titles = [];
       select.push(cid);
+      uidList.push(uid);
+      titles.push(_this.content.title);
       axios({
         method: 'get',
-        url: '/product/manage/deleteSelect/' + select,
+        url: '/product/manage/deleteSelect/' + select + '/' + uidList + '/' + titles,
         contentType:"application/json;charset=UTF-8",
         headers: { // 设置请求头
           token: this.cookie.get("token")
@@ -230,16 +234,17 @@ export default {
           type: 'success',
           message: '用户 ' + nickname +' 已被封禁!'
         });
-        this.suspendUser(uid);
+        let reason = "由于发布的内容违规，您的账号已被封禁！";
+        this.suspendUser(uid, reason);
       })
     },
 
-    suspendUser: function (uid) {
+    suspendUser: function (uid, reason) {
       let _this = this;
       _this.inputId = uid;
       axios({
         method: 'get',
-        url: '/product/manage/suspend/' + uid,
+        url: '/product/manage/suspend/' + uid + '/' + reason,
         contentType:"application/json;charset=UTF-8",
         headers: { // 设置请求头
           token: this.cookie.get("token")
@@ -258,7 +263,7 @@ export default {
       _this.content.date = _this.$moment(_this.content.date).format('YYYY-MM-DD HH:mm:ss')
     }
     _this.cookie.set('content', _this.content);
-    console.log("storage: " + this.localStorage.getItem('content'))
+
   },
 
   mounted() {

@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="main.biggreenbook.entity.dao.MessageMapper">
+
+    <insert id="setMessage" parameterType="map">
+        insert into message (uid, text, date) values (#{uid}, #{text}, #{date});
+    </insert>
+
+    <insert id="getAllUid">
+        insert into message(uid) select u.uid from user u;
+    </insert>
+
+    <update id="sendAllUser" parameterType="map">
+        update message set text = #{text}, date = #{date} where text is null;
+    </update>
+
+</mapper>
