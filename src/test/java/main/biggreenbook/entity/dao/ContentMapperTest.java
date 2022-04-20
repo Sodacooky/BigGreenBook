@@ -1,7 +1,9 @@
 package main.biggreenbook.entity.dao;
 
+import main.biggreenbook.entity.pojo.Content;
 import main.biggreenbook.entity.vo.ContentInfo;
 import main.biggreenbook.entity.vo.PreviewCard;
+import main.biggreenbook.utils.StaticMappingHelper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -75,10 +77,13 @@ public class ContentMapperTest {
     @Autowired
     ContentMapper contentMapper;
 
+    @Autowired
+    StaticMappingHelper staticMappingHelper;
 
     @Test
     public void getContentInfoTest() {
         ContentInfo contentInfo = contentMapper.getContentInfo("1", "1");
+
         System.out.println(contentInfo);
     }
 
@@ -119,5 +124,15 @@ public class ContentMapperTest {
         contentMapper.deleteCollection("1", "1");
     }
 
+    @Test
+    public void publishContentTest(){
+        Content content = new Content("1111","原神","xiangling",new Timestamp(new Date().getTime()),"picture",0,"1","1");
+        contentMapper.publishContent(content);
+    }
 
+    @Test
+    public void updateContent(){
+        Content content = new Content("1111","原神原神原神","xiangling",new Timestamp(new Date().getTime()),"picture",0,"1","1");
+        contentMapper.updateContent(content);
+    }
 }

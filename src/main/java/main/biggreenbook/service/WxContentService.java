@@ -1,8 +1,13 @@
 package main.biggreenbook.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.type.TypeFactory;
 import main.biggreenbook.entity.dao.ContentMapper;
+import main.biggreenbook.entity.pojo.Content;
 import main.biggreenbook.entity.vo.ContentInfo;
 import main.biggreenbook.entity.vo.PreviewCard;
+import main.biggreenbook.utils.RedisHelper;
 import main.biggreenbook.utils.StaticMappingHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -117,48 +122,129 @@ public class WxContentService {
     // 内容详情 //
 
     /**
-     * @param cid
-     * @param uid
-     * @return
+     * 获取内容详情
      */
-    public ContentInfo getContentInfo(String cid, String uid) {
-        ContentInfo contentInfo = contentMapper.getContentInfo(cid, uid);
+    public ContentInfo getContentInfo(String cid, String customCode) {
+        if (!redisHelper.hasKey(customCode))
+            return null;
+        String uid = redisHelper.getUidFromCustomCode(customCode);
+        ContentInfo contentInfo = contentMapper.getContentInfo(cid,uid);
 
-        //路径映射：图片组 未实现路径映射
-        contentInfo.setUserAvatarPath(staticMappingHelper.doMapToDomain(contentInfo.getUserAvatarPath()));
-        contentInfo.setPaths(staticMappingHelper.doMapToDomain(contentInfo.getPaths()));
+        //路径映射
+        switchJson(contentInfo);
 
         return contentInfo;
     }
 
-    public int giveLike(int isLike, String likeType, String goal, String uid) {
-        if (isLike == 0) {
-            //取消点赞，点赞数减少
-            contentMapper.subLikes(goal, uid);
-            contentMapper.updateLikeAmount(-1, goal);
-        } else {
-            //点赞，点赞数增加
-            contentMapper.addLikes(likeType, goal, uid);
-            contentMapper.updateLikeAmount(1, goal);
+    /**
+     * 资源 路径映射
+     * @param contentInfo
+     * @date 2022/4/20 21:25
+     * @return void
+     */
+    private void switchJson(ContentInfo contentInfo) {
+        ObjectMapper mapper = new ObjectMapper();
+        List<String> jsonList = new ArrayList<>();
+        try {
+            jsonList = mapper.readValue(contentInfo.getPath(), TypeFactory.defaultInstance().constructCollectionType(List.class, String.class));
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
         }
 
-        return contentMapper.queryLikeAmount(goal);
-    }
-
-    public int collectionContent(int isCollection, String cid, String uid) {
-        if (isCollection == 0) {
-            //取消收藏
-            return contentMapper.deleteCollection(cid, uid);
-        } else {
-            //添加收藏
-            Timestamp date = new Timestamp(new Date().getTime());
-            return contentMapper.addCollection(cid, uid, date);
+        int i = 0;
+        for (String path : jsonList){
+            jsonList.set(i++,staticMappingHelper.doMapToDomain(path));
         }
+
+        contentInfo.setPaths(jsonList);
+        contentInfo.setUserAvatarPath(staticMappingHelper.doMapToDomain(contentInfo.getUserAvatarPath()));
     }
 
-    public int reportContent(String uid, String cid, String reason) {
+
+    // 内容互动 //
+    // 内容互动 //
+    // 内容互动 //
+
+    /**
+     * 添加点赞
+     */
+    public int giveLike(String goal_id, String customCode,String likeType) {
+        if (!redisHelper.hasKey(customCode))
+            return contentMapper.queryLikeAmount(goal_id);
+
+        String uid = redisHelper.getUidFromCustomCode(customCode);
+
+        contentMapper.addLikes(goal_id,uid,likeType);
+        contentMapper.updateLikeAmount(1, goal_id);
+
+        return contentMapper.queryLikeAmount(goal_id);
+    }
+
+    /**
+     * 取消点赞
+     */
+    public int ungiveLike(String goal_id, String customCode){
+        if (!redisHelper.hasKey(customCode))
+            return contentMapper.queryLikeAmount(goal_id);
+
+        String uid = redisHelper.getUidFromCustomCode(customCode);
+
+        contentMapper.subLikes(goal_id, uid);
+        contentMapper.updateLikeAmount(-1, goal_id);
+
+        return contentMapper.queryLikeAmount(goal_id);
+    }
+
+    /**
+     * 添加收藏
+     */
+    public boolean collectionContent(String cid, String customCode) {
+        if (!redisHelper.hasKey(customCode)) return false;
+
+        String uid = redisHelper.getUidFromCustomCode(customCode);
+        //添加收藏
         Timestamp date = new Timestamp(new Date().getTime());
-        return contentMapper.addReportContent(uid, cid, reason, date);
+        return contentMapper.addCollection(cid, uid, date) > 0 ? true : false;
+    }
+
+    /**
+     * 取消收藏
+     */
+    public boolean uncollectionContent(String cid, String customCode) {
+        if (!redisHelper.hasKey(customCode)) return false;
+
+        String uid = redisHelper.getUidFromCustomCode(customCode);
+        return contentMapper.deleteCollection(cid,uid) > 0 ? true : false;
+    }
+
+    /**
+     * 举报内容
+     */
+    public boolean reportContent(String customCode, String cid, String reason) {
+        if (!redisHelper.hasKey(customCode)) return false;
+
+        String uid = redisHelper.getUidFromCustomCode(customCode);
+
+        Timestamp date = new Timestamp(new Date().getTime());
+        return contentMapper.addReportContent(uid, cid, reason, date) > 0 ? true : false;
+    }
+
+    /**
+     * 发布内容
+     */
+    public boolean publishContent(Content content) {
+        if (!redisHelper.hasKey(content.getUid())) return false;
+        String uid = redisHelper.getUidFromCustomCode(content.getUid());
+        content.setUid(uid);
+
+        return contentMapper.publishContent(content)>0?true:false;
+    }
+
+    /**
+     * 修改发布的内容
+     */
+    public boolean updateContent(Content content) {
+        return contentMapper.updateContent(content);
     }
 
 
@@ -175,4 +261,9 @@ public class WxContentService {
 
     @Autowired
     StaticMappingHelper staticMappingHelper;
+
+    @Autowired
+    private RedisHelper redisHelper;
+
+
 }

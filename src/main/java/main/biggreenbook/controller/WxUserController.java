@@ -263,11 +263,11 @@ public class WxUserController {
      * 更新用户基本信息
      *
      * @param user 新的用户基本信息，部分属性为空
-     * @return 返回1修改成功
+     * @return 返回是否修改成功
      */
     @PostMapping("/updateUser")
-    public int updateUser(User user) {
-        return wxUserService.updateUser(user);
+    public boolean updateUser(@RequestParam("customCode") String customCode, @RequestBody User user) {
+        return wxUserService.updateUser(customCode, user);
     }
 
     /**

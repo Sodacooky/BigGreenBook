@@ -1,12 +1,16 @@
 package main.biggreenbook.controller;
 
+import main.biggreenbook.entity.pojo.Content;
 import main.biggreenbook.entity.vo.ContentInfo;
 import main.biggreenbook.entity.vo.PreviewCard;
 import main.biggreenbook.service.WxContentService;
+import main.biggreenbook.utils.UUIDGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 //微信小程序内容相关控制器
@@ -28,9 +32,10 @@ public class WxContentController {
         return wxContentService.getHomePageQueryId();
     }
 
-    /***
+    /**
      * 获取首页瀑布流卡片
-     * @param page 当前浏览页检索ID，必须带有query_id否则这个页是没有意义的
+     *
+     * @param page     当前浏览页检索ID，必须带有query_id否则这个页是没有意义的
      * @param query_id 记住当前分页状态，避免重复
      * @return 预览页卡片们
      */
@@ -58,13 +63,15 @@ public class WxContentController {
     // 内容详情 //
 
     /**
+     * 获取内容详情
+     *
      * @param cid
-     * @param uid
+     * @param customCode
      * @return
      */
     @GetMapping("/get_contentInfo")
-    public ContentInfo getContentInfo(String cid, String uid) {
-        return wxContentService.getContentInfo(cid, uid);
+    public ContentInfo getContentInfo(String cid, String customCode) {
+        return wxContentService.getContentInfo(cid, customCode);
     }
 
     // 内容互动 //
@@ -72,44 +79,106 @@ public class WxContentController {
     // 内容互动 //
 
     /**
-     * 用户进入内容详情页时，点赞与否只有两个值 0/1;
-     * 用户进行 点赞/取消 时，提交与之原isLike相反的值
+     * 点赞
      *
-     * @param isLike   点赞与否：  1表示已点赞，0表示未点赞;
-     * @param likeType 点赞类型    (取消点赞时，不需要此参数)
-     * @param goal     点赞目标
-     * @param uid      用户uid
+     * @param goal_id    点赞目标id （cid）
+     * @param customCode 用户自己的自定义登录记录字符串
+     * @param likeType   点赞类型；content 对内容点赞/ reply 对评论点赞
      * @return int    返回点赞数
      * @date 2022/4/16 10:42
      */
     @GetMapping("/giveLike")
-    public int giveLike(int isLike, String likeType, String goal, String uid) {
-        return wxContentService.giveLike(isLike, likeType, goal, uid);
+    public int giveLike(String goal_id, String customCode, String likeType) {
+        return wxContentService.giveLike(goal_id, customCode, likeType);
     }
 
+    /**
+     * 取消点赞
+     *
+     * @param goal_id    点赞目标id （cid）
+     * @param customCode 用户自己的自定义登录记录字符串
+     * @return int    返回点赞数
+     * @date 2022/4/16 10:42
+     */
+    @GetMapping("/ungiveLike")
+    public int ungiveLike(String goal_id, String customCode) {
+        return wxContentService.ungiveLike(goal_id, customCode);
+    }
 
     /**
-     * @param isCollection 收藏与否：  1表示已收藏，0表示未收藏（同点赞）
-     * @param cid          收藏内容
-     * @param uid          收藏者
-     * @return int
+     * 收藏内容
+     *
+     * @param cid        收藏内容id
+     * @param customCode 用户自己的自定义登录记录字符串
+     * @return boolean    ture / fasle 成功/失败
      * @date 2022/4/16 19:17
      */
     @GetMapping("/collection")
-    public int collectionContent(int isCollection, String cid, String uid) {
-        return wxContentService.collectionContent(isCollection, cid, uid);
+    public boolean collectionContent(String cid, String customCode) {
+        return wxContentService.collectionContent(cid, customCode);
     }
 
     /**
-     * @param uid    举报发起者
-     * @param cid    举报内容
-     * @param reason 举报原因
-     * @return int
+     * 取消收藏内容
+     *
+     * @param cid        收藏内容id
+     * @param customCode 用户自己的自定义登录记录字符串
+     * @return boolean    ture / fasle 成功/失败
+     * @date 2022/4/16 19:17
+     */
+    @GetMapping("/uncollection")
+    public boolean uncollectionContent(String cid, String customCode) {
+        return wxContentService.uncollectionContent(cid, customCode);
+    }
+
+    /**
+     * 举报内容
+     *
+     * @param customCode 举报发起者,用户自己的自定义登录记录字符串
+     * @param cid        举报内容
+     * @param reason     举报原因
+     * @return boolean
      * @date 2022/4/16 17:53
      */
     @GetMapping("/report")
-    public int reportContent(String uid, String cid, String reason) {
-        return wxContentService.reportContent(uid, cid, reason);
+    public boolean reportContent(String customCode, String cid, String reason) {
+        return wxContentService.reportContent(customCode, cid, reason);
+    }
+
+    /**
+     * 发布内容
+     *
+     * @param content title 内容标题
+     *                mainText 正文
+     *                type  资源类型
+     *                uid   发布者customCode
+     *                sid   资源id
+     * @return boolean 发布成功与否
+     * @date 2022/4/20 16:46
+     */
+    @PostMapping("/publish_content")
+    public boolean publishContent(Content content) {
+
+        content.setCid(UUIDGenerator.generate());
+        content.setDate(new Timestamp(new Date().getTime()));
+        content.setLikeAmount(0);
+
+        return wxContentService.publishContent(content);
+    }
+
+    /**
+     * 修改发布的内容
+     *
+     * @param cid
+     * @param title
+     * @param mainText
+     * @param sid
+     * @return boolean
+     * @date 2022/4/20 17:56
+     */
+    @PostMapping("/update_content")
+    public boolean updateContent(Content content) {
+        return wxContentService.updateContent(content);
     }
 
 
