@@ -287,8 +287,11 @@ public class WxUserService {
     // 更新用户信息 //
     // 更新用户信息 //
 
-    public int updateUser(User user) {
-        return userMapper.updateUser(user);
+    public boolean updateUser(String customCode,User user) {
+        if (!redisHelper.hasKey(customCode)) return false;
+        String uid = redisHelper.getUidFromCustomCode(customCode);
+        user.setUid(uid);
+        return userMapper.updateUser(user)>0?true:false;
     }
 
     /**

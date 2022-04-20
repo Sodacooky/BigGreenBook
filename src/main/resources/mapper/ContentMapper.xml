@@ -20,7 +20,7 @@
         <result property="date" column="date"/>
         <result property="likeAmount" column="likeAmount"/>
         <result property="sid" column="sid"/>
-        <result property="paths" column="paths"/>
+        <result property="path" column="paths"/>
         <result property="uid" column="uid"/>
         <result property="userNickname" column="nickname"/>
         <result property="userAvatarPath" column="avatar_path"/>

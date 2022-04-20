@@ -54,12 +54,12 @@ public class WxContentController {
     /**
      * 获取内容详情
      * @param cid
-     * @param uid
+     * @param customCode
      * @return
      */
     @GetMapping("/get_contentInfo")
-    public ContentInfo getContentInfo(String cid, String uid) {
-        return wxContentService.getContentInfo(cid, uid);
+    public ContentInfo getContentInfo(String cid, String customCode) {
+        return wxContentService.getContentInfo(cid,customCode);
     }
 
     // 内容互动 //
@@ -68,27 +68,27 @@ public class WxContentController {
 
     /**
      * 点赞
-     * @param goal            点赞目标id （cid）
+     * @param goal_id            点赞目标id （cid）
      * @param customCode      用户自己的自定义登录记录字符串
      * @param likeType        点赞类型；content 对内容点赞/ reply 对评论点赞
      * @return int    返回点赞数
      * @date 2022/4/16 10:42
      */
     @GetMapping("/giveLike")
-    public int giveLike(String goal, String customCode,String likeType) {
-        return wxContentService.giveLike(goal, customCode,likeType);
+    public int giveLike(String goal_id, String customCode,String likeType) {
+        return wxContentService.giveLike(goal_id, customCode,likeType);
     }
 
     /**
      * 取消点赞
-     * @param goal            点赞目标id （cid）
+     * @param goal_id            点赞目标id （cid）
      * @param customCode      用户自己的自定义登录记录字符串
      * @return int    返回点赞数
      * @date 2022/4/16 10:42
      */
     @GetMapping("/ungiveLike")
-    public int ungiveLike(String goal, String customCode) {
-        return wxContentService.ungiveLike(goal, customCode);
+    public int ungiveLike(String goal_id, String customCode) {
+        return wxContentService.ungiveLike(goal_id, customCode);
     }
 
     /**

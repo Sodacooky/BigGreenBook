@@ -1,5 +1,8 @@
 package main.biggreenbook.service;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.type.TypeFactory;
 import main.biggreenbook.entity.dao.ContentMapper;
 import main.biggreenbook.entity.pojo.Content;
 import main.biggreenbook.entity.vo.ContentInfo;
@@ -122,17 +125,41 @@ public class WxContentService {
      * 获取内容详情
      */
     public ContentInfo getContentInfo(String cid, String customCode) {
-        if (!redisHelper.hasKey(customCode)) return null;
+        if (!redisHelper.hasKey(customCode))
+            return null;
         String uid = redisHelper.getUidFromCustomCode(customCode);
+        ContentInfo contentInfo = contentMapper.getContentInfo(cid,uid);
 
-        ContentInfo contentInfo = contentMapper.getContentInfo(cid, uid);
-
-        //路径映射：图片组 未实现路径映射
-        contentInfo.setUserAvatarPath(staticMappingHelper.doMapToDomain(contentInfo.getUserAvatarPath()));
-        contentInfo.setPaths(staticMappingHelper.doMapToDomain(contentInfo.getPaths()));
+        //路径映射
+        switchJson(contentInfo);
 
         return contentInfo;
     }
+
+    /**
+     * 资源 路径映射
+     * @param contentInfo
+     * @date 2022/4/20 21:25
+     * @return void
+     */
+    private void switchJson(ContentInfo contentInfo) {
+        ObjectMapper mapper = new ObjectMapper();
+        List<String> jsonList = new ArrayList<>();
+        try {
+            jsonList = mapper.readValue(contentInfo.getPath(), TypeFactory.defaultInstance().constructCollectionType(List.class, String.class));
+        } catch (JsonProcessingException e) {
+            e.printStackTrace();
+        }
+
+        int i = 0;
+        for (String path : jsonList){
+            jsonList.set(i++,staticMappingHelper.doMapToDomain(path));
+        }
+
+        contentInfo.setPaths(jsonList);
+        contentInfo.setUserAvatarPath(staticMappingHelper.doMapToDomain(contentInfo.getUserAvatarPath()));
+    }
+
 
     // 内容互动 //
     // 内容互动 //
@@ -141,31 +168,31 @@ public class WxContentService {
     /**
      * 添加点赞
      */
-    public int giveLike(String goal, String customCode,String likeType) {
+    public int giveLike(String goal_id, String customCode,String likeType) {
         if (!redisHelper.hasKey(customCode))
-            return contentMapper.queryLikeAmount(goal);
+            return contentMapper.queryLikeAmount(goal_id);
 
         String uid = redisHelper.getUidFromCustomCode(customCode);
 
-        contentMapper.addLikes(goal,uid,likeType);
-        contentMapper.updateLikeAmount(1, goal);
+        contentMapper.addLikes(goal_id,uid,likeType);
+        contentMapper.updateLikeAmount(1, goal_id);
 
-        return contentMapper.queryLikeAmount(goal);
+        return contentMapper.queryLikeAmount(goal_id);
     }
 
     /**
      * 取消点赞
      */
-    public int ungiveLike(String goal, String customCode){
+    public int ungiveLike(String goal_id, String customCode){
         if (!redisHelper.hasKey(customCode))
-            return contentMapper.queryLikeAmount(goal);
+            return contentMapper.queryLikeAmount(goal_id);
 
         String uid = redisHelper.getUidFromCustomCode(customCode);
 
-        contentMapper.subLikes(goal, uid);
-        contentMapper.updateLikeAmount(-1, goal);
+        contentMapper.subLikes(goal_id, uid);
+        contentMapper.updateLikeAmount(-1, goal_id);
 
-        return contentMapper.queryLikeAmount(goal);
+        return contentMapper.queryLikeAmount(goal_id);
     }
 
     /**

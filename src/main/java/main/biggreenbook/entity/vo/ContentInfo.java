@@ -1,7 +1,6 @@
 package main.biggreenbook.entity.vo;
 
-import main.biggreenbook.entity.pojo.Content;
-import main.biggreenbook.entity.pojo.Resource;
+import java.util.List;
 
 public class ContentInfo {
     //内容cid、标题、正文、日期、点赞数
@@ -13,7 +12,8 @@ public class ContentInfo {
 
     //资源sid、路径
     private String sid;
-    private String paths;
+    private String path;
+    private List<String> paths;
 
     //发布者uid、昵称、头像、关注状态
     private String uid;
@@ -30,39 +30,21 @@ public class ContentInfo {
     public ContentInfo() {
     }
 
-    public ContentInfo(String cid, String title, String text, String date, String likeAmount, String sid, String paths, String uid, String userNickname, String userAvatarPath, int like, int collection, int status){
+    public ContentInfo(String cid, String title, String text, String date, String likeAmount, String sid, String path, List<String> paths, String uid, String userNickname, String userAvatarPath, int status, int like, int collection) {
         this.cid = cid;
         this.title = title;
         this.text = text;
         this.date = date;
         this.likeAmount = likeAmount;
         this.sid = sid;
+        this.path = path;
         this.paths = paths;
         this.uid = uid;
         this.userNickname = userNickname;
         this.userAvatarPath = userAvatarPath;
+        this.status = status;
         this.like = like;
         this.collection = collection;
-        this.status = status;
-    }
-
-    @Override
-    public String toString() {
-        return "ContentInfo{" +
-                "cid='" + cid + '\'' +
-                ", title='" + title + '\'' +
-                ", text='" + text + '\'' +
-                ", date='" + date + '\'' +
-                ", likeAmount='" + likeAmount + '\'' +
-                ", sid='" + sid + '\'' +
-                ", paths='" + paths + '\'' +
-                ", uid='" + uid + '\'' +
-                ", userNickname='" + userNickname + '\'' +
-                ", userAvatarPath='" + userAvatarPath + '\'' +
-                ", status=" + status +
-                ", like=" + like +
-                ", collection=" + collection +
-                '}';
     }
 
     public String getCid() {
@@ -113,11 +95,19 @@ public class ContentInfo {
         this.sid = sid;
     }
 
-    public String getPaths() {
+    public String getPath() {
+        return path;
+    }
+
+    public void setPath(String path) {
+        this.path = path;
+    }
+
+    public List<String> getPaths() {
         return paths;
     }
 
-    public void setPaths(String paths) {
+    public void setPaths(List<String> paths) {
         this.paths = paths;
     }
 
@@ -145,6 +135,14 @@ public class ContentInfo {
         this.userAvatarPath = userAvatarPath;
     }
 
+    public int getStatus() {
+        return status;
+    }
+
+    public void setStatus(int status) {
+        this.status = status;
+    }
+
     public int getLike() {
         return like;
     }
@@ -161,12 +159,24 @@ public class ContentInfo {
         this.collection = collection;
     }
 
-    public int getStatus() {
-        return status;
-    }
-
-    public void setStatus(int status) {
-        this.status = status;
+    @Override
+    public String toString() {
+        return "ContentInfo{" +
+                "cid='" + cid + '\'' +
+                ", title='" + title + '\'' +
+                ", text='" + text + '\'' +
+                ", date='" + date + '\'' +
+                ", likeAmount='" + likeAmount + '\'' +
+                ", sid='" + sid + '\'' +
+                ", path='" + path + '\'' +
+                ", paths=" + paths +
+                ", uid='" + uid + '\'' +
+                ", userNickname='" + userNickname + '\'' +
+                ", userAvatarPath='" + userAvatarPath + '\'' +
+                ", status=" + status +
+                ", like=" + like +
+                ", collection=" + collection +
+                '}';
     }
 }
 

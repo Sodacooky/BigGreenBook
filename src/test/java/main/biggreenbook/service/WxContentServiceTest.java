@@ -23,9 +23,9 @@ public class WxContentServiceTest {
 
     @Test
     public void getContentInfoTest() {
-        ContentInfo contentInfo = wxContentService.getContentInfo("1", "1");
-        System.out.println(contentInfo.getPaths());
-        System.out.println(contentInfo);
+        //ContentInfo contentInfo = wxContentService.getContentInfo("1", "1");
+        //System.out.println(contentInfo.getPaths());
+        //System.out.println(contentInfo);
     }
 
     @Test

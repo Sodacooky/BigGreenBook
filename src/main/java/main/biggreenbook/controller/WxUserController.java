@@ -190,9 +190,16 @@ public class WxUserController {
     // 用户信息修改 //
     // 用户信息修改 //
 
+    /**
+     * 修改用户信息
+     * @param user
+     *          uid：    customCode
+     * @date 2022/4/20 21:34
+     * @return boolean
+     */
     @PostMapping("/updateUser")
-    public int updateUser(User user) {
-        return wxUserService.updateUser(user);
+    public boolean updateUser(@RequestParam("customCode") String customCode,@RequestBody User user) {
+        return wxUserService.updateUser(customCode,user);
     }
 
     /**
