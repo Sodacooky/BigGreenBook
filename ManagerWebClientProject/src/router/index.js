@@ -8,6 +8,7 @@ import ContentMessage from "../views/contentManage/ContentMessage";
 import ContentCheck from "../views/contentManage/ContentCheck";
 import ContentList from "../views/reportManage/ReportList";
 import ElementUI from "element-ui";
+import SendMessage from "../views/messageManage/SendMessage";
 
 Vue.use(Router)
 import cookies from 'vue-cookies'
@@ -27,7 +28,8 @@ const router = new Router({
         {path: '/userManage/UserMessage', name: 'UserMessage', component: UserMessage},
         {path: '/contentManage/contentMessage', name: 'ContentMessage', component: ContentMessage},
         {path: '/contentManage/contentCheck', name: 'ContentCheck', component: ContentCheck},
-        {path: '/reportManage/ContentList', name: 'ContentList', component: ContentList}
+        {path: '/reportManage/ContentList', name: 'ContentList', component: ContentList},
+        {path: '/messageManage/SendMessage', name: 'SendMessage', component: SendMessage}
       ]
     },
     {
