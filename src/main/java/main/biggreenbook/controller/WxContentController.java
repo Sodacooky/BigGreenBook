@@ -43,6 +43,16 @@ public class WxContentController {
         return wxContentService.getHomePageContent(page, query_id);
     }
 
+    /***
+     * 获取一共有多少页
+     * @param query_id 检索ID
+     * @return 页数
+     */
+    @GetMapping("/get_home_page_amount")
+    public int getHomePageAmount(@RequestParam(required = true) int query_id) {
+        return wxContentService.getPageAmount(query_id);
+    }
+
     // 内容详情 //
     // 内容详情 //
     // 内容详情 //
@@ -60,7 +70,6 @@ public class WxContentController {
     // 内容互动 //
     // 内容互动 //
     // 内容互动 //
-
 
     /**
      * 用户进入内容详情页时，点赞与否只有两个值 0/1;
@@ -104,15 +113,9 @@ public class WxContentController {
     }
 
 
-    /***
-     * 获取一共有多少页
-     * @param query_id 检索ID
-     * @return 页数
-     */
-    @GetMapping("/get_home_page_amount")
-    public int getHomePageAmount(@RequestParam(required = true) int query_id) {
-        return wxContentService.getPageAmount(query_id);
-    }
+    // 内容评论 //
+    // 内容评论 //
+    // 内容评论 //
 
 
     @Autowired

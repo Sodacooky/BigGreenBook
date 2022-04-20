@@ -146,6 +146,42 @@ GET /usr/get_followings
 
 ***
 
+## 获取用户粉丝数量
+
+```http request
+GET /usr/get_follower_amount
+```
+
+参数：
+
+| 参数名        | 说明           |
+|------------|--------------|
+| uid        | 要查看的用户的id    |
+
+返回：
+
+整数粉丝数量
+
+***
+
+## 获取用户正在关注的数量
+
+```http request
+GET /usr/get_following_amount
+```
+
+参数：
+
+| 参数名        | 说明           |
+|------------|--------------|
+| uid        | 要查看的用户的id    |
+
+返回：
+
+整数关注者数量
+
+***
+
 ## 获取用户的收藏夹内容
 
 ```http request

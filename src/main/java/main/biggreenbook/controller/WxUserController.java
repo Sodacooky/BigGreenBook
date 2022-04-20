@@ -103,6 +103,29 @@ public class WxUserController {
         return wxUserService.getFollowings(customCode, uid, page);
     }
 
+    /**
+     * 获取用户的粉丝数量，不需要权限判断
+     *
+     * @param uid 要查看的用户的id
+     * @return 粉丝数量
+     */
+    @GetMapping("/get_follower_amount")
+    public int getFollowerAmount(@RequestParam("uid") String uid) {
+        return wxUserService.getFollowerAmount(uid);
+    }
+
+    /**
+     * 获取用户的正在关注数量，不需要判断权限
+     *
+     * @param uid 要查看的用户id
+     * @return 正在关注数量
+     */
+    @GetMapping("/get_following_amount")
+    public int getFollowingAmount(@RequestParam("uid") String uid) {
+        return wxUserService.getFollowingAmount(uid);
+    }
+
+
     // 用户收藏夹相关 //
     // 用户收藏夹相关 //
     // 用户收藏夹相关 //

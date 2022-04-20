@@ -175,6 +175,16 @@ public class WxUserService {
         return result;
     }
 
+    //获取粉丝数量
+    public int getFollowerAmount(String uid) {
+        return userMapper.getUserFollowersAmount(uid);
+    }
+
+    //获取正在关注数量
+    public int getFollowingAmount(String uid) {
+        return userMapper.getUserFollowingsAmount(uid);
+    }
+
     // 用户收藏夹相关 //
     // 用户收藏夹相关 //
     // 用户收藏夹相关 //
