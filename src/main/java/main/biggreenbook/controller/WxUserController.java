@@ -1,12 +1,14 @@
 package main.biggreenbook.controller;
 
 import main.biggreenbook.entity.pojo.User;
+import main.biggreenbook.entity.pojo.UserPrivacy;
 import main.biggreenbook.entity.vo.PreviewCard;
+import main.biggreenbook.entity.vo.UserCard;
 import main.biggreenbook.service.WxUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -70,6 +72,26 @@ public class WxUserController {
         return wxUserService.getInfo((uid));
     }
 
+    /**
+     * 获取某用户的关注者列表
+     *
+     * @param uid 要查看的用户的id
+     * @return 用户预览卡片数组
+     */
+    public List<UserCard> getFollowers(@RequestParam("uid") String uid) {
+        throw new NotImplementedException();
+    }
+
+    /**
+     * 获取某用户的正在关注的人的列表
+     *
+     * @param uid 要查看的用户的id
+     * @return 用户预览卡片数组
+     */
+    public List<UserCard> getFollowings(@RequestParam("uid") String uid) {
+        throw new NotImplementedException();
+    }
+
     // 用户收藏夹相关 //
     // 用户收藏夹相关 //
     // 用户收藏夹相关 //
@@ -80,14 +102,25 @@ public class WxUserController {
      *
      * @param uid  谁的收藏夹，用户id
      * @param page 页
-     * @return 当前页的收藏内容预览卡片
+     * @return 当前页的收藏内容预览卡片（如果用户设置了隐藏，那么返回空数组
      */
     @GetMapping("/get_collections")
     public List<PreviewCard> getCollections(@RequestParam("uid") String uid, @RequestParam("page") int page) {
-        int collectionPageAmount = wxUserService.getCollectionPageAmount(uid);
-        if (page >= collectionPageAmount) page = collectionPageAmount - 1;
         if (page < 0) page = 0;
         return wxUserService.getCollections(uid, page);
+    }
+
+    /**
+     * 获取用户自己的收藏夹内容，不会判断权限
+     *
+     * @param customCode 用户自己的登录记录
+     * @param page       页
+     * @return 当前页的收藏内容预览卡片
+     */
+    @GetMapping("/get_my_collections")
+    public List<PreviewCard> getMyCollections(@RequestAttribute("customCode") String customCode, @RequestParam("page") int page) {
+        if (page < 0) page = 0;
+        return wxUserService.getMyCollections(customCode, page);
     }
 
     /**
@@ -142,9 +175,26 @@ public class WxUserController {
     }
 
 
+    // 用户信息修改 //
+    // 用户信息修改 //
+    // 用户信息修改 //
+
     @GetMapping("/updateUser")
-    public int updateUser(User user){
-        return   wxUserService.updateUser(user);
+    public int updateUser(User user) {
+        return wxUserService.updateUser(user);
+    }
+
+    /**
+     * 更新用户的隐私设定
+     *
+     * @param customCode  用户的自定义登录记录字符串
+     * @param userPrivacy 新的用户隐私设定Json对象
+     * @return 是否成功
+     */
+    @GetMapping("/update_user_privacy")
+    public boolean updateUserPrivacy(@RequestParam("customCode") String customCode,
+                                     @RequestBody UserPrivacy userPrivacy) {
+        return wxUserService.updateUserPrivacy(customCode, userPrivacy);
     }
 
     @Autowired

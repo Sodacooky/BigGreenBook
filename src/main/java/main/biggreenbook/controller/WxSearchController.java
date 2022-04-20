@@ -100,7 +100,7 @@ public class WxSearchController {
         return wxSearchService.getUserCardsBySearch(query_id, map);
     }
 
-    @GetMapping("/get_userCard_query_id")
+    @GetMapping("/get_user_search_query_id")
     public int getSearchQueryId(String search) {
         return wxSearchService.getUserCardQueryId(search);
     }
@@ -109,9 +109,9 @@ public class WxSearchController {
      * 获取一共有多少页
      *
      * @param query_id 检索ID
-     * @return
+     * @return 页数
      */
-    @GetMapping("/get_userCard_page_amount")
+    @GetMapping("/get_user_search_page_amount")
     public int getUserCardsPageAmount(@RequestParam(required = true) int query_id) {
         return wxSearchService.getUserCardPageAmount(query_id);
     }

@@ -6,7 +6,7 @@ import main.biggreenbook.service.WxContentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 
 //微信小程序内容相关控制器
@@ -38,11 +38,11 @@ public class WxContentController {
     public List<PreviewCard> getPreviewCards(@RequestParam int page, @RequestParam int query_id) {
         //page parameter check
         if (page < 0) page = 0;
-        if (page >= getHomePageAmount(query_id)) page = getHomePageAmount(query_id) - 1;
+        if (page >= getHomePageAmount(query_id)) return new ArrayList<>();
         //to service
         return wxContentService.getHomePageContent(page, query_id);
     }
-    
+
     // 内容详情 //
     // 内容详情 //
     // 内容详情 //

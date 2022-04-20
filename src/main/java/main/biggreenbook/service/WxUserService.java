@@ -6,6 +6,7 @@ import main.biggreenbook.entity.dao.ContentMapper;
 import main.biggreenbook.entity.dao.UserMapper;
 import main.biggreenbook.entity.pojo.Follow;
 import main.biggreenbook.entity.pojo.User;
+import main.biggreenbook.entity.pojo.UserPrivacy;
 import main.biggreenbook.entity.vo.PreviewCard;
 import main.biggreenbook.entity.vo.UserCard;
 import main.biggreenbook.utils.RedisHelper;
@@ -58,11 +59,6 @@ public class WxUserService {
         //计算逆序页，获得数据
         return queryId < USER_RESULT_PAGE_SIZE ? 1 : queryId / USER_RESULT_PAGE_SIZE;
     }
-
-    public int updateUser(User user){
-        return userMapper.updateUser(user);
-    }
-
 
     // 微信小程序登录 //
     // 微信小程序登录 //
@@ -126,12 +122,12 @@ public class WxUserService {
         String uid = redisHelper.getUidFromCustomCode(customCode);
         User user = userMapper.getUserByUid(uid);
 
-        if (user == null){
-            user = new User(uid,"新用户","",null,null,0,"avatar/default.jpg");
+        if (user == null) {
+            user = new User(uid, "新用户", "", null, null, 0, "avatar/default.jpg");
             userMapper.addUser(user);
             //通过uid获取用户
             return userMapper.getUserByUid(uid);
-        }else{
+        } else {
             return user;
         }
     }
@@ -152,16 +148,42 @@ public class WxUserService {
     // 用户收藏夹相关 //
 
     /**
-     * 获取用户的收藏夹
+     * 获取其他用户的收藏夹，会进行权限判定
      *
      * @param uid  用户的uid
      * @param page 页
-     * @return 预览卡片
+     * @return 预览卡片数组，如果没有权限会返回空
      */
     public List<PreviewCard> getCollections(String uid, int page) {
+        //check privacy
+        UserPrivacy userPrivacy = userMapper.getUserPrivacy(uid);
+        if (userPrivacy.getPublicCollection() == 0) {
+            return new ArrayList<>();
+        }
+        //check page
+        int collectionPageAmount = getCollectionPageAmount(uid);
+        if (page >= collectionPageAmount) return new ArrayList<>();
+        //do get
         return contentMapper.getUserCollections(uid, page, COLLECTION_PAGE_SIZE);
     }
 
+
+    /**
+     * 获取用户自己的收藏夹，没有权限判定
+     *
+     * @param customCode 用户的登录记录
+     * @param page       页
+     * @return 预览卡片数组，到达最后一页之后会返回空
+     */
+    public List<PreviewCard> getMyCollections(String customCode, int page) {
+        //get uid
+        String uid = redisHelper.getUidFromCustomCode(customCode);
+        //check page
+        int collectionPageAmount = getCollectionPageAmount(uid);
+        if (page >= collectionPageAmount) return new ArrayList<>();
+        //do get
+        return contentMapper.getUserCollections(uid, page, COLLECTION_PAGE_SIZE);
+    }
 
     /**
      * 获取用户的收藏夹的页数
@@ -180,7 +202,7 @@ public class WxUserService {
         }
     }
 
-    
+
     // 个人信息页关注互动 //
     // 个人信息页关注互动 //
     // 个人信息页关注互动 //
@@ -227,6 +249,33 @@ public class WxUserService {
         String uid = redisHelper.getUidFromCustomCode(customCode);
         List<Follow> followStateBetween = userMapper.getFollowStateBetween(uid, goal_uid);
         return followStateBetween.size() != 0;
+    }
+
+    // 更新用户信息 //
+    // 更新用户信息 //
+    // 更新用户信息 //
+
+    public int updateUser(User user) {
+        return userMapper.updateUser(user);
+    }
+
+    /**
+     * 更新用户的隐私设定
+     *
+     * @param customCode  自定义登录状态记录字符串
+     * @param userPrivacy 用户新的用户隐私设定
+     * @return 是否成功
+     */
+    public boolean updateUserPrivacy(String customCode, UserPrivacy userPrivacy) {
+        //check exist
+        String uid = redisHelper.getUidFromCustomCode(customCode);
+        UserPrivacy oldPrivacy = userMapper.getUserPrivacy(uid);
+        //not exist create it
+        if (oldPrivacy == null) userMapper.insertDefaultUserPrivacy(uid);
+        //do update
+        userMapper.updateUserPrivacy(userPrivacy);
+        //just true
+        return true;
     }
 
     //用户搜索结果每页展示的数量？//todo:

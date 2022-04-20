@@ -2,6 +2,7 @@ package main.biggreenbook.entity.dao;
 
 import main.biggreenbook.entity.pojo.Follow;
 import main.biggreenbook.entity.pojo.User;
+import main.biggreenbook.entity.pojo.UserPrivacy;
 import main.biggreenbook.entity.vo.UserCard;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
@@ -14,8 +15,6 @@ import java.util.Map;
 @Mapper
 @Repository
 public interface UserMapper {
-    //通过uid获取用户的头像和昵称
-    User getUserByUid(String uid);
 
     //注册用户
     int addUser(@Param("user") User user);
@@ -40,6 +39,12 @@ public interface UserMapper {
      * @return java.util.List<main.biggreenbook.entity.vo.UserCard>
      */
     List<UserCard> getUserCardBySearch(Map<String, Object> map);
+
+
+    // 个人信息相关 //
+
+    //通过uid获取用户的头像和昵称
+    User getUserByUid(String uid);
 
     /**
      * 获取两个用户之间的关注关系
@@ -67,4 +72,25 @@ public interface UserMapper {
      */
     void deleteFollow(@Param("me") String me_uid, @Param("goal") String goal_uid);
 
+    /**
+     * 为用户创建新的默认的隐私设定
+     *
+     * @param uid 要创建的用户的uid
+     */
+    void insertDefaultUserPrivacy(@Param("uid") String uid);
+
+    /**
+     * 获取用户的隐私设定
+     *
+     * @param uid 用户uid
+     * @return 用户隐私设定
+     */
+    UserPrivacy getUserPrivacy(@Param("uid") String uid);
+
+    /**
+     * 更新用户的隐私设定
+     *
+     * @param new_privacy 新的隐私设定
+     */
+    void updateUserPrivacy(@Param("new_privacy") UserPrivacy new_privacy);
 }
