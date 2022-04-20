@@ -73,6 +73,42 @@ public interface UserMapper {
     void deleteFollow(@Param("me") String me_uid, @Param("goal") String goal_uid);
 
     /**
+     * 获取某用户的关注者uid
+     *
+     * @param uid      用户uid
+     * @param pageNum  页
+     * @param pageSize 页大小
+     * @return 用户uid
+     */
+    List<String> getFollowersUid(@Param("uid") String uid, @Param("pageNum") int pageNum, @Param("pageSize") int pageSize);
+
+    /**
+     * 获取某用户的正在关注uid
+     *
+     * @param uid      用户uid
+     * @param pageNum  页
+     * @param pageSize 页大小
+     * @return 用户uid
+     */
+    List<String> getFollowingsUid(@Param("uid") String uid, @Param("pageNum") int pageNum, @Param("pageSize") int pageSize);
+
+    /**
+     * 获取某用户的关注者数量（粉丝数量）
+     *
+     * @param uid 用户uid
+     * @return 数量
+     */
+    int getUserFollowersAmount(@Param("uid") String uid);
+
+    /**
+     * 获取某用户正在关注的数量
+     *
+     * @param uid 用户uid
+     * @return 数量
+     */
+    int getUserFollowingsAmount(@Param("uid") String uid);
+
+    /**
      * 为用户创建新的默认的隐私设定
      *
      * @param uid 要创建的用户的uid

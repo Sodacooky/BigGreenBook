@@ -102,6 +102,31 @@
         where uid = #{uid}
     </select>
 
+    <select id="getFollowersUid" resultType="java.lang.String">
+        select follower
+        from follow
+        where uid = #{uid}
+        limit ${pageNum*pageSize},${pageSize}
+    </select>
+
+    <select id="getUserFollowersAmount" resultType="java.lang.Integer">
+        select count(follower)
+        from follow
+        where uid = #{uid}
+    </select>
+
+    <select id="getFollowingsUid" resultType="java.lang.String">
+        select uid
+        from follow
+        where follower = #{uid}
+    </select>
+
+    <select id="getUserFollowingsAmount" resultType="java.lang.Integer">
+        select count(uid)
+        from follow
+        where follower = #{uid}
+    </select>
+
     <!--添加用户-->
     <insert id="addUser">
         insert into `user`

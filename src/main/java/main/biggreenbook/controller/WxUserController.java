@@ -7,7 +7,6 @@ import main.biggreenbook.entity.vo.UserCard;
 import main.biggreenbook.service.WxUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.util.List;
 
@@ -75,21 +74,31 @@ public class WxUserController {
     /**
      * 获取某用户的关注者列表
      *
-     * @param uid 要查看的用户的id
-     * @return 用户预览卡片数组
+     * @param customCode 用户自定义登录记录字符串
+     * @param uid        要查看的用户的id
+     * @param page       页
+     * @return 用户预览卡片数组，到底了返回空
      */
-    public List<UserCard> getFollowers(@RequestParam("uid") String uid) {
-        throw new NotImplementedException();
+    public List<UserCard> getFollowers(@RequestParam("customCode") String customCode,
+                                       @RequestParam("uid") String uid,
+                                       @RequestParam("page") int page) {
+        if (page < 0) page = 0;
+        return wxUserService.getFollowers(customCode, uid, page);
     }
 
     /**
      * 获取某用户的正在关注的人的列表
      *
-     * @param uid 要查看的用户的id
+     * @param customCode 用户自定义登录记录字符串
+     * @param uid        要查看的用户的id
+     * @param page       页
      * @return 用户预览卡片数组
      */
-    public List<UserCard> getFollowings(@RequestParam("uid") String uid) {
-        throw new NotImplementedException();
+    public List<UserCard> getFollowings(@RequestParam("customCode") String customCode,
+                                        @RequestParam("uid") String uid,
+                                        @RequestParam("page") int page) {
+        if (page < 0) page = 0;
+        return wxUserService.getFollowings(customCode, uid, page);
     }
 
     // 用户收藏夹相关 //

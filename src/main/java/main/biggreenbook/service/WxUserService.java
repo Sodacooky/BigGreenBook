@@ -90,6 +90,17 @@ public class WxUserService {
         String customCode = UUIDGenerator.generate();
         //填充
         redisHelper.setCustomCode(customCode, resultOpenId, resultSessionKey, Duration.ofDays(1));
+        //判断是否是初次登录（注册为新用户）
+        if (userMapper.getUserByUid(resultOpenId) == null) {
+            userMapper.addUser(new User(
+                    resultOpenId,
+                    "新用户" + resultOpenId,
+                    "暂无简介",
+                    1,
+                    null,
+                    0,
+                    "avatar/default.jpg"));
+        }
         //
         return customCode;
     }
@@ -121,15 +132,8 @@ public class WxUserService {
         //从redis中获取uid
         String uid = redisHelper.getUidFromCustomCode(customCode);
         User user = userMapper.getUserByUid(uid);
-
-        if (user == null) {
-            user = new User(uid, "新用户", "", null, null, 0, "avatar/default.jpg");
-            userMapper.addUser(user);
-            //通过uid获取用户
-            return userMapper.getUserByUid(uid);
-        } else {
-            return user;
-        }
+        //通过uid获取用户
+        return userMapper.getUserByUid(uid);
     }
 
     /**
@@ -142,6 +146,67 @@ public class WxUserService {
         return userMapper.getUserByUid(uid);
     }
 
+    //获取用户的关注者列表
+    public List<UserCard> getFollowers(String customCode, String uid, int page) {
+        //
+        String me_uid = redisHelper.getUidFromCustomCode(customCode);
+        //page check
+        int followersAmount = userMapper.getUserFollowersAmount(me_uid);
+        int followersPageAmount = followersAmount < USER_CARD_PAGE_SIZE ? 1 : (followersAmount / USER_CARD_PAGE_SIZE) + 1;
+        if (page >= followersPageAmount) return new ArrayList<>();
+        //
+        List<UserCard> result = new ArrayList<>();
+        //获取当前页关注者uid
+        List<String> followersUid = userMapper.getFollowersUid(uid, page, USER_CARD_PAGE_SIZE);
+        //注入信息
+        followersUid.forEach(follower -> {
+            User theFollower = userMapper.getUserByUid(follower);
+            int theFollowerContentAmount = contentMapper.getUserContentAmount(follower);
+            int theFollowerFansAmount = userMapper.getUserFollowersAmount(follower);
+            int theFollowerStatus = userMapper.getFollowStateBetween(me_uid, follower).size();
+            UserCard followerCard =
+                    new UserCard(theFollower.getUid(),
+                            theFollower.getNickname(),
+                            theFollower.getAvatarPath(),
+                            theFollowerContentAmount,
+                            theFollowerFansAmount,
+                            theFollowerStatus);
+            result.add(followerCard);
+        });
+        //
+        return result;
+    }
+
+    //获取用户的正在关注列表
+    public List<UserCard> getFollowings(String customCode, String uid, int page) {
+        //
+        String me_uid = redisHelper.getUidFromCustomCode(customCode);
+        //page check
+        int followersAmount = userMapper.getUserFollowingsAmount(me_uid);
+        int followersPageAmount = followersAmount < USER_CARD_PAGE_SIZE ? 1 : (followersAmount / USER_CARD_PAGE_SIZE) + 1;
+        if (page >= followersPageAmount) return new ArrayList<>();
+        //
+        List<UserCard> result = new ArrayList<>();
+        //获取当前页正在关注的uid
+        List<String> followingsUid = userMapper.getFollowingsUid(me_uid, page, USER_CARD_PAGE_SIZE);
+        //注入信息
+        followingsUid.forEach(following -> {
+            User theFollower = userMapper.getUserByUid(following);
+            int theFollowerContentAmount = contentMapper.getUserContentAmount(following);
+            int theFollowerFansAmount = userMapper.getUserFollowersAmount(following);
+            int theFollowerStatus = userMapper.getFollowStateBetween(me_uid, following).size();
+            UserCard followerCard =
+                    new UserCard(theFollower.getUid(),
+                            theFollower.getNickname(),
+                            theFollower.getAvatarPath(),
+                            theFollowerContentAmount,
+                            theFollowerFansAmount,
+                            theFollowerStatus);
+            result.add(followerCard);
+        });
+        //
+        return result;
+    }
 
     // 用户收藏夹相关 //
     // 用户收藏夹相关 //
@@ -283,6 +348,9 @@ public class WxUserService {
 
     //用户收藏夹每页的卡片数量
     private static final int COLLECTION_PAGE_SIZE = 16;
+
+    //用户关注、粉丝列表每页卡片数量
+    private static final int USER_CARD_PAGE_SIZE = 16;
 
     @Autowired
     private WxInfoContainer wxInfoContainer;
