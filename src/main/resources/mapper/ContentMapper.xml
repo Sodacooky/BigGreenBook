@@ -420,4 +420,49 @@
         where `uid` = #{uid}
     </select>
 
+    <select id="getUserLiked" resultMap="previewCardMap">
+        select `content`.`cid`                                        as cid,
+               `content`.`like_amount`                                as like_amount,
+               `content`.`title`                                      as title,
+               `resource`.`type`                                      as type,
+               JSON_UNQUOTE(JSON_EXTRACT(`resource`.`paths`, '$[0]')) as first_path,
+               `user`.`avatar_path`                                   as avatar,
+               `user`.`nickname`                                      as nickname
+        from `likes`
+                 inner join `content` on `content`.`cid` = `likes`.`goal` and `likes`.`type` = 'content'
+                 inner join `user` on `user`.`uid` = `content`.`uid`
+                 inner join `resource` on `resource`.`sid` = `content`.`sid`
+        where `likes`.`uid` = #{uid}
+        order by `likes`.`date` desc
+            limit ${pageSize*pageNum}, #{pageSize}
+    </select>
+
+    <select id="getUserLikedAmount" resultType="java.lang.Integer">
+        select count(*)
+        from `likes`
+        where `uid` = #{uid}
+    </select>
+
+    <select id="getUserPublished" resultMap="previewCardMap">
+        select `content`.`cid`                                        as cid,
+               `content`.`like_amount`                                as like_amount,
+               `content`.`title`                                      as title,
+               `resource`.`type`                                      as type,
+               JSON_UNQUOTE(JSON_EXTRACT(`resource`.`paths`, '$[0]')) as first_path,
+               `user`.`avatar_path`                                   as avatar,
+               `user`.`nickname`                                      as nickname
+        from `content`
+                 inner join `user` on `user`.`uid` = `content`.`uid`
+                 inner join `resource` on `resource`.`sid` = `content`.`sid`
+        where `content`.`uid` = #{uid}
+        order by `content`.`date` desc
+            limit ${pageSize*pageNum}, #{pageSize}
+    </select>
+
+    <select id="getUserPublishedAmount" resultType="java.lang.Integer">
+        select count(*)
+        from `content`
+        where `uid` = #{uid}
+    </select>
+
 </mapper>

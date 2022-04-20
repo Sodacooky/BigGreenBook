@@ -1,8 +1,10 @@
-# 用户相关
+***
+
+# 用户登录相关
 
 ***
 
-## 用户登录
+### 用户登录
 
 ```http request
 GET /usr/login
@@ -20,7 +22,7 @@ GET /usr/login
 
 ***
 
-## 获取自定义登录记录字符串(3rdSession)可用性
+### 获取自定义登录记录字符串(3rdSession)可用性
 
 ```http request
 GET /usr/checkCustomCodeState
@@ -36,9 +38,20 @@ GET /usr/checkCustomCodeState
 
 是否可用布尔值
 
+
+
+
+
+
+
+
 ***
 
-## 获取用户自己的个人信息
+# 用户个人信息相关
+
+***
+
+### 获取用户自己的个人信息
 
 ```http request
 GET /usr/get_my_info
@@ -66,7 +79,7 @@ GET /usr/get_my_info
 
 ***
 
-## 获取指定UID用户的个人信息
+### 获取指定UID用户的个人信息
 
 ```http request
 GET /usr/get_info
@@ -84,7 +97,7 @@ GET /usr/get_info
 
 *** 
 
-## 获取用户的关注者（粉丝）
+### 获取用户的关注者（粉丝）
 
 ```http request
 GET /usr/get_followers
@@ -115,7 +128,7 @@ GET /usr/get_followers
 
 ***
 
-## 获取用户的正在关注
+### 获取用户的正在关注
 
 ```http request
 GET /usr/get_followings
@@ -146,7 +159,7 @@ GET /usr/get_followings
 
 ***
 
-## 获取用户粉丝数量
+### 获取用户粉丝数量
 
 ```http request
 GET /usr/get_follower_amount
@@ -164,7 +177,7 @@ GET /usr/get_follower_amount
 
 ***
 
-## 获取用户正在关注的数量
+### 获取用户正在关注的数量
 
 ```http request
 GET /usr/get_following_amount
@@ -180,9 +193,24 @@ GET /usr/get_following_amount
 
 整数正在关注数量
 
+
+
+
+
+
+
+
+
+
+
+
 ***
 
-## 获取用户的收藏夹内容
+# 用户发布内容、收藏、赞过
+
+***
+
+### 获取用户的收藏夹内容
 
 ```http request
 GET /usr/get_collections
@@ -213,7 +241,7 @@ PreviewCard数组，PreviewCard类型如下：
 
 ***
 
-## 获取用户【自己】的收藏夹
+### 获取用户【自己】的收藏夹
 
 ```http request
 get_my_collections
@@ -246,27 +274,154 @@ PreviewCard数组，PreviewCard类型如下：
 
 ***
 
-## 获取用户的收藏夹页数
+### 获取用户赞过的内容
 
 ```http request
-GET /usr/get_collections_page_amount
+GET /usr/get_liked
 ```
 
 参数：
 
-| 参数名  | 说明             |
-|------|----------------|
-| uid  | 要获取收藏夹的用户的uid  |
+| 参数名  | 说明          |
+|------|-------------|
+| uid  | 要查看的用户的uid  |
+| page | 要获取的页号，从0开始 |
 
 返回：
 
-整数类型的页数。
+如果对方设置了没有公开，或者超过了最后一页，返回空数组。
 
-当为0时，没有收藏内容。
+PreviewCard数组，PreviewCard类型如下：
+
+| 属性                | 类型      | 说明                       |
+|-------------------|---------|--------------------------|
+| contentCid        | String  | 内容的ID                    |
+| resourceType      | String  | 资源的类型，为"picture"或"video" |
+| resourcePath      | String  | 用于卡片显示的资源URL，为图片或视频的URL  |
+| contentTitle      | String  | 内容的标题                    |
+| userAvatarPath    | String  | 该内容作者的头像的图片的URL          |
+| userNickname      | String  | 该内容作者的昵称                 |
+| contentLikeAmount | Integer | 该内容的点赞数量                 |
 
 ***
 
-## 关注用户
+### 获取用户【自己】赞过的内容
+
+```http request
+GET /usr/get_my_liked
+```
+
+参数：
+
+| 参数名        | 说明           |
+|------------|--------------|
+| customCode | 用户自定义登录记录字符串 |
+| page       | 要获取的页号，从0开始  |
+
+返回：
+
+如果对方设置了没有公开，或者超过了最后一页，返回空数组。
+
+PreviewCard数组，PreviewCard类型如下：
+
+| 属性                | 类型      | 说明                       |
+|-------------------|---------|--------------------------|
+| contentCid        | String  | 内容的ID                    |
+| resourceType      | String  | 资源的类型，为"picture"或"video" |
+| resourcePath      | String  | 用于卡片显示的资源URL，为图片或视频的URL  |
+| contentTitle      | String  | 内容的标题                    |
+| userAvatarPath    | String  | 该内容作者的头像的图片的URL          |
+| userNickname      | String  | 该内容作者的昵称                 |
+| contentLikeAmount | Integer | 该内容的点赞数量                 |
+
+***
+
+### 获取用户的发布内容
+
+```http request
+GET /usr/get_published
+```
+
+参数：
+
+| 参数名  | 说明          |
+|------|-------------|
+| uid  | 要查看的用户的uid  |
+| page | 要获取的页号，从0开始 |
+
+返回：
+
+超过了最后一页，返回空数组。
+
+PreviewCard数组，PreviewCard类型如下：
+
+| 属性                | 类型      | 说明                       |
+|-------------------|---------|--------------------------|
+| contentCid        | String  | 内容的ID                    |
+| resourceType      | String  | 资源的类型，为"picture"或"video" |
+| resourcePath      | String  | 用于卡片显示的资源URL，为图片或视频的URL  |
+| contentTitle      | String  | 内容的标题                    |
+| userAvatarPath    | String  | 该内容作者的头像的图片的URL          |
+| userNickname      | String  | 该内容作者的昵称                 |
+| contentLikeAmount | Integer | 该内容的点赞数量                 |
+
+***
+
+### 获取用户【自己】的发布内容
+
+```http request
+GET /usr/get_my_published
+```
+
+与上一个接口没什么区别，只是一个方便使用的接口。
+
+参数：
+
+| 参数名        | 说明           |
+|------------|--------------|
+| customCode | 用户自定义登录状态字符串 |
+| page       | 要获取的页号，从0开始  |
+
+返回：
+
+超过了最后一页，返回空数组。
+
+PreviewCard数组，PreviewCard类型如下：
+
+| 属性                | 类型      | 说明                       |
+|-------------------|---------|--------------------------|
+| contentCid        | String  | 内容的ID                    |
+| resourceType      | String  | 资源的类型，为"picture"或"video" |
+| resourcePath      | String  | 用于卡片显示的资源URL，为图片或视频的URL  |
+| contentTitle      | String  | 内容的标题                    |
+| userAvatarPath    | String  | 该内容作者的头像的图片的URL          |
+| userNickname      | String  | 该内容作者的昵称                 |
+| contentLikeAmount | Integer | 该内容的点赞数量                 |
+
+***
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+***
+
+# 用户互动操作
+
+***
+
+### 关注用户
 
 ```http request
 GET /usr/follow
@@ -285,7 +440,7 @@ GET /usr/follow
 
 ***
 
-## 取消关注用户
+### 取消关注用户
 
 ```http request
 GET /usr/unfollow
@@ -304,7 +459,7 @@ GET /usr/unfollow
 
 ***
 
-## 获取关注状态
+### 获取关注状态
 
 ```http request
 GET /usr/get_follow_state
@@ -324,7 +479,11 @@ GET /usr/get_follow_state
 
 ***
 
-## 更新用户基本信息
+# 用户信息更新
+
+***
+
+### 更新用户基本信息
 
 ```http request
 POST /usr/updateUser
@@ -344,3 +503,21 @@ POST /usr/updateUser
 *USER POJO类的其他属性保持为NULL*
 
 ***
+
+### 更新用户隐私设定
+
+```http request
+POST /usr/update_user_privacy
+```
+
+参数：
+
+| 属性               | 类型      | 说明            |
+|------------------|---------|---------------|
+| customCode       | String  | 用户的自定义登录记录字符串 |
+| publicCollection | Boolean | 是否公开收藏        |
+| publicLiked      | Boolean | 是否公开赞过        |
+
+返回：
+
+是否成功

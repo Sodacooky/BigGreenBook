@@ -16,11 +16,16 @@ import java.util.Map;
 @Repository
 public interface UserMapper {
 
-    //注册用户
-    int addUser(@Param("user") User user);
+    // 用户信息修改 //
+    // 用户信息修改 //
+    // 用户信息修改 //
 
     //修改用户信息
     int updateUser(@Param("user") User user);
+    
+
+    //注册用户
+    int addUser(@Param("user") User user);
 
 
     /***

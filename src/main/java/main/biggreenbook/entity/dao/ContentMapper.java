@@ -65,9 +65,9 @@ public interface ContentMapper {
      */
     List<PreviewCard> getContentBySearch(Map<String, Object> map);
 
-    // 用户收藏夹 //
-    // 用户收藏夹 //
-    // 用户收藏夹 //
+    // 用户收藏夹，赞过的内容，自己发布的内容 //
+    // 用户收藏夹，赞过的内容，自己发布的内容 //
+    // 用户收藏夹，赞过的内容，自己发布的内容 //
 
     /**
      * 获取指定uid的用户的收藏夹的某一页内容的预览卡片
@@ -87,6 +87,43 @@ public interface ContentMapper {
      * @return collect amount
      */
     int getUserCollectionAmount(@Param("uid") String uid);
+
+    /**
+     * 获取用户赞过的内容
+     *
+     * @param uid      要获取的用户uid
+     * @param pageNum  页
+     * @param pageSize 页容量
+     * @return 预览卡片
+     */
+    List<PreviewCard> getUserLiked(@Param("uid") String uid, @Param("pageNum") int pageNum, @Param("pageSize") int pageSize);
+
+    /**
+     * 获取用户的赞过数量
+     *
+     * @param uid 要查看的用户
+     * @return 数量
+     */
+    int getUserLikedAmount(@Param("uid") String uid);
+
+    /**
+     * 获取指定用户发布的内容
+     *
+     * @param uid      指定的用户uid
+     * @param pageNum  页
+     * @param pageSize 页容量
+     * @return 内容预览卡片
+     */
+    List<PreviewCard> getUserPublished(@Param("uid") String uid, @Param("pageNum") int pageNum, @Param("pageSize") int pageSize);
+
+    /**
+     * 获取用户发布的内容的数量
+     *
+     * @param uid 指定的用户uid
+     * @return 数量
+     */
+    int getUserPublishedAmount(@Param("uid") String uid);
+
 
     // 展示个人信息所需数据 //
     // 展示个人信息所需数据 //

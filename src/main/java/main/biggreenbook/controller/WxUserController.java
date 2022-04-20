@@ -7,6 +7,7 @@ import main.biggreenbook.entity.vo.UserCard;
 import main.biggreenbook.service.WxUserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.List;
 
@@ -125,9 +126,10 @@ public class WxUserController {
     }
 
 
-    // 用户收藏夹相关 //
-    // 用户收藏夹相关 //
-    // 用户收藏夹相关 //
+    // 用户收藏夹，赞过的内容，自己发布的内容 //
+    // 用户收藏夹，赞过的内容，自己发布的内容 //
+    // 用户收藏夹，赞过的内容，自己发布的内容 //
+
 
     /**
      * 获取用户的收藏夹内容
@@ -156,15 +158,60 @@ public class WxUserController {
         return wxUserService.getMyCollections(customCode, page);
     }
 
+
     /**
-     * 获取用户收藏夹的页数
+     * 获取用户赞过的内容，会进行权限判断
      *
-     * @param uid 谁的收藏夹，用户id
-     * @return 页数，显然，当没有收藏内容时为0
+     * @param uid  要查看的用户uid
+     * @param page 页
+     * @return 赞过的内容的预览卡片数组
      */
-    @GetMapping("/get_collections_page_amount")
-    public int getCollectionPageAmount(@RequestParam("uid") String uid) {
-        return wxUserService.getCollectionPageAmount(uid);
+    @GetMapping("/get_liked")
+    public List<PreviewCard> getLiked(@RequestParam("uid") String uid, @RequestParam("page") int page) {
+        if (page < 0) page = 0;
+        return wxUserService.getLiked(uid, page);
+    }
+
+
+    /**
+     * 获取用户自己赞过的内容，不会进行权限判断
+     *
+     * @param customCode 用户的自定义登录记录
+     * @param page       页
+     * @return 赞过的内容的预览卡片数组
+     */
+    @GetMapping("/get_my_liked")
+    public List<PreviewCard> getMyLiked(@RequestParam("customCode") String customCode, @RequestParam("page") int page) {
+        if (page < 0) page = 0;
+        return wxUserService.getMyLiked(customCode, page);
+    }
+
+
+    /**
+     * 获取用户发布的内容
+     *
+     * @param uid  要查看的用户uid
+     * @param page 页
+     * @return 内容的预览卡片数组
+     */
+    @GetMapping("/get_published")
+    public List<PreviewCard> getPublished(@RequestParam("uid") String uid, @RequestParam("page") int page) {
+        if (page < 0) page = 0;
+        return wxUserService.getPublished(uid, page);
+    }
+
+
+    /**
+     * 获取用户自己发布的内容，只是个方便接口
+     *
+     * @param customCode 用户的自定义登录记录
+     * @param page       页
+     * @return 内容的预览卡片数组
+     */
+    @GetMapping("/get_my_published")
+    public List<PreviewCard> getMyPublished(@RequestParam("customCode") String customCode, @RequestParam("page") int page) {
+        if (page < 0) page = 0;
+        return wxUserService.getMyPublished(customCode, page);
     }
 
     // 个人信息页关注互动 //
@@ -212,6 +259,12 @@ public class WxUserController {
     // 用户信息修改 //
     // 用户信息修改 //
 
+    /**
+     * 更新用户基本信息
+     *
+     * @param user 新的用户基本信息，部分属性为空
+     * @return 返回1修改成功
+     */
     @PostMapping("/updateUser")
     public int updateUser(User user) {
         return wxUserService.updateUser(user);
@@ -220,14 +273,31 @@ public class WxUserController {
     /**
      * 更新用户的隐私设定
      *
-     * @param customCode  用户的自定义登录记录字符串
-     * @param userPrivacy 新的用户隐私设定Json对象
+     * @param customCode       用户的自定义登录记录字符串
+     * @param publicCollection 是否公开收藏
+     * @param publicLiked      是否公开赞过
      * @return 是否成功
      */
-    @GetMapping("/update_user_privacy")
+    @PostMapping("/update_user_privacy")
     public boolean updateUserPrivacy(@RequestParam("customCode") String customCode,
-                                     @RequestBody UserPrivacy userPrivacy) {
+                                     @RequestParam("publicCollection") boolean publicCollection,
+                                     @RequestParam("publicLiked") boolean publicLiked) {
+        UserPrivacy userPrivacy = new UserPrivacy(null, publicCollection ? 1 : 0, publicLiked ? 1 : 0);
         return wxUserService.updateUserPrivacy(customCode, userPrivacy);
+    }
+
+
+    /**
+     * 用户更新头像
+     *
+     * @param customCode 用好谁创应酬登录记录字符串
+     * @param file       要更换的新的头像文件
+     * @return 是否成功
+     */
+    @PostMapping("/update_user_avatar")
+    public boolean updateUserAvatar(@RequestParam("customCode") String customCode,
+                                    @RequestParam("file") MultipartFile file) {
+        return wxUserService.updateUserAvatar(customCode, file);
     }
 
     @Autowired

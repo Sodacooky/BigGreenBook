@@ -13,9 +13,12 @@ import main.biggreenbook.utils.RedisHelper;
 import main.biggreenbook.utils.StaticMappingHelper;
 import main.biggreenbook.utils.UUIDGenerator;
 import main.biggreenbook.utils.WxInfoContainer;
+import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.Timestamp;
@@ -185,9 +188,10 @@ public class WxUserService {
         return userMapper.getUserFollowingsAmount(uid);
     }
 
-    // 用户收藏夹相关 //
-    // 用户收藏夹相关 //
-    // 用户收藏夹相关 //
+
+    // 用户收藏夹，赞过的内容，自己发布的内容 //
+    // 用户收藏夹，赞过的内容，自己发布的内容 //
+    // 用户收藏夹，赞过的内容，自己发布的内容 //
 
     /**
      * 获取其他用户的收藏夹，会进行权限判定
@@ -245,6 +249,67 @@ public class WxUserService {
     }
 
 
+    //获取他人赞过的内容
+    public List<PreviewCard> getLiked(String uid, int page) {
+        //check privacy
+        UserPrivacy userPrivacy = userMapper.getUserPrivacy(uid);
+        if (userPrivacy.getPublicLiked() == 0) return new ArrayList<>();
+        //check page
+        int likedPageAmount = getLikedPageAmount(uid);
+        if (page >= likedPageAmount) return new ArrayList<>();
+        //do get
+        return contentMapper.getUserLiked(uid, page, COLLECTION_PAGE_SIZE);
+    }
+
+    //获取自己赞过的内容
+    public List<PreviewCard> getMyLiked(String customCode, int page) {
+        //get uid
+        String uid = redisHelper.getUidFromCustomCode(customCode);
+        //check page
+        int likedPageAmount = getLikedPageAmount(uid);
+        if (page >= likedPageAmount) return new ArrayList<>();
+        //do get
+        return contentMapper.getUserLiked(uid, page, COLLECTION_PAGE_SIZE);
+    }
+
+    //获取用户赞过的内容的数量
+    public int getLikedPageAmount(String uid) {
+        int amount = contentMapper.getUserLikedAmount(uid);
+        if (amount == 0) {
+            return 0;
+        } else if (amount < COLLECTION_PAGE_SIZE) {
+            return 1;
+        } else {
+            return (amount / COLLECTION_PAGE_SIZE) + (amount % COLLECTION_PAGE_SIZE == 0 ? 1 : 0);
+        }
+    }
+
+
+    //获取用户发布的内容
+    public List<PreviewCard> getPublished(String uid, int page) {
+        //check page
+        int likedPageAmount = getLikedPageAmount(uid);
+        if (page >= likedPageAmount) return new ArrayList<>();
+        //do get
+        return contentMapper.getUserLiked(uid, page, COLLECTION_PAGE_SIZE);
+    }
+
+    public List<PreviewCard> getMyPublished(String customCode, int page) {
+        return getPublished(redisHelper.getUidFromCustomCode(customCode), page);
+    }
+
+    //获取用户发布的内容的数量
+    public int getPublishedAmount(String uid) {
+        int amount = contentMapper.getUserPublishedAmount(uid);
+        if (amount == 0) {
+            return 0;
+        } else if (amount < COLLECTION_PAGE_SIZE) {
+            return 1;
+        } else {
+            return (amount / COLLECTION_PAGE_SIZE) + (amount % COLLECTION_PAGE_SIZE == 0 ? 1 : 0);
+        }
+    }
+
     // 个人信息页关注互动 //
     // 个人信息页关注互动 //
     // 个人信息页关注互动 //
@@ -297,6 +362,7 @@ public class WxUserService {
     // 更新用户信息 //
     // 更新用户信息 //
 
+    //更新用户信息
     public int updateUser(User user) {
         return userMapper.updateUser(user);
     }
@@ -315,10 +381,34 @@ public class WxUserService {
         //not exist create it
         if (oldPrivacy == null) userMapper.insertDefaultUserPrivacy(uid);
         //do update
+        userPrivacy.setUid(uid);
         userMapper.updateUserPrivacy(userPrivacy);
         //just true
         return true;
     }
+
+    //更新用户头像
+    public boolean updateUserAvatar(String customCode, MultipartFile file) {
+        //check custom coder
+        if (!redisHelper.hasCustomCode(customCode)) return false;
+        //make destination path
+        String toSaveFilename = UUIDGenerator.generate() + FilenameUtils.getExtension(file.getOriginalFilename());
+        String toStoreFilename = "avatar/" + toSaveFilename;
+        String toSavePath = staticMappingHelper.getStaticLocations() + toStoreFilename;
+        //save file
+        try {
+            file.transferTo(new File(toSavePath));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+        //save new url to db
+        User user = userMapper.getUserByUid(redisHelper.getUidFromCustomCode(customCode));
+        user.setAvatarPath(toStoreFilename);
+        userMapper.updateUser(user);
+        //
+        return true;
+    }
+
 
     //用户搜索结果每页展示的数量？//todo:
     private static final int USER_RESULT_PAGE_SIZE = 8;

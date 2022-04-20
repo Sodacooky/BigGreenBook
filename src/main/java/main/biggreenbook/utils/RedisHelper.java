@@ -9,6 +9,7 @@ import java.time.Duration;
 @Component
 public class RedisHelper {
 
+    //通过customCode key找到提取对应的uid
     public String getUidFromCustomCode(String customCode) {
         String value = (String) redisTemplate.opsForValue().get("customCode_" + customCode);
         if (value == null) return "null";
@@ -16,6 +17,7 @@ public class RedisHelper {
         return values[0];
     }
 
+    //通过customCode key找到提取对应的sessionKey
     public String getSessionKeyFromCustomCode(String customCode) {
         String value = (String) redisTemplate.opsForValue().get("customCode_" + customCode);
         if (value == null) return "null";
@@ -23,6 +25,7 @@ public class RedisHelper {
         return values[1];
     }
 
+    //redis hasKey的封装
     public boolean hasKey(String key) {
         return Boolean.TRUE.equals(redisTemplate.hasKey(key));
     }
@@ -35,11 +38,16 @@ public class RedisHelper {
      * @return 如果已经存在返回false
      */
     public boolean setCustomCode(String customCode, String uid, String sessionKey, Duration duration) {
-        if (redisTemplate.hasKey("customCode_" + customCode)) return false;
+        if (Boolean.TRUE.equals(redisTemplate.hasKey("customCode_" + customCode))) return false;
         else {
             redisTemplate.opsForValue().set("customCode_" + customCode, uid + "_" + sessionKey, duration);
             return true;
         }
+    }
+
+    //判断customCode是否存在（是否过期
+    public boolean hasCustomCode(String customCode) {
+        return Boolean.TRUE.equals(redisTemplate.hasKey("customCode_" + customCode));
     }
 
 

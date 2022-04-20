@@ -81,3 +81,5 @@
 | type, varchar(32)  | 点赞的目标类型，可以是"content"或"reply" |
 | uid, varchar(256)  | 点赞的人的uid                     |
 
+## 站内消息表
+
