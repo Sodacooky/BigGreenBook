@@ -96,4 +96,65 @@
           and `follower` = #{follower}
     </select>
 
+    <select id="getUserPrivacy" resultType="main.biggreenbook.entity.pojo.UserPrivacy">
+        select *
+        from user_privacy
+        where uid = #{uid}
+    </select>
+
+    <select id="getFollowersUid" resultType="java.lang.String">
+        select follower
+        from follow
+        where uid = #{uid}
+        limit ${pageNum*pageSize},${pageSize}
+    </select>
+
+    <select id="getUserFollowersAmount" resultType="java.lang.Integer">
+        select count(follower)
+        from follow
+        where uid = #{uid}
+    </select>
+
+    <select id="getFollowingsUid" resultType="java.lang.String">
+        select uid
+        from follow
+        where follower = #{uid}
+    </select>
+
+    <select id="getUserFollowingsAmount" resultType="java.lang.Integer">
+        select count(uid)
+        from follow
+        where follower = #{uid}
+    </select>
+
+    <!--添加用户-->
+    <insert id="addUser">
+        insert into `user`
+        values (#{user.uid}, #{user.nickname}, #{user.description}, #{user.gender}, #{user.birthday}, 0,
+                #{user.avatarPath})
+    </insert>
+
+    <insert id="insertDefaultUserPrivacy">
+        insert into `user_privacy`
+        values (#{uid}, 0, 0)
+    </insert>
+
+    <!--修改用户信息-->
+    <update id="updateUser">
+        update `user`
+        set `nickname`=#{user.nickname},
+            `description`=#{user.description},
+            `gender`=#{user.gender},
+            `birthday`=#{user.birthday},
+            `avatar_path`=#{user.avatarPath}
+        where uid = #{user.uid}
+    </update>
+
+    <update id="updateUserPrivacy" parameterType="main.biggreenbook.entity.pojo.UserPrivacy">
+        update `user_privacy`
+        set `public_collection`=#{new_privacy.publicCollection},
+            `public_liked`     = #{new_privacy.publicLiked}
+        where `uid` = #{new_privacy.uid}
+    </update>
+
 </mapper>

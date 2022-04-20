@@ -414,4 +414,10 @@
         where `uid` = #{uid}
     </select>
 
+    <select id="getUserContentAmount" resultType="java.lang.Integer">
+        select count(*)
+        from `content`
+        where `uid` = #{uid}
+    </select>
+
 </mapper>

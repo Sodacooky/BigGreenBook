@@ -88,6 +88,19 @@ public interface ContentMapper {
      */
     int getUserCollectionAmount(@Param("uid") String uid);
 
+    // 展示个人信息所需数据 //
+    // 展示个人信息所需数据 //
+    // 展示个人信息所需数据 //
+
+    /**
+     * 获取该用户发布的内容数量
+     *
+     * @param uid user uid
+     * @return 数量
+     */
+    int getUserContentAmount(@Param("uid") String uid);
+
+
     // ################### 后台
 
     /**

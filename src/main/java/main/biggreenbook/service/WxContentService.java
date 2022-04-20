@@ -8,10 +8,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.sql.Timestamp;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class WxContentService {
@@ -115,6 +112,15 @@ public class WxContentService {
     }
 
 
+    // 内容详情 //
+    // 内容详情 //
+    // 内容详情 //
+
+    /**
+     * @param cid
+     * @param uid
+     * @return
+     */
     public ContentInfo getContentInfo(String cid, String uid) {
         ContentInfo contentInfo = contentMapper.getContentInfo(cid, uid);
 
@@ -145,13 +151,13 @@ public class WxContentService {
             return contentMapper.deleteCollection(cid, uid);
         } else {
             //添加收藏
-            Timestamp date = new Timestamp(System.currentTimeMillis());
+            Timestamp date = new Timestamp(new Date().getTime());
             return contentMapper.addCollection(cid, uid, date);
         }
     }
 
-    public int reportContent(String uid, String cid, String reason, Timestamp date) {
-
+    public int reportContent(String uid, String cid, String reason) {
+        Timestamp date = new Timestamp(new Date().getTime());
         return contentMapper.addReportContent(uid, cid, reason, date);
     }
 

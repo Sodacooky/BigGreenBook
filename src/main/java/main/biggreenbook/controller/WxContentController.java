@@ -6,7 +6,7 @@ import main.biggreenbook.service.WxContentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.sql.Timestamp;
+import java.util.ArrayList;
 import java.util.List;
 
 //微信小程序内容相关控制器
@@ -38,55 +38,38 @@ public class WxContentController {
     public List<PreviewCard> getPreviewCards(@RequestParam int page, @RequestParam int query_id) {
         //page parameter check
         if (page < 0) page = 0;
-        if (page >= getHomePageAmount(query_id)) page = getHomePageAmount(query_id) - 1;
+        if (page >= getHomePageAmount(query_id)) return new ArrayList<>();
         //to service
         return wxContentService.getHomePageContent(page, query_id);
     }
 
-    // 搜索 //
-    // 搜索 //
-    // 搜索 //
-
-    /**
-     * 获取搜索的检索ID
-     *
-     * @param search 搜索的内容
-     * @return 检索ID
+    /***
+     * 获取一共有多少页
+     * @param query_id 检索ID
+     * @return 页数
      */
-    @GetMapping("/get_search_query_id")
-    public int getSearchQueryId(@RequestParam("search") String search) {
-        return wxContentService.getSearchQueryId(search);
+    @GetMapping("/get_home_page_amount")
+    public int getHomePageAmount(@RequestParam(required = true) int query_id) {
+        return wxContentService.getPageAmount(query_id);
     }
 
+    // 内容详情 //
+    // 内容详情 //
+    // 内容详情 //
+
     /**
-     * 内容搜索
-     *
-     * @param page     页
-     * @param query_id 检索iD
-     * @param search   搜索内容
-     * @param sort     搜索结果的排序方式，LATEST/HOT
-     * @return 结果内容预览卡片
+     * @param cid
+     * @param uid
+     * @return
      */
-    @GetMapping("/get_search")
-    public List<PreviewCard> getPreviewCardsBySearch(@RequestParam int page,
-                                                     @RequestParam int query_id,
-                                                     @RequestParam String search,
-                                                     @RequestParam String sort) {
-        //page parameter check
-        if (page < 0) page = 0;
-        if (page >= getHomePageAmount(query_id)) page = getHomePageAmount(query_id) - 1;
-        sort = sort.toUpperCase();
-        if (!sort.equals("HOT") && !sort.equals("LATEST")) sort = "HOT";
-        //to service
-
-        return wxContentService.getSearchContent(page, query_id, search, sort);
-
-    }
-
     @GetMapping("/get_contentInfo")
     public ContentInfo getContentInfo(String cid, String uid) {
         return wxContentService.getContentInfo(cid, uid);
     }
+
+    // 内容互动 //
+    // 内容互动 //
+    // 内容互动 //
 
     /**
      * 用户进入内容详情页时，点赞与否只有两个值 0/1;
@@ -103,6 +86,7 @@ public class WxContentController {
     public int giveLike(int isLike, String likeType, String goal, String uid) {
         return wxContentService.giveLike(isLike, likeType, goal, uid);
     }
+
 
     /**
      * @param isCollection 收藏与否：  1表示已收藏，0表示未收藏（同点赞）
@@ -125,20 +109,13 @@ public class WxContentController {
      */
     @GetMapping("/report")
     public int reportContent(String uid, String cid, String reason) {
-        Timestamp date = new Timestamp(System.currentTimeMillis());
-        return wxContentService.reportContent(uid, cid, reason, date);
+        return wxContentService.reportContent(uid, cid, reason);
     }
 
 
-    /***
-     * 获取一共有多少页
-     * @param query_id 检索ID
-     * @return 页数
-     */
-    @GetMapping("/get_home_page_amount")
-    public int getHomePageAmount(@RequestParam(required = true) int query_id) {
-        return wxContentService.getPageAmount(query_id);
-    }
+    // 内容评论 //
+    // 内容评论 //
+    // 内容评论 //
 
 
     @Autowired
