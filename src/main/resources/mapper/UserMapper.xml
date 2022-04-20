@@ -4,14 +4,14 @@
 
     <insert id="addFollow">
         insert into `follow`
-        values (#{me}, #{goal}, #{date})
+        values (#{goal}, #{me}, #{date})
     </insert>
 
     <delete id="deleteFollow">
         delete
         from `follow`
-        where `uid` = #{me}
-          and `follower` = #{goal}
+        where `uid` = #{goal}
+          and `follower` = #{me}
     </delete>
 
     <select id="getUserByUid" parameterType="java.lang.String" resultType="main.biggreenbook.entity.pojo.User">
@@ -89,8 +89,8 @@
         </choose>
     </select>
 
-    <select id="getFollowStateBetween" resultType="main.biggreenbook.entity.pojo.Follow">
-        select *
+    <select id="getFollowStateBetween" resultType="java.lang.Integer">
+        select count(*)
         from `follow`
         where `uid` = #{uid}
           and `follower` = #{follower}

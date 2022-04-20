@@ -1,6 +1,5 @@
 package main.biggreenbook.entity.dao;
 
-import main.biggreenbook.entity.pojo.Follow;
 import main.biggreenbook.entity.pojo.User;
 import main.biggreenbook.entity.pojo.UserPrivacy;
 import main.biggreenbook.entity.vo.UserCard;
@@ -22,7 +21,6 @@ public interface UserMapper {
 
     //修改用户信息
     int updateUser(@Param("user") User user);
-    
 
     //注册用户
     int addUser(@Param("user") User user);
@@ -51,14 +49,19 @@ public interface UserMapper {
     //通过uid获取用户的头像和昵称
     User getUserByUid(String uid);
 
+    // 个人信息页互动相关 //
+    // 个人信息页互动相关 //
+    // 个人信息页互动相关 //
+
+
     /**
      * 获取两个用户之间的关注关系
      *
      * @param uid      被关注者
      * @param follower 被谁关注
-     * @return 关注POJO类LIST，当没有关注时SIZE为0
+     * @return 关注了为1，没有关注为0
      */
-    List<Follow> getFollowStateBetween(@Param("uid") String uid, @Param("follower") String follower);
+    int getFollowStateBetween(@Param("uid") String uid, @Param("follower") String follower);
 
     /**
      * 进行关注
@@ -112,6 +115,10 @@ public interface UserMapper {
      * @return 数量
      */
     int getUserFollowingsAmount(@Param("uid") String uid);
+
+    // 用户隐私设定相关 //
+    // 用户隐私设定相关 //
+    // 用户隐私设定相关 //
 
     /**
      * 为用户创建新的默认的隐私设定

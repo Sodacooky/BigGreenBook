@@ -72,6 +72,17 @@ public class WxUserController {
     }
 
     /**
+     * 获取指定用户的隐私设定
+     *
+     * @param uid 指定的用户的uid
+     * @return 用户的隐私设定POJO
+     */
+    @GetMapping("/get_privacy")
+    public UserPrivacy getPrivacy(@RequestParam("uid") String uid) {
+        return wxUserService.getPrivacy(uid);
+    }
+
+    /**
      * 获取某用户的关注者列表
      *
      * @param customCode 用户自定义登录记录字符串
@@ -251,7 +262,7 @@ public class WxUserController {
      */
     @GetMapping("/get_follow_state")
     public boolean doIsFollowed(@RequestParam("customCode") String customCode, @RequestParam("goal") String goal_uid) {
-        return wxUserService.getFollowState(customCode, goal_uid);
+        return wxUserService.getIsFollowing(customCode, goal_uid);
     }
 
 
@@ -278,10 +289,10 @@ public class WxUserController {
      * @param publicLiked      是否公开赞过
      * @return 是否成功
      */
-    @PostMapping("/update_user_privacy")
-    public boolean updateUserPrivacy(@RequestParam("customCode") String customCode,
-                                     @RequestParam("publicCollection") boolean publicCollection,
-                                     @RequestParam("publicLiked") boolean publicLiked) {
+    @PostMapping("/update_privacy")
+    public boolean updatePrivacy(@RequestParam("customCode") String customCode,
+                                 @RequestParam("publicCollection") boolean publicCollection,
+                                 @RequestParam("publicLiked") boolean publicLiked) {
         UserPrivacy userPrivacy = new UserPrivacy(null, publicCollection ? 1 : 0, publicLiked ? 1 : 0);
         return wxUserService.updateUserPrivacy(customCode, userPrivacy);
     }
@@ -294,9 +305,9 @@ public class WxUserController {
      * @param file       要更换的新的头像文件
      * @return 是否成功
      */
-    @PostMapping("/update_user_avatar")
-    public boolean updateUserAvatar(@RequestParam("customCode") String customCode,
-                                    @RequestParam("file") MultipartFile file) {
+    @PostMapping("/update_avatar")
+    public boolean updateAvatar(@RequestParam("customCode") String customCode,
+                                @RequestParam("file") MultipartFile file) {
         return wxUserService.updateUserAvatar(customCode, file);
     }
 

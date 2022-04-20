@@ -4,7 +4,6 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import main.biggreenbook.entity.dao.ContentMapper;
 import main.biggreenbook.entity.dao.UserMapper;
-import main.biggreenbook.entity.pojo.Follow;
 import main.biggreenbook.entity.pojo.User;
 import main.biggreenbook.entity.pojo.UserPrivacy;
 import main.biggreenbook.entity.vo.PreviewCard;
@@ -84,7 +83,7 @@ public class WxUserService {
      */
     public boolean checkCustomCodeState(String customCode) {
         //查找是否存在
-        return redisHelper.hasKey(customCode);
+        return redisHelper.hasCustomCode(customCode);
     }
 
 
@@ -133,7 +132,7 @@ public class WxUserService {
             User theFollower = userMapper.getUserByUid(follower);
             int theFollowerContentAmount = contentMapper.getUserContentAmount(follower);
             int theFollowerFansAmount = userMapper.getUserFollowersAmount(follower);
-            int theFollowerStatus = userMapper.getFollowStateBetween(me_uid, follower).size();
+            int theFollowerStatus = userMapper.getFollowStateBetween(me_uid, follower);
             UserCard followerCard =
                     new UserCard(theFollower.getUid(),
                             theFollower.getNickname(),
@@ -145,6 +144,17 @@ public class WxUserService {
         });
         //
         return result;
+    }
+
+    //获取指定用户的隐私设定
+    public UserPrivacy getPrivacy(String uid) {
+        //如果没有，创建新的
+        UserPrivacy userPrivacy = userMapper.getUserPrivacy(uid);
+        if (userPrivacy == null) {
+            userMapper.insertDefaultUserPrivacy(uid);
+            userPrivacy = userMapper.getUserPrivacy(uid);
+        }
+        return userPrivacy;
     }
 
     //获取用户的正在关注列表
@@ -164,7 +174,7 @@ public class WxUserService {
             User theFollower = userMapper.getUserByUid(following);
             int theFollowerContentAmount = contentMapper.getUserContentAmount(following);
             int theFollowerFansAmount = userMapper.getUserFollowersAmount(following);
-            int theFollowerStatus = userMapper.getFollowStateBetween(me_uid, following).size();
+            int theFollowerStatus = userMapper.getFollowStateBetween(me_uid, following);
             UserCard followerCard =
                     new UserCard(theFollower.getUid(),
                             theFollower.getNickname(),
@@ -203,6 +213,10 @@ public class WxUserService {
     public List<PreviewCard> getCollections(String uid, int page) {
         //check privacy
         UserPrivacy userPrivacy = userMapper.getUserPrivacy(uid);
+        if (userPrivacy == null) {
+            userMapper.insertDefaultUserPrivacy(uid);
+            userPrivacy = userMapper.getUserPrivacy(uid);
+        }
         if (userPrivacy.getPublicCollection() == 0) {
             return new ArrayList<>();
         }
@@ -253,6 +267,10 @@ public class WxUserService {
     public List<PreviewCard> getLiked(String uid, int page) {
         //check privacy
         UserPrivacy userPrivacy = userMapper.getUserPrivacy(uid);
+        if (userPrivacy == null) {
+            userMapper.insertDefaultUserPrivacy(uid);
+            userPrivacy = userMapper.getUserPrivacy(uid);
+        }
         if (userPrivacy.getPublicLiked() == 0) return new ArrayList<>();
         //check page
         int likedPageAmount = getLikedPageAmount(uid);
@@ -288,10 +306,10 @@ public class WxUserService {
     //获取用户发布的内容
     public List<PreviewCard> getPublished(String uid, int page) {
         //check page
-        int likedPageAmount = getLikedPageAmount(uid);
-        if (page >= likedPageAmount) return new ArrayList<>();
+        int publishedAmount = getPublishedAmount(uid);
+        if (page >= publishedAmount) return new ArrayList<>();
         //do get
-        return contentMapper.getUserLiked(uid, page, COLLECTION_PAGE_SIZE);
+        return contentMapper.getUserPublished(uid, page, COLLECTION_PAGE_SIZE);
     }
 
     public List<PreviewCard> getMyPublished(String customCode, int page) {
@@ -322,8 +340,8 @@ public class WxUserService {
      * @return 如果本身就关注了，那么返回false（在前端的控制下这不应该发生
      */
     public boolean doFollow(String customCode, String goal_uid) {
-        if (!redisHelper.hasKey(customCode)) return false;
-        if (getFollowState(customCode, goal_uid)) return false;
+        if (!redisHelper.hasCustomCode(customCode)) return false;
+        if (getIsFollowing(customCode, goal_uid)) return false;
         String uid = redisHelper.getUidFromCustomCode(customCode);
         userMapper.addFollow(uid, goal_uid, new Timestamp(Calendar.getInstance().getTimeInMillis()));
         return true;
@@ -337,8 +355,8 @@ public class WxUserService {
      * @return 如果本身就没关注，那么返回false（在前端的控制下这不应该发生
      */
     public boolean doUnFollow(String customCode, String goal_uid) {
-        if (!redisHelper.hasKey(customCode)) return false;
-        if (!getFollowState(customCode, goal_uid)) return false;
+        if (!redisHelper.hasCustomCode(customCode)) return false;
+        if (!getIsFollowing(customCode, goal_uid)) return false;
         String uid = redisHelper.getUidFromCustomCode(customCode);
         userMapper.deleteFollow(uid, goal_uid);
         return true;
@@ -351,11 +369,13 @@ public class WxUserService {
      * @param goal_uid   目标用户UID
      * @return 是否已经关注
      */
-    public boolean getFollowState(String customCode, String goal_uid) {
-        if (!redisHelper.hasKey(customCode)) return false;
+    public boolean getIsFollowing(String customCode, String goal_uid) {
+        if (!redisHelper.hasCustomCode(customCode)) return false;
         String uid = redisHelper.getUidFromCustomCode(customCode);
-        List<Follow> followStateBetween = userMapper.getFollowStateBetween(uid, goal_uid);
-        return followStateBetween.size() != 0;
+        //不允许自己关注自己，所以自己是关注了自己
+        //无论数据库是否有错误填充的数据，关注和取关都会失败
+        if (uid.equals(goal_uid)) return true;
+        return userMapper.getFollowStateBetween(goal_uid, uid) == 1;
     }
 
     // 更新用户信息 //
@@ -364,7 +384,7 @@ public class WxUserService {
 
     //更新用户信息
     public boolean updateUser(String customCode, User user) {
-        if (!redisHelper.hasKey(customCode)) return false;
+        if (!redisHelper.hasCustomCode(customCode)) return false;
         String uid = redisHelper.getUidFromCustomCode(customCode);
         user.setUid(uid);
         return userMapper.updateUser(user) > 0;

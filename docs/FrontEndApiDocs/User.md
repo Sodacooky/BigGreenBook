@@ -95,6 +95,29 @@ GET /usr/get_info
 
 用户信息POJO类，属性见上一条。
 
+***
+
+### 获取用户的隐私设定
+
+```http request
+GET /usr/get_privacy
+```
+
+参数：
+
+| 参数名 | 说明        |
+|-----|-----------|
+| uid | 要获取的用户uid |
+
+返回：
+
+用户隐私设定JSON对象：
+
+| 属性               | 类型      | 说明      |
+|------------------|---------|---------|
+| publicCollection | Integer | 是否公开收藏夹 |
+| publicLiked      | Integer | 是否公开赞过  |
+
 *** 
 
 ### 获取用户的关注者（粉丝）
@@ -507,7 +530,7 @@ POST /usr/updateUser
 ### 更新用户隐私设定
 
 ```http request
-POST /usr/update_user_privacy
+POST /usr/update_privacy
 ```
 
 参数：

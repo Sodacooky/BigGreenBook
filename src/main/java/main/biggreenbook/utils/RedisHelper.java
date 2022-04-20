@@ -1,7 +1,7 @@
 package main.biggreenbook.utils;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.stereotype.Component;
 
 import java.time.Duration;
@@ -51,6 +51,9 @@ public class RedisHelper {
     }
 
 
+//    @Autowired
+//    private RedisTemplate<String, Object> redisTemplate;
+
     @Autowired
-    private RedisTemplate<String, Object> redisTemplate;
+    private StringRedisTemplate redisTemplate;
 }

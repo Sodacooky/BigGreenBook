@@ -28,7 +28,8 @@ spring:
       on-profile: dev
   datasource:
     url: jdbc:mysql://sodacooky.plus:3306/bgb
-    username: bgb
+    #url: jdbc:mysql://localhost:3306/bgb
+    username: root
     password: 114514
   web:
     resources:
@@ -49,6 +50,8 @@ spring:
     url: jdbc:mysql://localhost:3306/bgb
     username: bgb
     password: 114514
+    hikari:
+      max-lifetime: 180000
   web:
     resources:
       static-locations: file:/root/bgb_test/res
