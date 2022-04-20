@@ -79,6 +79,7 @@ public class WxUserController {
      * @param page       页
      * @return 用户预览卡片数组，到底了返回空
      */
+    @GetMapping("/get_followers")
     public List<UserCard> getFollowers(@RequestParam("customCode") String customCode,
                                        @RequestParam("uid") String uid,
                                        @RequestParam("page") int page) {
@@ -94,6 +95,7 @@ public class WxUserController {
      * @param page       页
      * @return 用户预览卡片数组
      */
+    @GetMapping("/get_followings")
     public List<UserCard> getFollowings(@RequestParam("customCode") String customCode,
                                         @RequestParam("uid") String uid,
                                         @RequestParam("page") int page) {
@@ -188,7 +190,7 @@ public class WxUserController {
     // 用户信息修改 //
     // 用户信息修改 //
 
-    @GetMapping("/updateUser")
+    @PostMapping("/updateUser")
     public int updateUser(User user) {
         return wxUserService.updateUser(user);
     }
