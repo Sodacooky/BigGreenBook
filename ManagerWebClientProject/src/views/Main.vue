@@ -40,12 +40,22 @@
             </el-menu-item-group>
           </el-submenu>
 
-          <el-submenu index="3" style="height: 600px">
-            <template slot="title"><i class="el-icon-message-solid"></i>举报处理</template>
+          <el-submenu index="3">
+            <template slot="title"><i class="el-icon-warning"></i>举报处理</template>
             <el-menu-item-group>
               <el-menu-item index="/reportManage/ContentList">
                 <!--插入的地方-->
                 <router-link to="/reportManage/ContentList"></router-link>消息列表
+              </el-menu-item>
+            </el-menu-item-group>
+          </el-submenu>
+
+          <el-submenu index="4" style="height: 600px">
+            <template slot="title"><i class="el-icon-message-solid"></i>系统通知</template>
+            <el-menu-item-group>
+              <el-menu-item index="/messageManage/SendMessage">
+                <!--插入的地方-->
+                <router-link to="/messageManage/SendMessage"></router-link>发送消息
               </el-menu-item>
             </el-menu-item-group>
           </el-submenu>

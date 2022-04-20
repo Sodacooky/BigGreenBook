@@ -4,6 +4,7 @@ import java.util.Date;
 
 public class ReportMessage {
     private String uid;
+    private String authorUid;
     private String authorName;
     private String cid;
     private String title;
@@ -20,6 +21,14 @@ public class ReportMessage {
 
     public void setUid(String uid) {
         this.uid = uid;
+    }
+
+    public String getAuthorUid() {
+        return authorUid;
+    }
+
+    public void setAuthorUid(String authorUid) {
+        this.authorUid = authorUid;
     }
 
     public String getAuthorName() {

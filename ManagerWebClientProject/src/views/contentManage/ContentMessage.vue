@@ -89,7 +89,7 @@
             show-overflow-tooltip>
             <template v-slot="scope">
               <el-button type="warning" size="small" @click="goToContent(scope.row.cid)">审查</el-button>
-              <el-button type="danger" size="small" @click="openDelete(scope.row.cid, scope.row.title)">删除</el-button>
+              <el-button type="danger" size="small" @click="openDelete(scope.row.cid, scope.row.uid, scope.row.title)">删除</el-button>
             </template>
           </el-table-column>
 
@@ -141,6 +141,7 @@ export default {
       value: '',
       tableData: [{
         cid: '',
+        uid: '',
         title: '',
         author: '',
         like_amount: '',
@@ -148,7 +149,8 @@ export default {
         cover_path: '',
         videoUrl: ''
       }],
-      multipleSelection: []
+      multipleSelection: [],
+      uidList:[],
     }
   },
   methods: {
@@ -161,11 +163,11 @@ export default {
       let _this = this;
       const video = document.createElement("video") // 也可以自己创建video
       video.crossOrigin="anonymous";
-      let src='/api/vid/op.mp4'; // url地址 url跟 视频流是一样的
+      // let src='/api/vid/op.mp4'; // url地址 url跟 视频流是一样的
       video.src = url;
       var canvas = document.createElement('canvas') // 获取 canvas 对象
       const ctx = canvas.getContext('2d'); // 绘制2d
-      let img = new Image();
+
       video.currentTime = 0.1 // 第一帧
       video.oncanplay= function() {
         canvas.width = 600; // 获取视频宽度
@@ -175,10 +177,9 @@ export default {
         // 转换成base64形式
         const imgsrc = canvas.toDataURL ("image/jpeg") // 截取后的视频封面
         Vue.set(_this.tableData, i, {
-          cid: file.cid, title: file.title, author: file.author,
+          cid: file.cid, title: file.title, author: file.author, uid: file.uid,
           like_amount: file.likeAmount, cover_path: imgsrc, date: _this.$moment(file.date).format('YYYY-MM-DD HH:mm:ss')})
       };
-
     },
 
     loadPage: function (currentPage) {
@@ -204,7 +205,7 @@ export default {
           else {
             Vue.set(_this.tableData, i, {
               cid: list[i].cid, title: list[i].title, author: list[i].author,
-              like_amount: list[i].likeAmount, cover_path: "https://sodacooky.plus:8080/static/" + list[i].paths[0],
+              like_amount: list[i].likeAmount, cover_path: "https://sodacooky.plus:8080/static/" + list[i].paths[0],uid: list[i].uid,
               date: _this.$moment(list[i].date).format('YYYY-MM-DD HH:mm:ss')});
           }
         }
@@ -235,14 +236,21 @@ export default {
       let _this = this;
       let contents = _this.multipleSelection;
       let select = [];
+      let uidList = [];
+      let titles = [];
       if (contents.length !== 0) {
         for (let i = 0; i < contents.length; i++) {
          select.push(contents[i].cid);
+         uidList.push(contents[i].uid);
+          console.log("contents: " + contents[i].uid);
+         titles.push(contents[i].title);
         }
       }
+      console.log("uidList: " + uidList);
+      console.log("titles: " + titles);
       axios({
         method: 'get',
-        url: '/product/manage/deleteSelect/' + select,
+        url: '/product/manage/deleteSelect/' + select + '/' + uidList + '/'+ titles,
         contentType:"application/json;charset=UTF-8",
         headers: { // 设置请求头
           token: this.cookie.get("token")
@@ -292,7 +300,7 @@ export default {
           else {
             Vue.set(_this.tableData, i, {
               cid: list[i].cid, title: list[i].title, author: list[i].author,
-              like_amount: list[i].likeAmount, cover_path: "https://sodacooky.plus:8080/static/" + list[i].paths[0],
+              like_amount: list[i].likeAmount, cover_path: "https://sodacooky.plus:8080/static/" + list[i].paths[0], uid: list[i].uid,
               date: _this.$moment(list[i].date).format('YYYY-MM-DD HH:mm:ss')});
           }
         }
@@ -324,7 +332,7 @@ export default {
           else {
             Vue.set(_this.tableData, i, {
               cid: list[i].cid, title: list[i].title, author: list[i].author,
-              like_amount: list[i].likeAmount, cover_path: "https://sodacooky.plus:8080/static/" + list[i].paths[0],
+              like_amount: list[i].likeAmount, cover_path: "https://sodacooky.plus:8080/static/" + list[i].paths[0], uid: list[i].uid,
               date: _this.$moment(list[i].date).format('YYYY-MM-DD HH:mm:ss')});
           }
         }
@@ -355,7 +363,7 @@ export default {
           else {
             Vue.set(_this.tableData, i, {
               cid: list[i].cid, title: list[i].title, author: list[i].author,
-              like_amount: list[i].likeAmount, cover_path: "https://sodacooky.plus:8080/static/" + list[i].paths[0],
+              like_amount: list[i].likeAmount, cover_path: "https://sodacooky.plus:8080/static/" + list[i].paths[0], uid: list[i].uid,
               date: _this.$moment(list[i].date).format('YYYY-MM-DD HH:mm:ss')});
           }
         }
@@ -383,7 +391,7 @@ export default {
 
     },
 
-    openDelete(cid, title) {
+    openDelete(cid, uid, title) {
       this.$confirm('是否删除标题为 ' + title + ' 的内容?', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
@@ -394,17 +402,21 @@ export default {
           type: 'success',
           message: '删除成功!'
         });
-        this.deleteContent(cid);
+        this.deleteContent(cid, uid, title);
       })
     },
 
-    deleteContent(cid) {
+    deleteContent(cid, uid, title) {
       let _this = this;
       let select = [];
+      let uidList = [];
+      let titles =[];
       select.push(cid);
+      uidList.push(uid);
+      titles.push(title)
       axios({
         method: 'get',
-        url: '/product/manage/deleteSelect/' + select,
+        url: '/product/manage/deleteSelect/' + select + '/' + uidList + '/' + titles,
         contentType:"application/json;charset=UTF-8",
         headers: { // 设置请求头
           token: this.cookie.get("token")

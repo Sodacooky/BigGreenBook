@@ -48,7 +48,7 @@
               </div>
               </el-col>
                 <el-button type="text" class="button" @click="openIgnore(item.uid, item.cid)">忽略</el-button>
-                <el-button type="text" class="button" @click="openDeleteSelect(item.cid)">删除内容</el-button>
+                <el-button type="text" class="button" @click="openDeleteSelect(item.uid, item.authorUid, item.cid, item.title)">删除内容</el-button>
               </el-row>
             </div>
           </el-card>
@@ -121,6 +121,7 @@
 <script>
 import axios from "axios";
 import Vue from "vue";
+import cookies from "vue-cookies";
 
 export default {
   name: "ContentList",
@@ -131,7 +132,8 @@ export default {
       pageSize: 12,
       totalPage: 1,
       reportList: '',
-      totalReports: ''
+      totalReports: '',
+      content: ''
     }
   },
   methods: {
@@ -150,7 +152,7 @@ export default {
         _this.totalReports = obj.totalReports;
         for (let i = 0; i < obj.list.length; i++) {
           obj.list[i].date = _this.$moment(obj.list[i].date).format('YYYY-MM-DD HH:mm:ss');
-          console.log(obj.list[i].solved);
+          console.log("authorUid:" + obj.list[i].authorUid);
         }
         _this.reportList = obj.list;
       });
@@ -162,23 +164,36 @@ export default {
       console.log(this.currentPage)  //点击第几页
     },
 
-    deleteContent(cid) {
+    deleteContent(rUid, authorUid, cid, title) {
       let _this = this;
       let select = [];
+      let uidList = [];
       select.push(cid);
+      uidList.push(authorUid);
+      axios.all([
       axios({
         method: 'get',
-        url: '/product/manage/deleteSelect/' + select,
+        url: '/product/manage/deleteSelect/' + select + '/' + uidList + '/' + title,
         contentType:"application/json;charset=UTF-8",
         headers: { // 设置请求头
-          token: this.cookie.get("token")
+          token: _this.cookie.get("token")
+        }
+      }).then(function (res) {
+      }),
+      axios({
+        method: 'get',
+        url: '/product/manage/handle/' + rUid + '/' + title,
+        contentType:"application/json;charset=UTF-8",
+        headers: { // 设置请求头
+          token: _this.cookie.get("token")
         }
       }).then(function (res) {
         _this.handleCurrentChange(_this.currentPage);
       })
+    ])
     },
 
-    openDeleteSelect(cid) {
+    openDeleteSelect(rUid, authorUid, cid, title) {
       this.$confirm('是否删除内容？', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
@@ -189,7 +204,7 @@ export default {
           type: 'success',
           message: '删除成功!'
         });
-        this.deleteContent(cid);
+        this.deleteContent(rUid, authorUid, cid, title);
       })
     },
 
@@ -204,6 +219,7 @@ export default {
         }
       }).then(function (res) {
         let content = res.data;
+        _this.content = content;
         console.log("goto: " + content.date);
         _this.$router.push({path: '/contentManage/ContentCheck/', query: {content: content}});
       })
@@ -270,7 +286,7 @@ export default {
         _this.totalReports = obj.totalReports;
         for (let i = 0; i < obj.list.length; i++) {
           obj.list[i].date = _this.$moment(obj.list[i].date).format('YYYY-MM-DD HH:mm:ss');
-          console.log(obj.list[i].solved);
+
         }
         _this.reportList = obj.list;
       });

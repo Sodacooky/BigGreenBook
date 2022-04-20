@@ -2,30 +2,36 @@
   <div>
     <el-page-header @back="goBack">
     </el-page-header>
-
-      <el-select size="medium" v-model="value" placeholder="请选择" clearable>
-        <el-option
-          v-for="item in options"
-          :key="item.value"
-          :label="item.label"
-          :value="item.value">
-        </el-option>
-      </el-select>
-
+    <el-row>
+      <el-col :span="1.5" :offset="6">
+    <el-select size="medium" v-model="value" placeholder="请选择" clearable>
+      <el-option
+        v-for="item in options"
+        :key="item.value"
+        :label="item.label"
+        :value="item.value">
+      </el-option>
+    </el-select>
     <el-input size="medium" v-if="value === '选项1'" style="width: 180px" v-model="inputId" @keyup.enter.native="query(inputId)" placeholder="请输入uid"></el-input>
     <el-button type="primary" v-if="value === '选项1'" size="small" @click="query(inputId)" icon="el-icon-search">搜索uid</el-button>
     <el-input size="medium" v-if="value === '选项2' || value === ''" style="width: 180px" v-model="input" @keyup.enter.native="queryNickname(input)" placeholder="请输入昵称"></el-input>
     <el-button type="primary" v-if="value === '选项2' || value === ''"  size="small" @click="queryNickname(input)" icon="el-icon-search">搜索</el-button>
-
+    </el-col>
+    <el-col :span="1.5" :offset="2">
+    <el-button size="medium" type="primary" @click="openSendAll" icon="el-icon-s-comment">全站发送</el-button>
+    </el-col>
+    </el-row>
     <br></br>
 
+    <el-row>
+    <el-col :span="1.5" :offset="4">
     <el-table
-      :data="tableData"
+      :data="tableData" header-align="center" border
       style="width: 100%" >
-      <el-table-column v-model="tableData.uid"
-        prop="uid"
-        label="ID"
-        width="120">
+      <el-table-column v-model="tableData.uid" align="center"
+                       prop="uid"
+                       label="ID"
+                       width="120">
       </el-table-column>
 
       <el-table-column
@@ -38,45 +44,33 @@
           </div>
         </template>
       </el-table-column>
-      <el-table-column v-slot="scope">
-        <el-button type="primary" size="small"  @click="openReset(scope.row.uid, scope.row.nickname)">重置</el-button>
-      </el-table-column>
 
-      <el-table-column
+      <el-table-column align="center"
         prop="nickname"
         label="昵称"
         width="130">
       </el-table-column>
-      <el-table-column v-slot="scope">
-        <el-button type="primary" size="small" icon="el-icon-edit" @click="openNickName(scope.row.uid)">修改</el-button>
-      </el-table-column>
 
-      <el-table-column
+      <el-table-column align="center"
         prop="description"
         label="个性签名"
-        width="200">
-      </el-table-column>
-      <el-table-column v-slot="scope">
-        <el-button type="primary" size="small" icon="el-icon-edit" @click="openDescription(scope.row.uid)">修改</el-button>
+        width="300">
       </el-table-column>
 
-      <el-table-column v-slot="scope"
-        prop="state"
-        label="封禁状态"
-        width="80">
+      <el-table-column v-slot="scope" align="center"
+                       prop="state"
+                       label="封禁状态"
+                       width="80">
         <el-tag v-if="scope.row.state === '正常'">正常</el-tag>
         <el-tag type="danger" v-if="scope.row.state === '封禁中'">封禁中</el-tag>
       </el-table-column>
-      <el-table-column v-slot="scope" width="80">
 
-        <el-button v-if="scope.row.state === '正常'" type="danger" size="small"  @click="openSuspend(scope.row.uid, scope.row.nickname)">封禁</el-button>
-        <el-button v-if="scope.row.state === '封禁中'" type="danger" size="small" disabled="disabled">封禁</el-button>
-      </el-table-column>
-      <el-table-column v-slot="scope">
-        <el-button v-if="scope.row.state === '封禁中'" type="warning" size="small" @click="openRestore(scope.row.uid, scope.row.nickname)">解封</el-button>
-        <el-button v-if="scope.row.state === '正常'" type="warning" size="small" disabled="disabled">解封</el-button>
+      <el-table-column width="120" v-slot="scope">
+        <el-button type="primary" size="mini" @click="openSendUser(scope.row.uid)">发送消息</el-button>
       </el-table-column>
     </el-table>
+    </el-col>
+    </el-row>
     <br></br>
 
     <el-pagination @current-change="handleCurrentChange"
@@ -95,8 +89,7 @@ import Vue from "vue";
 import Router from "vue-router";
 
 export default {
-  name: "UserMessage",
-  inject: ['reload'],
+  name: "SendMessage",
   data () {
     return {
       count: 0,
@@ -128,16 +121,16 @@ export default {
       this.$router.go(0);
     },
 
-    openDescription(uid) {
-      this.$prompt('修改个性签名', '提示', {
+    openSendAll() {
+      this.$prompt('发送系统消息', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
-        size: 100
+        size: 200,
       }).then(({value}) => {
-        this.modifyDescription(uid, value);
+        this.sendAllUser(value);
         this.$message({
           type: 'success',
-          message: '修改成功！'
+          message: '发送成功！'
         });
       }).catch(() => {
         this.$message({
@@ -147,16 +140,29 @@ export default {
       });
     },
 
-    openNickName(uid) {
-      this.$prompt('修改昵称', '提示', {
+    sendAllUser: function (value) {
+      let _this = this;
+      axios({
+        method: 'get',
+        url: '/product/manage/systemMessage/' + value,
+        contentType:"application/json;charset=UTF-8",
+        headers: { // 设置请求头
+          token: _this.cookie.get("token")
+        }
+      }).then(function (res) {
+      })
+    },
+
+    openSendUser(uid) {
+      this.$prompt('发送系统消息', '提示', {
         confirmButtonText: '确定',
         cancelButtonText: '取消',
-        size: 100
+        size: 200,
       }).then(({value}) => {
-        this.modifyNickName(uid, value);
+        this.sendUser(uid, value);
         this.$message({
           type: 'success',
-          message: '修改成功！'
+          message: '发送成功！'
         });
       }).catch(() => {
         this.$message({
@@ -164,13 +170,26 @@ export default {
           message: '取消输入'
         });
       });
+    },
+
+    sendUser: function (uid, value) {
+      let _this = this;
+      axios({
+        method: 'get',
+        url: '/product/manage/sendMessage/' + uid + '/' + value,
+        contentType:"application/json;charset=UTF-8",
+        headers: { // 设置请求头
+          token: _this.cookie.get("token")
+        }
+      }).then(function (res) {
+      })
     },
 
     query: function (uid) {
       var _this = this;
       if (uid === '') {
         _this.currentPage = 1;
-       _this.loadPage(_this.currentPage);
+        _this.loadPage(_this.currentPage);
       }
       _this.tableData = [];
       axios({
@@ -181,18 +200,18 @@ export default {
           token: _this.cookie.get("token")
         }
       }).then(function (res) {
-          let obj = JSON.parse(JSON.stringify(res.data));
-          console.log(res.data)
-          let state = "正常";
-          if (obj.state === 1) {
-            state = "封禁中";
-          }
-          console.log(_this.tableData);
-          _this.totalPage = 1;
-          Vue.set(_this.tableData, 0, {
-            uid: obj.uid, nickname: obj.nickname,
-            description: obj.description, avatar_path: "https://sodacooky.plus:8080/static/" + obj.avatarPath, state: state
-          });
+        let obj = JSON.parse(JSON.stringify(res.data));
+        console.log(res.data)
+        let state = "正常";
+        if (obj.state === 1) {
+          state = "封禁中";
+        }
+        console.log(_this.tableData);
+        _this.totalPage = 1;
+        Vue.set(_this.tableData, 0, {
+          uid: obj.uid, nickname: obj.nickname,
+          description: obj.description, avatar_path: "https://sodacooky.plus:8080/static/" + obj.avatarPath, state: state
+        });
       })
     },
 
@@ -250,9 +269,9 @@ export default {
           uid: obj.uid, nickname: obj.nickname,
           description: obj.description, avatar_path: obj.avatarPath, state: state});
 
-          _this.query(obj.uid);
-          _this.inputId = '';
-          _this.reload();
+        _this.query(obj.uid);
+        _this.inputId = '';
+        _this.reload();
       })
     },
 
@@ -264,7 +283,7 @@ export default {
         type: 'warning',
         center: true
       }).then(() => {
-          this.$message({
+        this.$message({
           type: 'success',
           message: '重置成功!'
         });
@@ -309,17 +328,17 @@ export default {
           token: _this.cookie.get("token")
         }
       }).then(function (res) {
-          let obj = JSON.parse(JSON.stringify(res.data));
-          let state = "正常";
-          if (obj.state === 1) {
-            state = "封禁中";
-          }
-          Vue.set(_this.tableData, 0, {
-            uid: obj.uid, nickname: obj.nickname,
-            description: obj.description, avatar_path: obj.avatarPath, state: state});
-          _this.query(obj.uid);
+        let obj = JSON.parse(JSON.stringify(res.data));
+        let state = "正常";
+        if (obj.state === 1) {
+          state = "封禁中";
+        }
+        Vue.set(_this.tableData, 0, {
+          uid: obj.uid, nickname: obj.nickname,
+          description: obj.description, avatar_path: obj.avatarPath, state: state});
+        _this.query(obj.uid);
 
-          _this.reload();
+        _this.reload();
       })
     },
 
@@ -377,16 +396,16 @@ export default {
           token: _this.cookie.get("token")
         }
       }).then(function (res) {
-          let obj = JSON.parse(JSON.stringify(res.data));
+        let obj = JSON.parse(JSON.stringify(res.data));
 
-          let state = "正常";
-          if (obj.state === 1) {
-            state = "封禁中";
-          }
-          Vue.set(_this.tableData, 0, {
+        let state = "正常";
+        if (obj.state === 1) {
+          state = "封禁中";
+        }
+        Vue.set(_this.tableData, 0, {
           uid: obj.uid, nickname: obj.nickname,
           description: obj.description, avatar_path: obj.avatarPath, state: state});
-          _this.query(obj.uid);
+        _this.query(obj.uid);
       })
     },
 
@@ -441,21 +460,21 @@ export default {
           token: this.cookie.get("token")
         }
       }).then(function (res) {
-          let obj = JSON.parse(JSON.stringify(res.data));
-          let list = obj.list;
-          _this.totalPage = Math.ceil(obj.totalUsers / _this.pageSize)*10;
+        let obj = JSON.parse(JSON.stringify(res.data));
+        let list = obj.list;
+        _this.totalPage = Math.ceil(obj.totalUsers / _this.pageSize)*10;
 
-          console.log(list);
-          for (let i = 0; i < list.length; i++) {
-            let state = "正常";
-            if (list[i].state === 1) {
-              state = "封禁中";
-            }
-            console.log(state);
-            Vue.set(_this.tableData, i, {
-              uid: list[i].uid, nickname: list[i].nickname,
-              description: list[i].description, avatar_path: "https://sodacooky.plus:8080/static/" + list[i].avatarPath, state: state});
+        console.log(list);
+        for (let i = 0; i < list.length; i++) {
+          let state = "正常";
+          if (list[i].state === 1) {
+            state = "封禁中";
           }
+          console.log(state);
+          Vue.set(_this.tableData, i, {
+            uid: list[i].uid, nickname: list[i].nickname,
+            description: list[i].description, avatar_path: "https://sodacooky.plus:8080/static/" + list[i].avatarPath, state: state});
+        }
       })
     },
 
