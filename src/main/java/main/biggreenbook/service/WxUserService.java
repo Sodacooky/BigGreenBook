@@ -132,7 +132,7 @@ public class WxUserService {
             User theFollower = userMapper.getUserByUid(follower);
             int theFollowerContentAmount = contentMapper.getUserContentAmount(follower);
             int theFollowerFansAmount = userMapper.getUserFollowersAmount(follower);
-            int theFollowerStatus = userMapper.getFollowStateBetween(me_uid, follower);
+            int theFollowerStatus = getIsFollowing(customCode, follower) ? 1 : 0;
             UserCard followerCard =
                     new UserCard(theFollower.getUid(),
                             theFollower.getNickname(),
@@ -174,7 +174,7 @@ public class WxUserService {
             User theFollower = userMapper.getUserByUid(following);
             int theFollowerContentAmount = contentMapper.getUserContentAmount(following);
             int theFollowerFansAmount = userMapper.getUserFollowersAmount(following);
-            int theFollowerStatus = userMapper.getFollowStateBetween(me_uid, following);
+            int theFollowerStatus = getIsFollowing(customCode, following) ? 1 : 0;
             UserCard followerCard =
                     new UserCard(theFollower.getUid(),
                             theFollower.getNickname(),
