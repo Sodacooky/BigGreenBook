@@ -192,7 +192,7 @@ public class WxContentService {
 
         String uid = redisHelper.getUidFromCustomCode(customCode);
 
-        contentMapper.addLikes(goal_id, uid, likeType);
+        contentMapper.addLikes(goal_id, uid, likeType,new Timestamp(new Date().getTime()));
         contentMapper.updateLikeAmount(1, goal_id);
 
         return contentMapper.queryLikeAmount(goal_id);
