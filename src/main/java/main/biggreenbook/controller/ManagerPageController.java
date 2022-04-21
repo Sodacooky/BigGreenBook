@@ -331,9 +331,7 @@ public class ManagerPageController {
         map.put("cid", title);
         map.put("text", "您举报的内容《" + title + "》已经被删除，感谢您对社区管理作出的贡献！");
         map.put("date", new Date());
-        System.out.println("----------------------------------------------");
-        System.out.println("已处理举报！");
-        System.out.println("----------------------------------------------");
+
         messageService.setMessage(map);
         return reportService.handleReports(map);
     }
