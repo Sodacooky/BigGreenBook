@@ -486,4 +486,11 @@
         where `uid` = #{uid}
     </select>
 
+    <select id="getUserReportState" resultType="java.lang.Integer">
+        select count(*)
+        from report
+        where `uid` = #{uid}
+          and `cid` = #{cid}
+    </select>
+
 </mapper>

@@ -139,7 +139,6 @@ public class WxContentService {
         contentInfo.setUserAvatarPath(staticMappingHelper.doMapToDomain(contentInfo.getUserAvatarPath()));
         //路径映射
         switchJson(contentInfo);
-
         return contentInfo;
     }
 
@@ -237,10 +236,14 @@ public class WxContentService {
      * 举报内容
      */
     public boolean reportContent(String customCode, String cid, String reason) {
+        //customCode
         if (!redisHelper.hasCustomCode(customCode)) return false;
-
+        //uid
         String uid = redisHelper.getUidFromCustomCode(customCode);
-
+        //is reported ?
+        int userReportState = contentMapper.getUserReportState(uid, cid);
+        if (userReportState == 1) return false;//already
+        // new report
         Timestamp date = new Timestamp(new Date().getTime());
         return contentMapper.addReportContent(uid, cid, reason, date) > 0;
     }

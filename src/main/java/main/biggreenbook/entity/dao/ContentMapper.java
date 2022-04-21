@@ -143,6 +143,7 @@ public interface ContentMapper {
 
     /**
      * 获取内容详情
+     *
      * @param cid 内容cid
      * @param uid 当前用户uid
      * @return main.biggreenbook.entity.vo.ContentInfo
@@ -213,6 +214,7 @@ public interface ContentMapper {
 
     /**
      * 举报内容
+     *
      * @param uid    举报者uid
      * @param cid    内容cid
      * @param reason 举报原因
@@ -222,22 +224,37 @@ public interface ContentMapper {
      */
     int addReportContent(@Param("uid") String uid, @Param("cid") String cid, @Param("reason") String reason, @Param("date") Timestamp date);
 
+
+    /**
+     * 获取是否有举报记录,返回非0位有
+     */
+    int getUserReportState(@Param("uid") String uid, @Param("cid") String cid);
+
+
+    // 发布 //
+    // 发布 //
+    // 发布 //
+    // 发布 //
+
+
     /**
      * 发布内容
+     *
      * @param content
-     * @date 2022/4/20 16:41
      * @return int
+     * @date 2022/4/20 16:41
      */
     int publishContent(@Param("content") Content content);
 
     /**
      * 修改发布的内容
-     * @param cid       内容id
-     * @param title     内容标题
-     * @param mainText  内容正文
-     * @param sid       资源id
-     * @date 2022/4/20 17:58
+     *
+     * @param cid      内容id
+     * @param title    内容标题
+     * @param mainText 内容正文
+     * @param sid      资源id
      * @return boolean
+     * @date 2022/4/20 17:58
      */
     boolean updateContent(@Param("content") Content content);
 
