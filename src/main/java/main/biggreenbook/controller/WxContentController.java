@@ -154,6 +154,7 @@ public class WxContentController {
      *                type  资源类型
      *                uid   发布者customCode
      *                sid   资源id
+     *                tags  标签
      * @return boolean 发布成功与否
      * @date 2022/4/20 16:46
      */
@@ -165,10 +166,11 @@ public class WxContentController {
     /**
      * 修改发布的内容
      *
-     * @param cid
-     * @param title
-     * @param mainText
-     * @param sid
+     * @param cid           内容id
+     * @param title         内容标题
+     * @param mainText      内容正文
+     * @param sid           资源id
+     * @param tags          标签
      * @return boolean
      * @date 2022/4/20 17:56
      */

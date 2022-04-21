@@ -170,7 +170,7 @@ public interface ContentMapper {
      * @return int
      * @date 2022/4/16 16:19
      */
-    int addLikes(@Param("likeType") String likeType, @Param("goal") String goal, @Param("uid") String uid);
+    int addLikes(@Param("likeType") String likeType, @Param("goal") String goal, @Param("uid") String uid,@Param("date") Timestamp date);
 
     /**
      * 取消点赞

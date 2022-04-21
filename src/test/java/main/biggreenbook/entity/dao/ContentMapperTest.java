@@ -93,7 +93,7 @@ public class ContentMapperTest {
 
     @Test
     public void addLikesTest() {
-        contentMapper.addLikes("content", "1", "1");
+        contentMapper.addLikes("content", "1111", "1",new Timestamp(new Date().getTime()));
     }
 
     @Test
