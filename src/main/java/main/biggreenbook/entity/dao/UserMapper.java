@@ -141,4 +141,6 @@ public interface UserMapper {
      * @param new_privacy 新的隐私设定
      */
     void updateUserPrivacy(@Param("new_privacy") UserPrivacy new_privacy);
+    
+
 }

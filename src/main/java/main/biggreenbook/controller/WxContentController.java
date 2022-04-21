@@ -3,6 +3,7 @@ package main.biggreenbook.controller;
 import main.biggreenbook.entity.pojo.Content;
 import main.biggreenbook.entity.vo.ContentInfo;
 import main.biggreenbook.entity.vo.PreviewCard;
+import main.biggreenbook.entity.vo.ReplyVO;
 import main.biggreenbook.service.WxContentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -218,6 +219,34 @@ public class WxContentController {
     // 内容评论 //
     // 内容评论 //
     // 内容评论 //
+
+    /**
+     * 获取评论
+     *
+     * @param cid 内容的cid
+     * @return 双层评论内容
+     */
+    @GetMapping("/get_reply")
+    public List<ReplyVO> getReply(@RequestParam("cid") String cid) {
+        return wxContentService.getReply(cid);
+    }
+
+    /**
+     * 发表评论
+     *
+     * @param customCode 用户customCode
+     * @param goal_id    目标id
+     * @param goal_type  目标类型
+     * @param content    发什么
+     * @return 是否成功
+     */
+    public boolean addReply(@RequestParam("customCode") String customCode,
+                            @RequestParam("goal") String goal_id,
+                            @RequestParam("type") String goal_type,
+                            @RequestParam("content") String content) {
+        goal_type = goal_type.toLowerCase();
+        return wxContentService.addReply(customCode, goal_id, goal_type, content);
+    }
 
 
     @Autowired

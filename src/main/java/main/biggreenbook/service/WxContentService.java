@@ -5,11 +5,14 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.type.TypeFactory;
 import main.biggreenbook.entity.dao.ContentMapper;
+import main.biggreenbook.entity.dao.ReplyMapper;
 import main.biggreenbook.entity.dao.ResourceMapper;
 import main.biggreenbook.entity.pojo.Content;
+import main.biggreenbook.entity.pojo.Reply;
 import main.biggreenbook.entity.pojo.Resource;
 import main.biggreenbook.entity.vo.ContentInfo;
 import main.biggreenbook.entity.vo.PreviewCard;
+import main.biggreenbook.entity.vo.ReplyVO;
 import main.biggreenbook.utils.RedisHelper;
 import main.biggreenbook.utils.StaticMappingHelper;
 import main.biggreenbook.utils.UUIDGenerator;
@@ -376,6 +379,45 @@ public class WxContentService {
         return sid;
     }
 
+    // 内容评论 //
+    // 内容评论 //
+    // 内容评论 //
+
+    public List<ReplyVO> getReply(String cid) {
+        //获取顶层评论
+        List<ReplyVO> topReply = replyMapper.getAllTopReplyOfContent(cid);
+        //遍历楼中楼，填充楼中楼评论
+        topReply.forEach(top -> {
+            top.setUserAvatarPath(staticMappingHelper.doMapToDomain(top.getUserAvatarPath()));
+            List<ReplyVO> subReply = replyMapper.getAllSubReply(top.getRid());
+            subReply.forEach(sub -> {
+                sub.setUserAvatarPath(staticMappingHelper.doMapToDomain(sub.getUserAvatarPath()));
+            });
+            top.setInner(subReply);
+        });
+        return topReply;
+    }
+
+    public boolean addReply(String customCode, String goal_id, String goal_type, String content) {
+        //check custom code
+        if (!redisHelper.hasCustomCode(customCode)) return false;
+        //check type
+        if (!"inner".equals(goal_type) && !"top".equals(goal_type)) return false;
+        //build reply
+        Reply reply = new Reply();
+        reply.setUid(redisHelper.getUidFromCustomCode(customCode));
+        reply.setContent(content);
+        reply.setGoal(goal_id);
+        reply.setDate(new Timestamp(Calendar.getInstance().getTimeInMillis()));
+        reply.setLikeAmount(0);
+        reply.setRid(UUIDGenerator.generate());
+        //save
+        replyMapper.addReply(reply);
+        //
+        return true;
+    }
+
+
     public int getPageAmount(int queryId) {
         //计算逆序页，获得数据
         return queryId < PAGESIZE ? 1 : queryId / PAGESIZE;
@@ -389,6 +431,10 @@ public class WxContentService {
 
     @Autowired
     ResourceMapper resourceMapper;
+
+    @Autowired
+    ReplyMapper replyMapper;
+
     @Autowired
     StaticMappingHelper staticMappingHelper;
 
