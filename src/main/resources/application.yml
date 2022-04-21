@@ -1,7 +1,8 @@
 # 通用部分配置
 spring:
   profiles:
-    active: product # 当前激活的配置文件
+    #active: product # 当前激活的配置文件
+    active: dev
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
   mvc:
@@ -29,7 +30,7 @@ spring:
   datasource:
     url: jdbc:mysql://sodacooky.plus:3306/bgb
     #url: jdbc:mysql://localhost:3306/bgb
-    username: root
+    username: bgb
     password: 114514
   web:
     resources:

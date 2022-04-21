@@ -7,6 +7,7 @@ public class Content {
     private String cid;
     private String title;
     private String mainText;
+    private String tags;//json
     private Timestamp date;
     private String type; //picture/video
     private Integer likeAmount;
@@ -16,10 +17,11 @@ public class Content {
     public Content() {
     }
 
-    public Content(String cid, String title, String mainText, Timestamp date, String type, Integer likeAmount, String uid, String sid) {
+    public Content(String cid, String title, String mainText, String tags, Timestamp date, String type, Integer likeAmount, String uid, String sid) {
         this.cid = cid;
         this.title = title;
         this.mainText = mainText;
+        this.tags = tags;
         this.date = date;
         this.type = type;
         this.likeAmount = likeAmount;
@@ -89,5 +91,28 @@ public class Content {
 
     public void setSid(String sid) {
         this.sid = sid;
+    }
+
+    public String getTags() {
+        return tags;
+    }
+
+    public void setTags(String tags) {
+        this.tags = tags;
+    }
+
+    @Override
+    public String toString() {
+        return "Content{" +
+                "cid='" + cid + '\'' +
+                ", title='" + title + '\'' +
+                ", mainText='" + mainText + '\'' +
+                ", tags='" + tags + '\'' +
+                ", date=" + date +
+                ", type='" + type + '\'' +
+                ", likeAmount=" + likeAmount +
+                ", uid='" + uid + '\'' +
+                ", sid='" + sid + '\'' +
+                '}';
     }
 }

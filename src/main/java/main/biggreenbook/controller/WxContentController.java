@@ -4,13 +4,10 @@ import main.biggreenbook.entity.pojo.Content;
 import main.biggreenbook.entity.vo.ContentInfo;
 import main.biggreenbook.entity.vo.PreviewCard;
 import main.biggreenbook.service.WxContentService;
-import main.biggreenbook.utils.UUIDGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 //微信小程序内容相关控制器
@@ -115,7 +112,7 @@ public class WxContentController {
      */
     @GetMapping("/collection")
     public boolean collectionContent(String cid, String customCode) {
-        return wxContentService.collectionContent(cid, customCode);
+        return wxContentService.addCollectionContent(cid, customCode);
     }
 
     /**
@@ -128,7 +125,7 @@ public class WxContentController {
      */
     @GetMapping("/uncollection")
     public boolean uncollectionContent(String cid, String customCode) {
-        return wxContentService.uncollectionContent(cid, customCode);
+        return wxContentService.deleteCollectionContent(cid, customCode);
     }
 
     /**
@@ -157,13 +154,8 @@ public class WxContentController {
      * @date 2022/4/20 16:46
      */
     @PostMapping("/publish_content")
-    public boolean publishContent(Content content) {
-
-        content.setCid(UUIDGenerator.generate());
-        content.setDate(new Timestamp(new Date().getTime()));
-        content.setLikeAmount(0);
-
-        return wxContentService.publishContent(content);
+    public boolean publishContent(@RequestParam("customCode") String customCode, @RequestBody Content content) {
+        return wxContentService.publishContent(customCode, content);
     }
 
     /**

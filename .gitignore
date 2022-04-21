@@ -41,3 +41,6 @@ src/main/resources/wxInfo.yml
 ManagerWebClientProject/node_modules/**
 ManagerWebClientProject/build/
 ManagerWebClientProject/.idea/
+
+### log ###
+log/

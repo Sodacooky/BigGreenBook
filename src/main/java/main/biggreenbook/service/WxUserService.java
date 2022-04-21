@@ -56,7 +56,15 @@ public class WxUserService {
             return null;
         }
         //生成
-        String customCode = UUIDGenerator.generate();
+        StringBuilder customCodeBuilder = new StringBuilder();
+        try {
+            customCodeBuilder.append(UUIDGenerator.generate());
+            Thread.sleep(10); //睡一下以获得不同的uuid
+            customCodeBuilder.append(UUIDGenerator.generate().hashCode());//并且哈希化
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+        String customCode = customCodeBuilder.toString();
         //填充
         redisHelper.setCustomCode(customCode, resultOpenId, resultSessionKey, Duration.ofDays(1));
         //判断是否是初次登录（注册为新用户）
