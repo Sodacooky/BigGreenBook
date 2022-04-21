@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="main.biggreenbook.entity.dao.ResourceMapper">
+
+    <insert id="insertNewEmpty">
+        insert into `resource`
+        values (#{sid}, #{type}, '[]')
+    </insert>
+
+    <update id="update" parameterType="main.biggreenbook.entity.pojo.Resource">
+        update `resource`
+        set `paths`=#{nres.paths}
+        where `sid` = #{nres.sid}
+    </update>
+
+    <select id="getBySid" resultType="main.biggreenbook.entity.pojo.Resource">
+        select *
+        from `resource`
+        where `sid` = #{sid}
+    </select>
+
+</mapper>

@@ -6,6 +6,7 @@ import main.biggreenbook.entity.vo.PreviewCard;
 import main.biggreenbook.service.WxContentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,7 +20,6 @@ public class WxContentController {
     // 首页瀑布流 //
     // 首页瀑布流 //
     // 首页瀑布流 //
-
 
     /**
      * 获取首页瀑布流检索ID
@@ -142,6 +142,10 @@ public class WxContentController {
         return wxContentService.reportContent(customCode, cid, reason);
     }
 
+    // 内容发布 //
+    // 内容发布 //
+    // 内容发布 //
+
     /**
      * 发布内容
      *
@@ -171,6 +175,43 @@ public class WxContentController {
     @PostMapping("/update_content")
     public boolean updateContent(Content content) {
         return wxContentService.updateContent(content);
+    }
+
+
+    /**
+     * 指示开始上传文件，如果调用该方法后半小时仍然没有指示结束上传，那么资源将作废
+     *
+     * @param customCode 用户自定义登录记录
+     * @param type       上传的资源类型，对应正在上传的内容的类型，可为"picture"/"video"
+     * @return 当前上传文件操作的ID，在后续上传操作中需要用到，失败返回空字符串
+     */
+    @GetMapping("/start_upload")
+    public String startUploadFile(@RequestParam("customCode") String customCode, @RequestParam("type") String type) {
+        return wxContentService.startUploadFile(customCode, type);
+    }
+
+
+    /**
+     * 上传文件
+     *
+     * @param uploadId 在指示开启上传文件方法中获得的上传ID
+     * @param file     要上传的文件
+     * @return 成功返回true，失败（文件类型非法）时返回false
+     */
+    @PostMapping("/do_upload")
+    public boolean uploadFile(@RequestParam("uploadId") String uploadId, @RequestParam("file") MultipartFile file) {
+        return wxContentService.uploadFile(uploadId, file);
+    }
+
+    /**
+     * 指示结束上传文件，将之前上传的文件合并为一个资源并获得其资源sid
+     *
+     * @param uploadId 上传ID
+     * @return 资源ID，sid,需要填写到发布内容的sid属性内，失败返回空字符串
+     */
+    @GetMapping("/finish_upload")
+    public String finishUploadFile(@RequestParam("uploadId") String uploadId) {
+        return wxContentService.finishUploadFile(uploadId);
     }
 
 
