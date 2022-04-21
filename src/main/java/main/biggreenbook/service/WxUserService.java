@@ -100,9 +100,8 @@ public class WxUserService {
     public User getMyInfo(String customCode) {
         //从redis中获取uid
         String uid = redisHelper.getUidFromCustomCode(customCode);
-        User user = userMapper.getUserByUid(uid);
-        //通过uid获取用户
-        return userMapper.getUserByUid(uid);
+        //
+        return getInfo(uid);
     }
 
     /**
@@ -112,7 +111,11 @@ public class WxUserService {
      * @return 用户信息pojo类
      */
     public User getInfo(String uid) {
-        return userMapper.getUserByUid(uid);
+        User user = userMapper.getUserByUid(uid);
+        //map avatar url
+        user.setAvatarPath(staticMappingHelper.doMapToDomain(user.getAvatarPath()));
+        //
+        return user;
     }
 
     //获取用户的关注者列表
@@ -136,7 +139,7 @@ public class WxUserService {
             UserCard followerCard =
                     new UserCard(theFollower.getUid(),
                             theFollower.getNickname(),
-                            theFollower.getAvatarPath(),
+                            staticMappingHelper.doMapToDomain(theFollower.getAvatarPath()),
                             theFollowerContentAmount,
                             theFollowerFansAmount,
                             theFollowerStatus);
@@ -178,7 +181,7 @@ public class WxUserService {
             UserCard followerCard =
                     new UserCard(theFollower.getUid(),
                             theFollower.getNickname(),
-                            theFollower.getAvatarPath(),
+                            staticMappingHelper.doMapToDomain(theFollower.getAvatarPath()),
                             theFollowerContentAmount,
                             theFollowerFansAmount,
                             theFollowerStatus);
@@ -224,7 +227,14 @@ public class WxUserService {
         int collectionPageAmount = getCollectionPageAmount(uid);
         if (page >= collectionPageAmount) return new ArrayList<>();
         //do get
-        return contentMapper.getUserCollections(uid, page, COLLECTION_PAGE_SIZE);
+        List<PreviewCard> userCollections = contentMapper.getUserCollections(uid, page, COLLECTION_PAGE_SIZE);
+        //do map
+        userCollections.forEach(c -> {
+            c.setUserAvatarPath(staticMappingHelper.doMapToDomain(c.getUserAvatarPath()));
+            c.setResourcePath(staticMappingHelper.doMapToDomain(c.getResourcePath()));
+        });
+        //
+        return userCollections;
     }
 
 
@@ -242,7 +252,14 @@ public class WxUserService {
         int collectionPageAmount = getCollectionPageAmount(uid);
         if (page >= collectionPageAmount) return new ArrayList<>();
         //do get
-        return contentMapper.getUserCollections(uid, page, COLLECTION_PAGE_SIZE);
+        List<PreviewCard> userCollections = contentMapper.getUserCollections(uid, page, COLLECTION_PAGE_SIZE);
+        //do map
+        userCollections.forEach(c -> {
+            c.setUserAvatarPath(staticMappingHelper.doMapToDomain(c.getUserAvatarPath()));
+            c.setResourcePath(staticMappingHelper.doMapToDomain(c.getResourcePath()));
+        });
+        //
+        return userCollections;
     }
 
     /**
@@ -276,7 +293,14 @@ public class WxUserService {
         int likedPageAmount = getLikedPageAmount(uid);
         if (page >= likedPageAmount) return new ArrayList<>();
         //do get
-        return contentMapper.getUserLiked(uid, page, COLLECTION_PAGE_SIZE);
+        List<PreviewCard> userLiked = contentMapper.getUserLiked(uid, page, COLLECTION_PAGE_SIZE);
+        //do map
+        userLiked.forEach(previewCard -> {
+            previewCard.setUserAvatarPath(staticMappingHelper.doMapToDomain(previewCard.getUserAvatarPath()));
+            previewCard.setResourcePath(staticMappingHelper.doMapToDomain(previewCard.getResourcePath()));
+        });
+        //
+        return userLiked;
     }
 
     //获取自己赞过的内容
@@ -287,7 +311,14 @@ public class WxUserService {
         int likedPageAmount = getLikedPageAmount(uid);
         if (page >= likedPageAmount) return new ArrayList<>();
         //do get
-        return contentMapper.getUserLiked(uid, page, COLLECTION_PAGE_SIZE);
+        List<PreviewCard> userLiked = contentMapper.getUserLiked(uid, page, COLLECTION_PAGE_SIZE);
+        //do map
+        userLiked.forEach(previewCard -> {
+            previewCard.setUserAvatarPath(staticMappingHelper.doMapToDomain(previewCard.getUserAvatarPath()));
+            previewCard.setResourcePath(staticMappingHelper.doMapToDomain(previewCard.getResourcePath()));
+        });
+        //
+        return userLiked;
     }
 
     //获取用户赞过的内容的数量
@@ -309,7 +340,14 @@ public class WxUserService {
         int publishedAmount = getPublishedAmount(uid);
         if (page >= publishedAmount) return new ArrayList<>();
         //do get
-        return contentMapper.getUserPublished(uid, page, COLLECTION_PAGE_SIZE);
+        List<PreviewCard> userPublished = contentMapper.getUserPublished(uid, page, COLLECTION_PAGE_SIZE);
+        //do map
+        userPublished.forEach(previewCard -> {
+            previewCard.setUserAvatarPath(staticMappingHelper.doMapToDomain(previewCard.getUserAvatarPath()));
+            previewCard.setResourcePath(staticMappingHelper.doMapToDomain(previewCard.getResourcePath()));
+        });
+        //
+        return userPublished;
     }
 
     public List<PreviewCard> getMyPublished(String customCode, int page) {
