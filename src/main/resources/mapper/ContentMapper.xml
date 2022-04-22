@@ -500,4 +500,12 @@
         where `uid` = #{uid}
           and `cid` = #{cid}
     </select>
+
+    <select id="getContentLikeAmount" resultType="java.lang.Integer">
+        select count(*)
+        from `likes`
+        where `type` = 'content'
+          and `goal` = #{cid}
+    </select>
+
 </mapper>

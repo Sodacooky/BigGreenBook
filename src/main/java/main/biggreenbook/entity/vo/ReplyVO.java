@@ -22,12 +22,13 @@ public class ReplyVO {
 
     //楼中楼
     List<ReplyVO> inner;
-
+    //楼中楼需要用到回复对象昵称
+    private String innerGoalNickname;
 
     public ReplyVO() {
     }
 
-    public ReplyVO(String rid, String content, String userUid, String userNickname, String userAvatarPath, Timestamp date, Integer likeAmount, List<ReplyVO> inner) {
+    public ReplyVO(String rid, String content, String userUid, String userNickname, String userAvatarPath, Timestamp date, Integer likeAmount, List<ReplyVO> inner, String innerGoalNickname) {
         this.rid = rid;
         this.content = content;
         this.userUid = userUid;
@@ -36,6 +37,7 @@ public class ReplyVO {
         this.date = date;
         this.likeAmount = likeAmount;
         this.inner = inner;
+        this.innerGoalNickname = innerGoalNickname;
     }
 
     public String getRid() {
@@ -102,6 +104,14 @@ public class ReplyVO {
         this.inner = inner;
     }
 
+    public String getInnerGoalNickname() {
+        return innerGoalNickname;
+    }
+
+    public void setInnerGoalNickname(String innerGoalNickname) {
+        this.innerGoalNickname = innerGoalNickname;
+    }
+
     @Override
     public String toString() {
         return "ReplyVO{" +
@@ -113,6 +123,7 @@ public class ReplyVO {
                 ", date=" + date +
                 ", likeAmount=" + likeAmount +
                 ", inner=" + inner +
+                ", innerGoalNickname='" + innerGoalNickname + '\'' +
                 '}';
     }
 }

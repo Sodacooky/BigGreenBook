@@ -112,7 +112,7 @@ public class WxContentController {
      * @date 2022/4/16 19:17
      */
     @GetMapping("/collection")
-    public boolean collectionContent(String cid, String customCode) {
+    public boolean collectionContent(@RequestParam("customCode") String customCode, @RequestParam("cid") String cid) {
         return wxContentService.addCollectionContent(cid, customCode);
     }
 
@@ -125,7 +125,7 @@ public class WxContentController {
      * @date 2022/4/16 19:17
      */
     @GetMapping("/uncollection")
-    public boolean uncollectionContent(String cid, String customCode) {
+    public boolean uncollectionContent(@RequestParam("customCode") String customCode, @RequestParam("cid") String cid) {
         return wxContentService.deleteCollectionContent(cid, customCode);
     }
 
@@ -167,11 +167,11 @@ public class WxContentController {
     /**
      * 修改发布的内容
      *
-     * @param cid           内容id
-     * @param title         内容标题
-     * @param mainText      内容正文
-     * @param sid           资源id
-     * @param tags          标签
+     * @param cid      内容id
+     * @param title    内容标题
+     * @param mainText 内容正文
+     * @param sid      资源id
+     * @param tags     标签
      * @return boolean
      * @date 2022/4/20 17:56
      */

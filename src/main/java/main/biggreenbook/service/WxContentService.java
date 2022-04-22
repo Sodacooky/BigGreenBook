@@ -7,6 +7,7 @@ import com.fasterxml.jackson.databind.type.TypeFactory;
 import main.biggreenbook.entity.dao.ContentMapper;
 import main.biggreenbook.entity.dao.ReplyMapper;
 import main.biggreenbook.entity.dao.ResourceMapper;
+import main.biggreenbook.entity.dao.UserMapper;
 import main.biggreenbook.entity.pojo.Content;
 import main.biggreenbook.entity.pojo.Reply;
 import main.biggreenbook.entity.pojo.Resource;
@@ -188,14 +189,14 @@ public class WxContentService {
      */
     public int giveLike(String goal_id, String customCode, String likeType) {
         if (!redisHelper.hasCustomCode(customCode))
-            return contentMapper.queryLikeAmount(goal_id);
+            return contentMapper.getContentLikeAmount(goal_id);//没有错误反馈
 
         String uid = redisHelper.getUidFromCustomCode(customCode);
 
-        contentMapper.addLikes(goal_id, uid, likeType,new Timestamp(new Date().getTime()));
+        contentMapper.addLikes(likeType, goal_id, uid, new Timestamp(new Date().getTime()));
         contentMapper.updateLikeAmount(1, goal_id);
 
-        return contentMapper.queryLikeAmount(goal_id);
+        return contentMapper.getContentLikeAmount(goal_id);
     }
 
     /**
@@ -203,14 +204,14 @@ public class WxContentService {
      */
     public int ungiveLike(String goal_id, String customCode) {
         if (!redisHelper.hasCustomCode(customCode))
-            return contentMapper.queryLikeAmount(goal_id);
+            return contentMapper.getContentLikeAmount(goal_id);
 
         String uid = redisHelper.getUidFromCustomCode(customCode);
 
         contentMapper.subLikes(goal_id, uid);
         contentMapper.updateLikeAmount(-1, goal_id);
 
-        return contentMapper.queryLikeAmount(goal_id);
+        return contentMapper.getContentLikeAmount(goal_id);
     }
 
     /**
@@ -218,11 +219,10 @@ public class WxContentService {
      */
     public boolean addCollectionContent(String cid, String customCode) {
         if (!redisHelper.hasCustomCode(customCode)) return false;
-
+        //uid
         String uid = redisHelper.getUidFromCustomCode(customCode);
         //添加收藏
-        Timestamp date = new Timestamp(new Date().getTime());
-        return contentMapper.addCollection(cid, uid, date) > 0;
+        return contentMapper.addCollection(cid, uid, new Timestamp(Calendar.getInstance().getTimeInMillis())) > 0;
     }
 
     /**
@@ -392,6 +392,9 @@ public class WxContentService {
             List<ReplyVO> subReply = replyMapper.getAllSubReply(top.getRid());
             subReply.forEach(sub -> {
                 sub.setUserAvatarPath(staticMappingHelper.doMapToDomain(sub.getUserAvatarPath()));
+                if (sub.getInner() == null || sub.getInner().isEmpty()) {
+                    sub.setInnerGoalNickname(userMapper.getUserByUid(sub.getInnerGoalNickname()).getNickname());
+                }
             });
             top.setInner(subReply);
         });
@@ -434,6 +437,9 @@ public class WxContentService {
 
     @Autowired
     ReplyMapper replyMapper;
+
+    @Autowired
+    UserMapper userMapper;
 
     @Autowired
     StaticMappingHelper staticMappingHelper;

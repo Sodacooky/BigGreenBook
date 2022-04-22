@@ -12,6 +12,7 @@
         <result property="userAvatarPath" column="avatar"/>
         <result property="userNickname" column="nickname"/>
         <result property="userUid" column="uid"/>
+        <result property="innerGoalNickname" column="goal"/>
     </resultMap>
 
     <insert id="addReply" parameterType="main.biggreenbook.entity.pojo.Reply">
@@ -40,6 +41,7 @@
                r.content     as `content`,
                r.date        as `date`,
                r.like_amount as `like`,
+               r.goal        as `goal`,
                u.avatar_path as `avatar`,
                u.nickname    as `nickname`,
                u.uid         as `uid`

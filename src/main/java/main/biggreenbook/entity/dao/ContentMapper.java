@@ -142,6 +142,7 @@ public interface ContentMapper {
     // 更新内容的点赞数量字段 //
     void updateAllLikeAmount();
 
+    int getContentLikeAmount(@Param("cid") String cid);
 
     // ################### 后台
 
