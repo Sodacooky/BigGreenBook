@@ -4,10 +4,7 @@ import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.type.TypeFactory;
-import main.biggreenbook.entity.dao.ContentMapper;
-import main.biggreenbook.entity.dao.ReplyMapper;
-import main.biggreenbook.entity.dao.ResourceMapper;
-import main.biggreenbook.entity.dao.UserMapper;
+import main.biggreenbook.entity.dao.*;
 import main.biggreenbook.entity.pojo.Content;
 import main.biggreenbook.entity.pojo.Reply;
 import main.biggreenbook.entity.pojo.Resource;
@@ -194,7 +191,8 @@ public class WxContentService {
         String uid = redisHelper.getUidFromCustomCode(customCode);
 
         contentMapper.addLikes(likeType, goal_id, uid, new Timestamp(new Date().getTime()));
-        contentMapper.updateLikeAmount(1, goal_id);
+        //contentMapper.updateLikeAmount(1, goal_id);
+        contentMapper.updateSpecifiedLikeAmount(goal_id);
 
         return contentMapper.getContentLikeAmount(goal_id);
     }
@@ -209,7 +207,9 @@ public class WxContentService {
         String uid = redisHelper.getUidFromCustomCode(customCode);
 
         contentMapper.subLikes(goal_id, uid);
-        contentMapper.updateLikeAmount(-1, goal_id);
+        //contentMapper.updateLikeAmount(-1, goal_id);
+        contentMapper.updateSpecifiedLikeAmount(goal_id);
+
 
         return contentMapper.getContentLikeAmount(goal_id);
     }
@@ -221,6 +221,9 @@ public class WxContentService {
         if (!redisHelper.hasCustomCode(customCode)) return false;
         //uid
         String uid = redisHelper.getUidFromCustomCode(customCode);
+        //
+        if (collectionMapper.getUserCollectionState(uid, cid) == 1) return false;
+
         //添加收藏
         return contentMapper.addCollection(cid, uid, new Timestamp(Calendar.getInstance().getTimeInMillis())) > 0;
     }
@@ -230,8 +233,8 @@ public class WxContentService {
      */
     public boolean deleteCollectionContent(String cid, String customCode) {
         if (!redisHelper.hasCustomCode(customCode)) return false;
-
         String uid = redisHelper.getUidFromCustomCode(customCode);
+        if (collectionMapper.getUserCollectionState(uid, cid) == 0) return false;
         return contentMapper.deleteCollection(cid, uid) > 0;
     }
 
@@ -440,6 +443,9 @@ public class WxContentService {
 
     @Autowired
     UserMapper userMapper;
+
+    @Autowired
+    CollectionMapper collectionMapper;
 
     @Autowired
     StaticMappingHelper staticMappingHelper;

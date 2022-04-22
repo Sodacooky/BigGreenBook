@@ -100,6 +100,19 @@ public class RedisHelper {
         return values[1];
     }
 
+    // 热榜 //
+    // 热榜 //
+    // 热榜 //
+
+    //place start from 0, to 9, totally 10
+    public String getHotTop(int place) {
+        return redisTemplate.opsForValue().get("hot_" + place);
+    }
+
+    public void setHotTop(int place, String cid) {
+        redisTemplate.opsForValue().set("hot_" + place, cid);
+    }
+
     // 特殊情况下才使用 //
     // 特殊情况下才使用 //
     // 特殊情况下才使用 //
@@ -109,7 +122,6 @@ public class RedisHelper {
     public boolean hasKey(String key) {
         return Boolean.TRUE.equals(redisTemplate.hasKey(key));
     }
-
 
 //    @Autowired
 //    private RedisTemplate<String, Object> redisTemplate;

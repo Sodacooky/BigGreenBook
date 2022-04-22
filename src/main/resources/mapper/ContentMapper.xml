@@ -164,6 +164,12 @@
         where 1 = 1
     </update>
 
+    <update id="updateSpecifiedLikeAmount">
+        update `content` c
+        set `like_amount` = (select count(*) from `likes` l where c.cid = l.goal and l.type = 'content')
+        where c.cid = #{cid}
+    </update>
+
     <!--    &lt;!&ndash;    在当前Mapper.xml中使用二级缓存&ndash;&gt;-->
     <!--    <cache eviction="FIFO"-->
     <!--           flushInterval="60000"-->
@@ -507,5 +513,26 @@
         where `type` = 'content'
           and `goal` = #{cid}
     </select>
+
+    <select id="getContentAfterDate" resultType="main.biggreenbook.entity.pojo.Content">
+        select *
+        from `content`
+        where `date` > #{date}
+    </select>
+
+    <select id="getPreviewCardByCid" resultMap="previewCardMap">
+        select `content`.`cid`                                        as cid,
+               `content`.`like_amount`                                as like_amount,
+               `content`.`title`                                      as title,
+               `resource`.`type`                                      as type,
+               JSON_UNQUOTE(JSON_EXTRACT(`resource`.`paths`, '$[0]')) as first_path,
+               `user`.`avatar_path`                                   as avatar,
+               `user`.`nickname`                                      as nickname
+        from `content`
+                 inner join `user` on `user`.`uid` = `content`.`uid`
+                 inner join `resource` on `resource`.`sid` = `content`.`sid`
+        where `content`.`cid` = #{cid}
+    </select>
+
 
 </mapper>

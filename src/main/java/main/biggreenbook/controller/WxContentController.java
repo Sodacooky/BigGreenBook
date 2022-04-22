@@ -242,6 +242,7 @@ public class WxContentController {
      * @param content    发什么
      * @return 是否成功
      */
+    @GetMapping("/add_reply")
     public boolean addReply(@RequestParam("customCode") String customCode,
                             @RequestParam("goal") String goal_id,
                             @RequestParam("type") String goal_type,

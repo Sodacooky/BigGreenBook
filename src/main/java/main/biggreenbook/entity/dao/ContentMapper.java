@@ -142,6 +142,8 @@ public interface ContentMapper {
     // 更新内容的点赞数量字段 //
     void updateAllLikeAmount();
 
+    void updateSpecifiedLikeAmount(@Param("cid") String cid);
+
     int getContentLikeAmount(@Param("cid") String cid);
 
     // ################### 后台
@@ -262,6 +264,18 @@ public interface ContentMapper {
      * @date 2022/4/20 17:58
      */
     boolean updateContent(@Param("content") Content content);
+
+
+    // 热榜 //
+    // 热榜 //
+    // 热榜 //
+
+    List<Content> getContentAfterDate(@Param("date") Timestamp date);
+
+    PreviewCard getPreviewCardByCid(@Param("cid") String cid);
+
+
+    // //
 
     //什么玩意？
     List<ContentMessage> getContents(Map<?, ?> map);

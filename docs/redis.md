@@ -1,15 +1,15 @@
-# Redis缓存数据结构
+customCode_{customCode}
+->
+{openId}_{sessionKey}
 
 ***
 
-## 用户自定义登录记录字符串
+uploading_{uploadId}
+->
+sid_type
 
-Key:
+***
 
-customCode_{customCode}
-
-如：customCode_abc114514
-
-Value:
-
-{OpenId}_{SessionKey}
+hot_{place}
+->
+cid
