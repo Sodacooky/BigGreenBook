@@ -145,7 +145,7 @@
     <insert id="publishContent">
         insert into `content`
         values (#{content.cid}, #{content.title}, #{content.mainText}, #{content.date}, #{content.type},
-                #{content.likeAmount}, #{content.uid}, #{content.sid},#{content.tags})
+                #{content.likeAmount}, #{content.uid}, #{content.sid}, #{content.tags})
     </insert>
     <!--修改发布的内容-->
     <update id="updateContent">
@@ -155,6 +155,12 @@
             sid       = #{content.sid},
             tags      = #{content.tags}
         where `content`.`cid` = ${content.cid}
+    </update>
+
+    <update id="updateAllLikeAmount">
+        update `content` c
+        set `like_amount` = (select count(*) from `likes` l where c.cid = l.goal and l.type = 'content')
+        where 1 = 1
     </update>
 
     <!--    &lt;!&ndash;    在当前Mapper.xml中使用二级缓存&ndash;&gt;-->
@@ -493,5 +499,4 @@
         where `uid` = #{uid}
           and `cid` = #{cid}
     </select>
-
 </mapper>

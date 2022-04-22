@@ -139,6 +139,10 @@ public interface ContentMapper {
     int getUserContentAmount(@Param("uid") String uid);
 
 
+    // 更新内容的点赞数量字段 //
+    void updateAllLikeAmount();
+
+
     // ################### 后台
 
     /**
@@ -170,7 +174,7 @@ public interface ContentMapper {
      * @return int
      * @date 2022/4/16 16:19
      */
-    int addLikes(@Param("likeType") String likeType, @Param("goal") String goal, @Param("uid") String uid,@Param("date") Timestamp date);
+    int addLikes(@Param("likeType") String likeType, @Param("goal") String goal, @Param("uid") String uid, @Param("date") Timestamp date);
 
     /**
      * 取消点赞
