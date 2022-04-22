@@ -1,5 +1,6 @@
 package main.biggreenbook.entity.dao;
 
+import main.biggreenbook.entity.pojo.Content;
 import main.biggreenbook.entity.vo.ContentInfo;
 import main.biggreenbook.entity.vo.PreviewCard;
 import main.biggreenbook.utils.StaticMappingHelper;
@@ -121,6 +122,19 @@ public class ContentMapperTest {
     @Test
     public void deleteCollectionTest() {
         contentMapper.deleteCollection("obrK14iCCFuFye29bq-dV7BJU9l4", "obrK14iCCFuFye29bq-dV7BJU9l4");
+    }
+
+
+    @Test
+    public void publishContentTest(){
+        Content content = new Content("obrK14iCCFuFye29bq-dV7BJU114","原神","xiangling","[\"原神\", \"香菱\", \"二次元\"]",new Timestamp(new Date().getTime()),"picture",0,"1","1");
+        contentMapper.publishContent(content);
+    }
+
+    @Test
+    public void updateContent(){
+        Content content = new Content("obrK14iCCFuFye29bq-dV7BJU114","原神原神原神","xiangling","[\"原神\", \"香菱\", \"二次元\"]",new Timestamp(new Date().getTime()),"picture",0,"1","1");
+        contentMapper.updateContent(content);
     }
 
 }
