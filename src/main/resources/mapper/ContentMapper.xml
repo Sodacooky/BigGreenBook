@@ -93,8 +93,8 @@
                       and `follow`.`follower` = #{uid}
                     group by `user`.`uid`) u
               where `r`.`uid` = `u`.`uid`) `t`
-                 left join `likes` on `likes`.`goal` = `t`.`cid` and `likes`.`uid` = `t`.`uid`
-                 LEFT JOIN `collection` on `collection`.`cid` = `t`.`cid` and `collection`.`uid` = `t`.`uid`
+                 left join `likes` on `likes`.`goal` = `t`.`cid` and `likes`.`uid` = #{uid}
+                 LEFT JOIN `collection` on `collection`.`cid` = `t`.`cid` and `collection`.`uid` = #{uid}
         GROUP BY `t`.`cid`
     </select>
 
