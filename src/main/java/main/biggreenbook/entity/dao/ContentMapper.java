@@ -146,6 +146,7 @@ public interface ContentMapper {
 
     int getContentLikeAmount(@Param("cid") String cid);
 
+
     // ################### 后台
 
     /**
@@ -264,6 +265,12 @@ public interface ContentMapper {
      * @date 2022/4/20 17:58
      */
     boolean updateContent(@Param("content") Content content);
+
+    //现存的太垃圾所以不如写个新的
+    Content getContentByCid(@Param("cid") String cid);
+
+
+    int deleteContentByCid(@Param("cid") String cid);
 
 
     // 热榜 //

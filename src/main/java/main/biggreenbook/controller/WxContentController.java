@@ -8,7 +8,6 @@ import main.biggreenbook.service.WxContentService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import sun.reflect.generics.reflectiveObjects.NotImplementedException;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -221,7 +220,7 @@ public class WxContentController {
     @GetMapping("/remove_content")
     public boolean removeContent(@RequestParam("customCode") String customCode,
                                  @RequestParam("cid") String cid) {
-        throw new NotImplementedException();
+        return wxContentService.removeContent(customCode, cid);
     }
 
     // 内容评论 //

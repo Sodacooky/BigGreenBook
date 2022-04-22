@@ -390,6 +390,22 @@ public class WxContentService {
         return sid;
     }
 
+    public boolean removeContent(String customCode, String cid) {
+        //check customCode
+        if (!redisHelper.hasCustomCode(customCode)) return false;
+        //get uid
+        String uid = redisHelper.getUidFromCustomCode(customCode);
+        //get content
+        Content content = contentMapper.getContentByCid(cid);
+        //check content exist
+        if (content == null) return false;
+        //check content ownership
+        if (!content.getUid().equals(uid)) return false;
+        //execute remove
+        int i = contentMapper.deleteContentByCid(cid);
+        return i == 1;
+    }
+
     // 内容评论 //
     // 内容评论 //
     // 内容评论 //
