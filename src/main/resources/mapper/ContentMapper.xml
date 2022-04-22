@@ -79,9 +79,10 @@
                                  `content`.`sid`         as `sid`,
                                  `content`.`tags`        as `tags`
                           from `content`
-                          where `content`.`cid` = ${cid}) `c`,
+                          where `content`.`cid` = #{cid}) `c`,
                          `resource`
                     where `c`.`sid` = `resource`.`sid`) `r`,
+
                    (select `user`.`uid`          as uid,
                            `user`.`nickname`     as nickname,
                            `user`.`avatar_path`  as avatar_path,
@@ -89,7 +90,7 @@
                     from `user`,
                          `follow`
                     where `follow`.`uid` = `user`.`uid`
-                      and `follow`.`follower` = ${uid}
+                      and `follow`.`follower` = #{uid}
                     group by `user`.`uid`) u
               where `r`.`uid` = `u`.`uid`) `t`
                  left join `likes` on `likes`.`goal` = `t`.`cid` and `likes`.`uid` = `t`.`uid`
@@ -100,45 +101,45 @@
     <!--修改点赞数-->
     <update id="updateLikeAmount">
         update `content`
-        set `like_amount` = `like_amount` + ${isLike}
-        where `content`.`cid` = ${cid}
+        set `like_amount` = `like_amount` + #{isLike}
+        where `content`.`cid` = #{cid}
     </update>
     <!--查询点赞数-->
     <select id="queryLikeAmount" resultType="int">
         select `like_amount`
         from `content`
-        where `content`.`cid` = ${cid}
+        where `content`.`cid` = #{cid}
     </select>
     <!--新增点赞-->
     <insert id="addLikes">
         insert into `likes`
-        values (${goal}, '${likeType}', ${uid}, #{date})
+        values (#{goal}, #{likeType}, #{uid}, #{date})
     </insert>
     <!--取消点赞-->
     <delete id="subLikes">
         delete
         from `likes`
-        where `likes`.`goal` = ${goal}
-          and `likes`.`uid` = ${uid}
+        where `likes`.`goal` = #{goal}
+          and `likes`.`uid` = #{uid}
     </delete>
 
     <!--添加收藏-->
     <insert id="addCollection">
         insert into `collection`
-        values (${uid}, ${cid}, #{date})
+        values (#{uid}, #{cid}, #{date})
     </insert>
     <!--取消收藏-->
     <delete id="deleteCollection">
         delete
         from `collection`
-        where `collection`.`uid` = ${uid}
-          and `collection`.`cid` = ${cid}
+        where `collection`.`uid` = #{uid}
+          and `collection`.`cid` = #{cid}
     </delete>
 
     <!--添加举报-->
     <insert id="addReportContent">
         insert into `report`
-        values (${uid}, ${cid}, '${date}', 0, '${reason}')
+        values (#{uid}, #{cid}, #{date}, 0, #{reason})
     </insert>
 
     <!--发布内容-->
@@ -154,7 +155,7 @@
             main_text = #{content.mainText},
             sid       = #{content.sid},
             tags      = #{content.tags}
-        where `content`.`cid` = ${content.cid}
+        where `content`.`cid` = #{content.cid}
     </update>
 
     <update id="updateAllLikeAmount">
