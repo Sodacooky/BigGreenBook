@@ -185,11 +185,15 @@ public class WxContentService {
      * 添加点赞
      */
     public int giveLike(String goal_id, String customCode, String likeType) {
+        //check customcode
         if (!redisHelper.hasCustomCode(customCode))
             return contentMapper.getContentLikeAmount(goal_id);//没有错误反馈
-
+        //check liked
         String uid = redisHelper.getUidFromCustomCode(customCode);
+        if (likeMapper.getLikeStateOfContent(uid, goal_id) == 1)
+            return contentMapper.getContentLikeAmount(goal_id);//没有错误反馈
 
+        //add
         contentMapper.addLikes(likeType, goal_id, uid, new Timestamp(new Date().getTime()));
         //contentMapper.updateLikeAmount(1, goal_id);
         contentMapper.updateSpecifiedLikeAmount(goal_id);
@@ -204,7 +208,11 @@ public class WxContentService {
         if (!redisHelper.hasCustomCode(customCode))
             return contentMapper.getContentLikeAmount(goal_id);
 
+        //check liked
         String uid = redisHelper.getUidFromCustomCode(customCode);
+        if (likeMapper.getLikeStateOfContent(uid, goal_id) == 0)
+            return contentMapper.getContentLikeAmount(goal_id);//没有错误反馈
+
 
         contentMapper.subLikes(goal_id, uid);
         //contentMapper.updateLikeAmount(-1, goal_id);
@@ -446,6 +454,9 @@ public class WxContentService {
 
     @Autowired
     CollectionMapper collectionMapper;
+
+    @Autowired
+    LikeMapper likeMapper;
 
     @Autowired
     StaticMappingHelper staticMappingHelper;
