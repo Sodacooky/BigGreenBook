@@ -82,7 +82,7 @@ public class ContentMapperTest {
 
     @Test
     public void getContentInfoTest() {
-        ContentInfo contentInfo = contentMapper.getContentInfo("obrK14iCCFuFye29bq-dV7BJU9l4", "obrK14iCCFuFye29bq-dV7BJU9l4");
+        ContentInfo contentInfo = contentMapper.getContentInfo("1", "1");
         System.out.println(contentInfo);
     }
 

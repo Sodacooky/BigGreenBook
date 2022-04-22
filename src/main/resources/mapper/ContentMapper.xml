@@ -50,12 +50,12 @@ select `content`.`cid` as `cid`,
          count(`likes`.`goal`) as `islike`,
          count(`collection`.`cid`) as `iscollection`
 from `content`
-left join `user` on `content`.`cid` = #{cid}
-left join `follow` on `follow`.`follower` = #{uid}
+left join `user` on  `user`.`uid` = `content`.`uid`
+left join `resource` on `resource`.`sid` = `content`.`sid`
+left join `follow` on `user`.`uid` = `follow`.`uid` and `follow`.`follower` = #{uid}
 left join `likes` on `content`.`cid` = `likes`.`goal` and `likes`.`uid` = #{uid}
 left join `collection` on `content`.`cid` = `collection`.`cid` and `collection`.`uid` = #{uid}
-left join `resource` on `resource`.`sid` = `content`.`sid`
-where `user`.`uid` = `content`.`uid`
+where `content`.`cid` = #{cid}
 group by `content`.`cid`
     </select>
 
