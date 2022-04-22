@@ -35,67 +35,28 @@
 
     <!--获取内容详情-->
     <select id="getContentInfo" resultMap="contentInfoMap">
-        SELECT `t`.`cid`                 as `cid`,
-               `t`.`title`               as `title`,
-               `t`.`text`                as `text`,
-               `t`.`date`                as `date`,
-               `t`.`likeAmount`          as `likeAmount`,
-               `t`.`sid`                 as `sid`,
-               `t`.`paths`               as `paths`,
-               `t`.`tags`                as `tags`,
-               `t`.`uid`                 as `uid`,
-               `t`.`nickname`            as `nickname`,
-               `t`.`avatar_path`         as `avatar_path`,
-               `t`.`status`              as `status`,
-               count(`likes`.`goal`)     as islike,
-               count(`collection`.`cid`) as iscollection
-        from (select `r`.`cid`         as `cid`,
-                     `r`.`title`       as `title`,
-                     `r`.`text`        as `text`,
-                     `r`.`date`        as `date`,
-                     `r`.`likeAmount`  as `likeAmount`,
-                     `r`.`sid`         as `sid`,
-                     `r`.`paths`       as `paths`,
-                     `r`.`tags`        as `tags`,
-                     `u`.`uid`         as `uid`,
-                     `u`.`nickname`    as `nickname`,
-                     `u`.`avatar_path` as `avatar_path`,
-                     `u`.`status`      as `status`
-              from (select `c`.`cid`          as `cid`,
-                           `c`.`title`        as `title`,
-                           `c`.`text`         as `text`,
-                           `c`.`date`         as `date`,
-                           `c`.`likeAmount`   as `likeAmount`,
-                           `c`.`uid`          as `uid`,
-                           `c`.`tags`         as `tags`,
-                           `resource`.`sid`   as `sid`,
-                           `resource`.`paths` as `paths`
-                    from (select `content`.`cid`         as `cid`,
-                                 `content`.`title`       as `title`,
-                                 `content`.`main_text`   as `text`,
-                                 `content`.`date`        as `date`,
-                                 `content`.`like_amount` as `likeAmount`,
-                                 `content`.`uid`         as `uid`,
-                                 `content`.`sid`         as `sid`,
-                                 `content`.`tags`        as `tags`
-                          from `content`
-                          where `content`.`cid` = #{cid}) `c`,
-                         `resource`
-                    where `c`.`sid` = `resource`.`sid`) `r`,
-
-                   (select `user`.`uid`          as uid,
-                           `user`.`nickname`     as nickname,
-                           `user`.`avatar_path`  as avatar_path,
-                           count(`follow`.`uid`) as status
-                    from `user`,
-                         `follow`
-                    where `follow`.`uid` = `user`.`uid`
-                      and `follow`.`follower` = #{uid}
-                    group by `user`.`uid`) u
-              where `r`.`uid` = `u`.`uid`) `t`
-                 left join `likes` on `likes`.`goal` = `t`.`cid` and `likes`.`uid` = #{uid}
-                 LEFT JOIN `collection` on `collection`.`cid` = `t`.`cid` and `collection`.`uid` = #{uid}
-        GROUP BY `t`.`cid`
+select `content`.`cid` as `cid`,
+         `content`.`title` as `title`,
+         `content`.`main_text` as `text`,
+         `content`.`date`as `date`,
+         `content`.`like_amount` as `likeAmount`,
+         `content`.`sid` as `sid`,
+				 `resource`.`paths` as `paths`,
+         `content`.`uid` as `uid`,
+         `content`.`tags` as `tags`,
+         `user`.`nickname` as `nickname`,
+         `user`.`avatar_path` as `avatar_path`,
+         count(`follow`.`follower`) as `status`,
+         count(`likes`.`goal`) as `islike`,
+         count(`collection`.`cid`) as `iscollection`
+from `content`
+left join `user` on `content`.`cid` = #{cid}
+left join `follow` on `follow`.`follower` = #{uid}
+left join `likes` on `content`.`cid` = `likes`.`goal` and `likes`.`uid` = #{uid}
+left join `collection` on `content`.`cid` = `collection`.`cid` and `collection`.`uid` = #{uid}
+left join `resource` on `resource`.`sid` = `content`.`sid`
+where `user`.`uid` = `content`.`uid`
+group by `content`.`cid`
     </select>
 
     <!--修改点赞数-->
