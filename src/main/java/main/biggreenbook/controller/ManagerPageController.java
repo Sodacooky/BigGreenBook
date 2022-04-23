@@ -217,6 +217,7 @@ public class ManagerPageController {
         map.put("start", dateValue[0]);
         map.put("end", dateValue[1]);
         List<ContentMessage> list = contentManageService.queryContents(map);
+
         int totalContents = contentManageService.countQueryContents(map);
 
         return new ManageContentPage(list, totalContents);

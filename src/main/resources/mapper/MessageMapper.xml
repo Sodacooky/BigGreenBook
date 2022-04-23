@@ -16,7 +16,7 @@
     </update>
 
     <select id="getMessage" parameterType="map" resultType="main.biggreenbook.entity.pojo.Message">
-        select mid, uid, text, date from message where uid = #{uid}
+        select mid, uid, text, date from message where uid = #{uid} order by date desc
     </select>
 
     <delete id="deleteMessage" parameterType="map">
