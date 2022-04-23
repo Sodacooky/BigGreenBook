@@ -1,17 +1,26 @@
 package main.biggreenbook.service;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.type.TypeFactory;
-import main.biggreenbook.entity.dao.ContentMapper;
+import main.biggreenbook.entity.dao.*;
 import main.biggreenbook.entity.pojo.Content;
+import main.biggreenbook.entity.pojo.Reply;
+import main.biggreenbook.entity.pojo.Resource;
 import main.biggreenbook.entity.vo.ContentInfo;
 import main.biggreenbook.entity.vo.PreviewCard;
+import main.biggreenbook.entity.vo.ReplyVO;
 import main.biggreenbook.utils.RedisHelper;
 import main.biggreenbook.utils.StaticMappingHelper;
+import main.biggreenbook.utils.UUIDGenerator;
+import org.apache.commons.io.FilenameUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
+import java.io.File;
+import java.io.IOException;
 import java.sql.Timestamp;
 import java.util.*;
 
@@ -125,39 +134,46 @@ public class WxContentService {
      * 获取内容详情
      */
     public ContentInfo getContentInfo(String cid, String customCode) {
-        if (!redisHelper.hasKey(customCode))
-            return null;
+        if (!redisHelper.hasCustomCode(customCode)) return null;
         String uid = redisHelper.getUidFromCustomCode(customCode);
-        ContentInfo contentInfo = contentMapper.getContentInfo(cid,uid);
-
+        ContentInfo contentInfo = contentMapper.getContentInfo(cid, uid);
+        contentInfo.setUserAvatarPath(staticMappingHelper.doMapToDomain(contentInfo.getUserAvatarPath()));
         //路径映射
         switchJson(contentInfo);
-
         return contentInfo;
     }
 
     /**
      * 资源 路径映射
-     * @param contentInfo
-     * @date 2022/4/20 21:25
+     *
+     * @param contentInfo 详情页信息
      * @return void
+     * @date 2022/4/20 21:25
      */
     private void switchJson(ContentInfo contentInfo) {
+        //mapper
         ObjectMapper mapper = new ObjectMapper();
-        List<String> jsonList = new ArrayList<>();
+        //paths
+        List<String> pathList = new ArrayList<>();
         try {
-            jsonList = mapper.readValue(contentInfo.getPath(), TypeFactory.defaultInstance().constructCollectionType(List.class, String.class));
+            pathList = mapper.readValue(contentInfo.getPath(), TypeFactory.defaultInstance().constructCollectionType(List.class, String.class));
         } catch (JsonProcessingException e) {
             e.printStackTrace();
         }
-
-        int i = 0;
-        for (String path : jsonList){
-            jsonList.set(i++,staticMappingHelper.doMapToDomain(path));
+        List<String> pathListTemp = new ArrayList<>(pathList);
+        pathList.clear();
+        for (String path : pathListTemp) {
+            pathList.add(staticMappingHelper.doMapToDomain(path));
         }
-
-        contentInfo.setPaths(jsonList);
-        contentInfo.setUserAvatarPath(staticMappingHelper.doMapToDomain(contentInfo.getUserAvatarPath()));
+        contentInfo.setPaths(pathList);
+        //tags
+        List<String> tagList = new ArrayList<>();
+        try {
+            tagList = mapper.readValue(contentInfo.getTag(), TypeFactory.defaultInstance().constructCollectionType(List.class, String.class));
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
+        contentInfo.setTags(tagList);
     }
 
 
@@ -168,76 +184,102 @@ public class WxContentService {
     /**
      * 添加点赞
      */
-    public int giveLike(String goal_id, String customCode,String likeType) {
-        if (!redisHelper.hasKey(customCode))
-            return contentMapper.queryLikeAmount(goal_id);
-
+    public int giveLike(String goal_id, String customCode, String likeType) {
+        //check customcode
+        if (!redisHelper.hasCustomCode(customCode))
+            return contentMapper.getContentLikeAmount(goal_id);//没有错误反馈
+        //check liked
         String uid = redisHelper.getUidFromCustomCode(customCode);
+        if (likeMapper.getLikeStateOfContent(uid, goal_id) == 1)
+            return contentMapper.getContentLikeAmount(goal_id);//没有错误反馈
 
-        contentMapper.addLikes(goal_id,uid,likeType);
-        contentMapper.updateLikeAmount(1, goal_id);
+        //add
+        contentMapper.addLikes(likeType, goal_id, uid, new Timestamp(new Date().getTime()));
+        //contentMapper.updateLikeAmount(1, goal_id);
+        contentMapper.updateSpecifiedLikeAmount(goal_id);
 
-        return contentMapper.queryLikeAmount(goal_id);
+        return contentMapper.getContentLikeAmount(goal_id);
     }
 
     /**
      * 取消点赞
      */
-    public int ungiveLike(String goal_id, String customCode){
-        if (!redisHelper.hasKey(customCode))
-            return contentMapper.queryLikeAmount(goal_id);
+    public int ungiveLike(String goal_id, String customCode) {
+        if (!redisHelper.hasCustomCode(customCode))
+            return contentMapper.getContentLikeAmount(goal_id);
 
+        //check liked
         String uid = redisHelper.getUidFromCustomCode(customCode);
+        if (likeMapper.getLikeStateOfContent(uid, goal_id) == 0)
+            return contentMapper.getContentLikeAmount(goal_id);//没有错误反馈
+
 
         contentMapper.subLikes(goal_id, uid);
-        contentMapper.updateLikeAmount(-1, goal_id);
+        //contentMapper.updateLikeAmount(-1, goal_id);
+        contentMapper.updateSpecifiedLikeAmount(goal_id);
 
-        return contentMapper.queryLikeAmount(goal_id);
+
+        return contentMapper.getContentLikeAmount(goal_id);
     }
 
     /**
      * 添加收藏
      */
-    public boolean collectionContent(String cid, String customCode) {
-        if (!redisHelper.hasKey(customCode)) return false;
-
+    public boolean addCollectionContent(String cid, String customCode) {
+        if (!redisHelper.hasCustomCode(customCode)) return false;
+        //uid
         String uid = redisHelper.getUidFromCustomCode(customCode);
+        //
+        if (collectionMapper.getUserCollectionState(uid, cid) == 1) return false;
+
         //添加收藏
-        Timestamp date = new Timestamp(new Date().getTime());
-        return contentMapper.addCollection(cid, uid, date) > 0 ? true : false;
+        return contentMapper.addCollection(cid, uid, new Timestamp(Calendar.getInstance().getTimeInMillis())) > 0;
     }
 
     /**
      * 取消收藏
      */
-    public boolean uncollectionContent(String cid, String customCode) {
-        if (!redisHelper.hasKey(customCode)) return false;
-
+    public boolean deleteCollectionContent(String cid, String customCode) {
+        if (!redisHelper.hasCustomCode(customCode)) return false;
         String uid = redisHelper.getUidFromCustomCode(customCode);
-        return contentMapper.deleteCollection(cid,uid) > 0 ? true : false;
+        if (collectionMapper.getUserCollectionState(uid, cid) == 0) return false;
+        return contentMapper.deleteCollection(cid, uid) > 0;
     }
 
     /**
      * 举报内容
      */
     public boolean reportContent(String customCode, String cid, String reason) {
-        if (!redisHelper.hasKey(customCode)) return false;
-
+        //customCode
+        if (!redisHelper.hasCustomCode(customCode)) return false;
+        //uid
         String uid = redisHelper.getUidFromCustomCode(customCode);
-
+        //is reported ?
+        int userReportState = contentMapper.getUserReportState(uid, cid);
+        if (userReportState == 1) return false;//already
+        // new report
         Timestamp date = new Timestamp(new Date().getTime());
-        return contentMapper.addReportContent(uid, cid, reason, date) > 0 ? true : false;
+        return contentMapper.addReportContent(uid, cid, reason, date) > 0;
     }
+
+    // 内容发布 //
+    // 内容发布 //
+    // 内容发布 //
+
 
     /**
      * 发布内容
      */
-    public boolean publishContent(Content content) {
-        if (!redisHelper.hasKey(content.getUid())) return false;
-        String uid = redisHelper.getUidFromCustomCode(content.getUid());
-        content.setUid(uid);
-
-        return contentMapper.publishContent(content)>0?true:false;
+    public boolean publishContent(String customCode, Content content) {
+        //登录判断
+        if (!redisHelper.hasCustomCode(customCode)) return false;
+        //设置内容的非用户编辑属性
+        content.setCid(UUIDGenerator.generate());
+        content.setDate(new Timestamp(Calendar.getInstance().getTimeInMillis()));
+        content.setLikeAmount(0);
+        content.setUid(redisHelper.getUidFromCustomCode(customCode));
+        //保存
+        return contentMapper.publishContent(content) > 0;
     }
 
     /**
@@ -245,6 +287,164 @@ public class WxContentService {
      */
     public boolean updateContent(Content content) {
         return contentMapper.updateContent(content);
+    }
+
+    /**
+     * 指示开始上传文件，如果调用该方法后半小时仍然没有指示结束上传，那么资源将作废
+     *
+     * @param customCode 用户自定义登录记录
+     * @param type       上传的资源类型，对应正在上传的内容的类型，可为"picture"/"video"
+     * @return 当前上传文件操作的ID，在后续上传操作中需要用到
+     */
+    public String startUploadFile(String customCode, String type) {
+        //check customCode
+        if (!redisHelper.hasCustomCode(customCode)) return "";
+        //create redis record
+        String uploadId = UUIDGenerator.generate();
+        try {
+            Thread.sleep(10);//to get different uuid
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+        String sid = UUIDGenerator.generate() + uploadId.hashCode();
+        redisHelper.setUploadId(uploadId, sid, type);
+        // create database sid record
+        resourceMapper.insertNewEmpty(sid, type);
+        //
+        return uploadId;
+    }
+
+
+    /**
+     * 上传文件
+     *
+     * @param uploadId 在指示开启上传文件方法中获得的上传ID
+     * @param file     要上传的文件
+     * @return 成功返回true，失败（文件类型非法）时返回false
+     */
+    public boolean uploadFile(String uploadId, MultipartFile file) {
+        //check upload id
+        if (!redisHelper.hasUploadId(uploadId)) return false;
+
+        //make destination path
+        StringBuilder toStoreFilename = new StringBuilder();
+        //check upload type
+        String uploadType = redisHelper.getUploadType(uploadId);
+        if (uploadType.equals("picture")) {
+            //check extension
+            Set<String> availableFiles = new HashSet<>(Arrays.asList("jpg", "png", "jpeg"));
+            if (!availableFiles.contains(FilenameUtils.getExtension(file.getOriginalFilename()))) return false;
+            //set dir
+            toStoreFilename.append("picture/");
+        } else if (uploadType.equals("video")) {
+            //check extension
+            if (!"mp4".equals(FilenameUtils.getExtension(file.getOriginalFilename()))) return false;
+            //set dir
+            toStoreFilename.append("vid/");
+        } else return false;
+        //generate filename
+        toStoreFilename.append(UUIDGenerator.generate()).append(FilenameUtils.getExtension(file.getOriginalFilename()));
+        //make mapped url
+        String toSavePath = staticMappingHelper.getStaticLocations() + toStoreFilename;
+
+        //save file
+        try {
+            file.transferTo(new File(toSavePath));
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        //add url to database
+        Resource resource = resourceMapper.getBySid(redisHelper.getUploadSid(uploadId));
+        try {
+            ObjectMapper om = new ObjectMapper();
+            //get json array as list
+            List<String> paths = om.readValue(resource.getPaths(), new TypeReference<List<String>>() {
+            });
+            //add new file name
+            paths.add(toStoreFilename.toString());
+            //covert back to json array
+            resource.setPaths(om.writeValueAsString(paths));
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
+        }
+
+        //
+        return true;
+    }
+
+    /**
+     * 指示结束上传文件，将之前上传的文件合并为一个资源并获得其资源sid
+     *
+     * @param uploadId 上传ID
+     * @return 资源ID，sid,需要填写到发布内容的sid属性内
+     */
+    public String finishUploadFile(String uploadId) {
+        //check upload id
+        if (!redisHelper.hasUploadId(uploadId)) return "";
+        //get sid
+        String sid = redisHelper.getUploadSid(uploadId);
+        //remove the upload id
+        redisHelper.removeUploadId(uploadId);
+        //
+        return sid;
+    }
+
+    public boolean removeContent(String customCode, String cid) {
+        //check customCode
+        if (!redisHelper.hasCustomCode(customCode)) return false;
+        //get uid
+        String uid = redisHelper.getUidFromCustomCode(customCode);
+        //get content
+        Content content = contentMapper.getContentByCid(cid);
+        //check content exist
+        if (content == null) return false;
+        //check content ownership
+        if (!content.getUid().equals(uid)) return false;
+        //execute remove
+        int i = contentMapper.deleteContentByCid(cid);
+        return i == 1;
+    }
+
+    // 内容评论 //
+    // 内容评论 //
+    // 内容评论 //
+
+    public List<ReplyVO> getReply(String cid) {
+        //获取顶层评论
+        List<ReplyVO> topReply = replyMapper.getAllTopReplyOfContent(cid);
+        //遍历楼中楼，填充楼中楼评论
+        topReply.forEach(top -> {
+            top.setUserAvatarPath(staticMappingHelper.doMapToDomain(top.getUserAvatarPath()));
+            List<ReplyVO> subReply = replyMapper.getAllSubReply(top.getRid());
+            subReply.forEach(sub -> {
+                sub.setUserAvatarPath(staticMappingHelper.doMapToDomain(sub.getUserAvatarPath()));
+                if (sub.getInner() == null || sub.getInner().isEmpty()) {
+                    sub.setInnerGoalNickname(userMapper.getUserByUid(sub.getInnerGoalNickname()).getNickname());
+                }
+            });
+            top.setInner(subReply);
+        });
+        return topReply;
+    }
+
+    public boolean addReply(String customCode, String goal_id, String goal_type, String content) {
+        //check custom code
+        if (!redisHelper.hasCustomCode(customCode)) return false;
+        //check type
+        if (!"inner".equals(goal_type) && !"top".equals(goal_type)) return false;
+        //build reply
+        Reply reply = new Reply();
+        reply.setUid(redisHelper.getUidFromCustomCode(customCode));
+        reply.setContent(content);
+        reply.setGoal(goal_id);
+        reply.setDate(new Timestamp(Calendar.getInstance().getTimeInMillis()));
+        reply.setLikeAmount(0);
+        reply.setRid(UUIDGenerator.generate());
+        //save
+        replyMapper.addReply(reply);
+        //
+        return true;
     }
 
 
@@ -258,6 +458,21 @@ public class WxContentService {
 
     @Autowired
     ContentMapper contentMapper;
+
+    @Autowired
+    ResourceMapper resourceMapper;
+
+    @Autowired
+    ReplyMapper replyMapper;
+
+    @Autowired
+    UserMapper userMapper;
+
+    @Autowired
+    CollectionMapper collectionMapper;
+
+    @Autowired
+    LikeMapper likeMapper;
 
     @Autowired
     StaticMappingHelper staticMappingHelper;

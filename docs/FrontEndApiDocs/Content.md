@@ -243,6 +243,7 @@ POST /ctn/publish_content
 | type     | 资源类型  为"picture"或"video"     |
 | uid      | 发布者uid，上传发布者的 customCode 即可。 |
 | sid      | 资源id                         |
+| tags      | 标签  `不可为null`                         |
 
 返回：
 
@@ -264,6 +265,7 @@ POST /ctn/update_content
 | title    | 内容标题  |
 | mainText | 正文    |
 | sid      | 资源id  |
+| tags      | 标签  `不可为null`  |
 
 返回：
 

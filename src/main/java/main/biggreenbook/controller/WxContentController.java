@@ -3,14 +3,13 @@ package main.biggreenbook.controller;
 import main.biggreenbook.entity.pojo.Content;
 import main.biggreenbook.entity.vo.ContentInfo;
 import main.biggreenbook.entity.vo.PreviewCard;
+import main.biggreenbook.entity.vo.ReplyVO;
 import main.biggreenbook.service.WxContentService;
-import main.biggreenbook.utils.UUIDGenerator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
-import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 //微信小程序内容相关控制器
@@ -22,7 +21,6 @@ public class WxContentController {
     // 首页瀑布流 //
     // 首页瀑布流 //
     // 首页瀑布流 //
-
 
     /**
      * 获取首页瀑布流检索ID
@@ -114,8 +112,8 @@ public class WxContentController {
      * @date 2022/4/16 19:17
      */
     @GetMapping("/collection")
-    public boolean collectionContent(String cid, String customCode) {
-        return wxContentService.collectionContent(cid, customCode);
+    public boolean collectionContent(@RequestParam("customCode") String customCode, @RequestParam("cid") String cid) {
+        return wxContentService.addCollectionContent(cid, customCode);
     }
 
     /**
@@ -127,8 +125,8 @@ public class WxContentController {
      * @date 2022/4/16 19:17
      */
     @GetMapping("/uncollection")
-    public boolean uncollectionContent(String cid, String customCode) {
-        return wxContentService.uncollectionContent(cid, customCode);
+    public boolean uncollectionContent(@RequestParam("customCode") String customCode, @RequestParam("cid") String cid) {
+        return wxContentService.deleteCollectionContent(cid, customCode);
     }
 
     /**
@@ -145,6 +143,10 @@ public class WxContentController {
         return wxContentService.reportContent(customCode, cid, reason);
     }
 
+    // 内容发布 //
+    // 内容发布 //
+    // 内容发布 //
+
     /**
      * 发布内容
      *
@@ -153,26 +155,23 @@ public class WxContentController {
      *                type  资源类型
      *                uid   发布者customCode
      *                sid   资源id
+     *                tags  标签
      * @return boolean 发布成功与否
      * @date 2022/4/20 16:46
      */
     @PostMapping("/publish_content")
-    public boolean publishContent(Content content) {
-
-        content.setCid(UUIDGenerator.generate());
-        content.setDate(new Timestamp(new Date().getTime()));
-        content.setLikeAmount(0);
-
-        return wxContentService.publishContent(content);
+    public boolean publishContent(@RequestParam("customCode") String customCode, @RequestBody Content content) {
+        return wxContentService.publishContent(customCode, content);
     }
 
     /**
      * 修改发布的内容
      *
-     * @param cid
-     * @param title
-     * @param mainText
-     * @param sid
+     * @param cid      内容id
+     * @param title    内容标题
+     * @param mainText 内容正文
+     * @param sid      资源id
+     * @param tags     标签
      * @return boolean
      * @date 2022/4/20 17:56
      */
@@ -182,9 +181,80 @@ public class WxContentController {
     }
 
 
+    /**
+     * 指示开始上传文件，如果调用该方法后半小时仍然没有指示结束上传，那么资源将作废
+     *
+     * @param customCode 用户自定义登录记录
+     * @param type       上传的资源类型，对应正在上传的内容的类型，可为"picture"/"video"
+     * @return 当前上传文件操作的ID，在后续上传操作中需要用到，失败返回空字符串
+     */
+    @GetMapping("/start_upload")
+    public String startUploadFile(@RequestParam("customCode") String customCode, @RequestParam("type") String type) {
+        return wxContentService.startUploadFile(customCode, type);
+    }
+
+
+    /**
+     * 上传文件
+     *
+     * @param uploadId 在指示开启上传文件方法中获得的上传ID
+     * @param file     要上传的文件
+     * @return 成功返回true，失败（文件类型非法）时返回false
+     */
+    @PostMapping("/do_upload")
+    public boolean uploadFile(@RequestParam("uploadId") String uploadId, @RequestParam("file") MultipartFile file) {
+        return wxContentService.uploadFile(uploadId, file);
+    }
+
+    /**
+     * 指示结束上传文件，将之前上传的文件合并为一个资源并获得其资源sid
+     *
+     * @param uploadId 上传ID
+     * @return 资源ID，sid,需要填写到发布内容的sid属性内，失败返回空字符串
+     */
+    @GetMapping("/finish_upload")
+    public String finishUploadFile(@RequestParam("uploadId") String uploadId) {
+        return wxContentService.finishUploadFile(uploadId);
+    }
+
+    @GetMapping("/remove_content")
+    public boolean removeContent(@RequestParam("customCode") String customCode,
+                                 @RequestParam("cid") String cid) {
+        return wxContentService.removeContent(customCode, cid);
+    }
+
     // 内容评论 //
     // 内容评论 //
     // 内容评论 //
+
+    /**
+     * 获取评论
+     *
+     * @param cid 内容的cid
+     * @return 双层评论内容
+     */
+    @GetMapping("/get_reply")
+    public List<ReplyVO> getReply(@RequestParam("cid") String cid) {
+        return wxContentService.getReply(cid);
+    }
+
+    /**
+     * 发表评论
+     *
+     * @param customCode 用户customCode
+     * @param goal_id    目标id
+     * @param goal_type  目标类型
+     * @param content    发什么
+     * @return 是否成功
+     */
+    @GetMapping("/add_reply")
+    public boolean addReply(@RequestParam("customCode") String customCode,
+                            @RequestParam("goal") String goal_id,
+                            @RequestParam("type") String goal_type,
+                            @RequestParam("content") String content) {
+        goal_type = goal_type.toLowerCase();
+        return wxContentService.addReply(customCode, goal_id, goal_type, content);
+    }
 
 
     @Autowired

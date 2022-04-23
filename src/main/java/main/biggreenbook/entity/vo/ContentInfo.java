@@ -10,6 +10,10 @@ public class ContentInfo {
     private String date;
     private String likeAmount;
 
+    private String tag; //json array
+
+    private List<String> tags; //part tag
+
     //资源sid、路径
     private String sid;
     private String path;
@@ -30,12 +34,14 @@ public class ContentInfo {
     public ContentInfo() {
     }
 
-    public ContentInfo(String cid, String title, String text, String date, String likeAmount, String sid, String path, List<String> paths, String uid, String userNickname, String userAvatarPath, int status, int like, int collection) {
+    public ContentInfo(String cid, String title, String text, String date, String likeAmount, String tag, List<String> tags, String sid, String path, List<String> paths, String uid, String userNickname, String userAvatarPath, int status, int like, int collection) {
         this.cid = cid;
         this.title = title;
         this.text = text;
         this.date = date;
         this.likeAmount = likeAmount;
+        this.tag = tag;
+        this.tags = tags;
         this.sid = sid;
         this.path = path;
         this.paths = paths;
@@ -159,6 +165,22 @@ public class ContentInfo {
         this.collection = collection;
     }
 
+    public String getTag() {
+        return tag;
+    }
+
+    public void setTag(String tag) {
+        this.tag = tag;
+    }
+
+    public List<String> getTags() {
+        return tags;
+    }
+
+    public void setTags(List<String> tags) {
+        this.tags = tags;
+    }
+
     @Override
     public String toString() {
         return "ContentInfo{" +
@@ -167,6 +189,8 @@ public class ContentInfo {
                 ", text='" + text + '\'' +
                 ", date='" + date + '\'' +
                 ", likeAmount='" + likeAmount + '\'' +
+                ", tag='" + tag + '\'' +
+                ", tags=" + tags +
                 ", sid='" + sid + '\'' +
                 ", path='" + path + '\'' +
                 ", paths=" + paths +

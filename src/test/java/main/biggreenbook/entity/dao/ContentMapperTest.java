@@ -83,56 +83,58 @@ public class ContentMapperTest {
     @Test
     public void getContentInfoTest() {
         ContentInfo contentInfo = contentMapper.getContentInfo("1", "1");
-
         System.out.println(contentInfo);
     }
 
 
     @Test
     public void updateLikeAmountTest() {
+        contentMapper.updateLikeAmount(-1,"obrK14iCCFuFye29bq-dV7BJU9l4");
     }
 
     @Test
     public void addLikesTest() {
-        contentMapper.addLikes("content", "1", "1");
+        contentMapper.addLikes("content", "obrK14iCCFuFye29bq-dV7BJU9l4", "obrK14iCCFuFye29bq-dV7BJU9l4",new Timestamp(new Date().getTime()));
     }
 
     @Test
     public void subLikesTest() {
-        contentMapper.subLikes("1", "1");
+        contentMapper.subLikes("obrK14iCCFuFye29bq-dV7BJU9l4", "obrK14iCCFuFye29bq-dV7BJU9l4");
     }
 
     @Test
     public void queryLikeAmountTest() {
-        contentMapper.queryLikeAmount("1");
+        contentMapper.queryLikeAmount("obrK14iCCFuFye29bq-dV7BJU9l4");
     }
 
     @Test
     public void addReportContentTest() {
         Timestamp date = new Timestamp(new Date().getTime());
-        contentMapper.addReportContent("1", "1", "不可奉告", date);
+        contentMapper.addReportContent("obrK14iCCFuFye29bq-dV7BJU9l4", "obrK14iCCFuFye29bq-dV7BJU9l4", "不可奉告", date);
     }
 
     @Test
     public void addConllectionTest() {
         Timestamp date = new Timestamp(new Date().getTime());
-        contentMapper.addCollection("1", "1", date);
+        contentMapper.addCollection("obrK14iCCFuFye29bq-dV7BJU9l4", "obrK14iCCFuFye29bq-dV7BJU9l4", date);
     }
 
     @Test
     public void deleteCollectionTest() {
-        contentMapper.deleteCollection("1", "1");
+        contentMapper.deleteCollection("obrK14iCCFuFye29bq-dV7BJU9l4", "obrK14iCCFuFye29bq-dV7BJU9l4");
     }
+
 
     @Test
     public void publishContentTest(){
-        Content content = new Content("1111","原神","xiangling",new Timestamp(new Date().getTime()),"picture",0,"1","1");
+        Content content = new Content("obrK14iCCFuFye29bq-dV7BJU114","原神","xiangling","[\"原神\", \"香菱\", \"二次元\"]",new Timestamp(new Date().getTime()),"picture",0,"1","1");
         contentMapper.publishContent(content);
     }
 
     @Test
     public void updateContent(){
-        Content content = new Content("1111","原神原神原神","xiangling",new Timestamp(new Date().getTime()),"picture",0,"1","1");
+        Content content = new Content("obrK14iCCFuFye29bq-dV7BJU114","原神原神原神","xiangling","[\"原神\", \"香菱\", \"二次元\"]",new Timestamp(new Date().getTime()),"picture",0,"1","1");
         contentMapper.updateContent(content);
     }
+
 }

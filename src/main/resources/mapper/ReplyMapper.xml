@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+
+<mapper namespace="main.biggreenbook.entity.dao.ReplyMapper">
+
+    <resultMap id="replyVOMap" type="main.biggreenbook.entity.vo.ReplyVO">
+        <id property="rid" column="rid"/>
+        <result property="rid" column="rid"/>
+        <result property="content" column="content"/>
+        <result property="date" column="date"/>
+        <result property="likeAmount" column="like"/>
+        <result property="userAvatarPath" column="avatar"/>
+        <result property="userNickname" column="nickname"/>
+        <result property="userUid" column="uid"/>
+        <result property="innerGoalNickname" column="goal"/>
+    </resultMap>
+
+    <insert id="addReply" parameterType="main.biggreenbook.entity.pojo.Reply">
+        insert into `reply`
+        values (#{reply.rid}, #{reply.type}, #{reply.content}, #{reply.goal}, #{reply.likeAmount}, #{reply.date},
+                #{reply.uid})
+    </insert>
+
+    <select id="getAllTopReplyOfContent" resultMap="replyVOMap">
+        select r.rid         as `rid`,
+               r.content     as `content`,
+               r.date        as `date`,
+               r.like_amount as `like`,
+               u.avatar_path as `avatar`,
+               u.nickname    as `nickname`,
+               u.uid         as `uid`
+        from `reply` r
+                 inner join user u on r.uid = u.uid
+        where `type` = 'top'
+          and `goal` = #{cid}
+        order by r.like_amount desc
+    </select>
+
+    <select id="getAllSubReply" resultMap="replyVOMap">
+        select r.rid         as `rid`,
+               r.content     as `content`,
+               r.date        as `date`,
+               r.like_amount as `like`,
+               r.goal        as `goal`,
+               u.avatar_path as `avatar`,
+               u.nickname    as `nickname`,
+               u.uid         as `uid`
+        from `reply` r
+                 inner join user u on r.uid = u.uid
+        where `type` = 'inner'
+          and `goal` = #{rid}
+        order by `date` desc
+    </select>
+
+</mapper>
