@@ -1,8 +1,12 @@
 # 通用部分配置
 spring:
   profiles:
+<<<<<<< HEAD
+    active: dev # 当前激活的配置文件
+=======
     #active: product # 当前激活的配置文件
     active: product
+>>>>>>> d2aee598001639f25870e5d1be68920d4726d108
   datasource:
     driver-class-name: com.mysql.cj.jdbc.Driver
   mvc:
