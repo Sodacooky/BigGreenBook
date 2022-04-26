@@ -35,9 +35,10 @@ public class WxSearchService {
             result.addAll(contentMapper.getContentBySearch(paramsMap));
         }
         //获取页
+        if (queryId >= PAGESIZE)    //若不足一页，该判断保证不重复取记录
         {
             Map<String, Object> paramsMap = new HashMap<>();
-            paramsMap.put("pageNum", page);
+            paramsMap.put("pageNum", actualPage);
             paramsMap.put("pageSize", PAGESIZE);
             paramsMap.put("amount", PAGESIZE);
             paramsMap.put("search", search);
@@ -49,7 +50,19 @@ public class WxSearchService {
             one.setUserAvatarPath(staticMappingHelper.doMapToDomain(one.getUserAvatarPath()));
             one.setResourcePath(staticMappingHelper.doMapToDomain(one.getResourcePath()));
         });
-        //
+
+        //若按HOT方式排序，则按逆序排序，正序取记录，则排序紊乱，故在此再作一次排序
+        //若按时间发布排序，因前端体现不出，故不需排序
+        if (sort.equals("HOT")) {
+            Comparator<PreviewCard> comparator = new Comparator<PreviewCard>() {
+                @Override
+                public int compare(PreviewCard p1, PreviewCard p2) {
+                    return p2.getContentLikeAmount() - p1.getContentLikeAmount();
+                }
+            };
+            result.sort(comparator);
+        }
+
         return result;
     }
 
@@ -65,7 +78,12 @@ public class WxSearchService {
 
     public int getPreviewCardPageAmount(int queryId) {
         //计算逆序页，获得数据
-        return queryId < PAGESIZE ? 1 : queryId / PAGESIZE;
+        if (queryId == 0)
+            return 0;
+        else if (queryId % PAGESIZE == 0)
+            return queryId / PAGESIZE - 1;
+        else
+            return queryId < PAGESIZE ? 0 : queryId / PAGESIZE - 1;
     }
 
 
