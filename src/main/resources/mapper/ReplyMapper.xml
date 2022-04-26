@@ -33,7 +33,7 @@
                  inner join user u on r.uid = u.uid
         where `type` = 'top'
           and `goal` = #{cid}
-        order by r.like_amount desc
+        order by r.date desc
     </select>
 
     <select id="getAllSubReply" resultMap="replyVOMap">

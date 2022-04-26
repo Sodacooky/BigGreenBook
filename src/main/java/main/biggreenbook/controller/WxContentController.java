@@ -160,7 +160,19 @@ public class WxContentController {
      * @date 2022/4/20 16:46
      */
     @PostMapping("/publish_content")
-    public boolean publishContent(@RequestParam("customCode") String customCode, @RequestBody Content content) {
+    public boolean publishContent(@RequestParam("customCode") String customCode,
+                                  @RequestParam("title") String title,
+                                  @RequestParam("mainText") String mainText,
+                                  @RequestParam("tags") String tagsJson,
+                                  @RequestParam("sid") String sid,
+                                  @RequestParam("type") String type) {
+
+        Content content = new Content();
+        content.setTitle(title);
+        content.setMainText(mainText);
+        content.setTags(tagsJson);
+        content.setSid(sid);
+        content.setType(type);
         return wxContentService.publishContent(customCode, content);
     }
 
@@ -255,7 +267,7 @@ public class WxContentController {
         goal_type = goal_type.toLowerCase();
         return wxContentService.addReply(customCode, goal_id, goal_type, content);
     }
-
+    
 
     @Autowired
     WxContentService wxContentService;

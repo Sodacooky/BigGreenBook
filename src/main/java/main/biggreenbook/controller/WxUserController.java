@@ -164,7 +164,7 @@ public class WxUserController {
      * @return 当前页的收藏内容预览卡片
      */
     @GetMapping("/get_my_collections")
-    public List<PreviewCard> getMyCollections(@RequestAttribute("customCode") String customCode, @RequestParam("page") int page) {
+    public List<PreviewCard> getMyCollections(@RequestParam("customCode") String customCode, @RequestParam("page") int page) {
         if (page < 0) page = 0;
         return wxUserService.getMyCollections(customCode, page);
     }
@@ -277,8 +277,13 @@ public class WxUserController {
      * @return 返回是否修改成功
      */
     @PostMapping("/updateUser")
-    public boolean updateUser(@RequestParam("customCode") String customCode, @RequestBody User user) {
-        return wxUserService.updateUser(customCode, user);
+    public boolean updateUser(@RequestParam("customCode") String customCode,
+                              @RequestParam("nickname") String nickname,
+                              @RequestParam("description") String desp) {
+        User tempUser = new User();
+        tempUser.setNickname(nickname);
+        tempUser.setDescription(desp);
+        return wxUserService.updateUser(customCode, tempUser);
     }
 
     /**

@@ -24,11 +24,10 @@ public class MessageController {
      * @deprecated use getMyMessages() instead
      */
     @Deprecated
-    @GetMapping("/get/{uid}")
-    public List<Message> getMessage(@PathVariable String uid) {
+    @GetMapping("/get")
+    public List<Message> getMessage(@RequestParam("uid") String uid) {
         Map<String, String> map = new HashMap<>();
         map.put("uid", uid);
-
         return messageService.getMessage(map);
     }
 

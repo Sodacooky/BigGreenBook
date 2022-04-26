@@ -4,8 +4,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
 
-import java.io.File;
-
 @Component
 @PropertySource("classpath:/application.yml")
 public class StaticMappingHelper {
@@ -37,7 +35,7 @@ public class StaticMappingHelper {
     }
 
     public String getStaticLocations() {
-        return new File(staticLocations).getAbsolutePath();
+        return staticLocations;
     }
 
     public void setStaticLocations(String staticLocations) {

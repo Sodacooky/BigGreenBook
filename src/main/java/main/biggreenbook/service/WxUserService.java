@@ -60,7 +60,7 @@ public class WxUserService {
         try {
             customCodeBuilder.append(UUIDGenerator.generate());
             Thread.sleep(10); //睡一下以获得不同的uuid
-            customCodeBuilder.append(UUIDGenerator.generate().hashCode());//并且哈希化
+            customCodeBuilder.append(UUIDGenerator.generate());
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
@@ -432,8 +432,10 @@ public class WxUserService {
     public boolean updateUser(String customCode, User user) {
         if (!redisHelper.hasCustomCode(customCode)) return false;
         String uid = redisHelper.getUidFromCustomCode(customCode);
-        user.setUid(uid);
-        return userMapper.updateUser(user) > 0;
+        User newUser = userMapper.getUserByUid(uid);
+        newUser.setNickname(user.getNickname());
+        newUser.setDescription(user.getDescription());
+        return userMapper.updateUser(newUser) > 0;
     }
 
     /**
@@ -462,8 +464,8 @@ public class WxUserService {
         if (!redisHelper.hasCustomCode(customCode)) return false;
         //make destination path
         String toSaveFilename = UUIDGenerator.generate() + FilenameUtils.getExtension(file.getOriginalFilename());
-        String toStoreFilename = "avatar/" + toSaveFilename;
-        String toSavePath = staticMappingHelper.getStaticLocations() + toStoreFilename;
+        String toStoreFilename = "/avatar/" + toSaveFilename;
+        String toSavePath = staticMappingHelper.getStaticLocations().substring("file:".length()) + toStoreFilename;
         //save file
         try {
             file.transferTo(new File(toSavePath));

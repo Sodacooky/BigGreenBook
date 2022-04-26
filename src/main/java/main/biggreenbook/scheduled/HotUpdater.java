@@ -27,10 +27,10 @@ public class HotUpdater {
 
 
     private void doUpdateHot() {
-        //从数据库中获取最近一天的内容
-        //获取一天前的时间
+        //从数据库中获取最近两天的内容
+        //获取两天前的时间
         Calendar date = Calendar.getInstance();
-        date.add(Calendar.DAY_OF_MONTH, -1);
+        date.add(Calendar.DAY_OF_MONTH, -2);
         //获取
         List<Content> contentToday = contentMapper.getContentAfterDate(new Timestamp(date.getTimeInMillis()));
         //排序，找出最热门的10个

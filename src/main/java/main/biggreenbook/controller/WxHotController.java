@@ -4,6 +4,7 @@ import main.biggreenbook.entity.dao.ContentMapper;
 import main.biggreenbook.entity.dao.UserMapper;
 import main.biggreenbook.entity.vo.PreviewCard;
 import main.biggreenbook.utils.RedisHelper;
+import main.biggreenbook.utils.StaticMappingHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -25,7 +26,7 @@ public class WxHotController {
     public List<PreviewCard> get() {
         return getPreviewCardByCid(getHotContentIdFromRedis());
     }
-    
+
 
     //
     private List<String> getHotContentIdFromRedis() {
@@ -42,7 +43,12 @@ public class WxHotController {
     private List<PreviewCard> getPreviewCardByCid(List<String> cids) {
         List<PreviewCard> results = new ArrayList<>();
         cids.forEach(cid -> {
-            results.add(contentMapper.getPreviewCardByCid(cid));
+            PreviewCard previewCard = contentMapper.getPreviewCardByCid(cid);
+            //map
+            previewCard.setUserAvatarPath(staticMappingHelper.doMapToDomain(previewCard.getUserAvatarPath()));
+            previewCard.setResourcePath(staticMappingHelper.doMapToDomain(previewCard.getResourcePath()));
+            //
+            results.add(previewCard);
         });
         return results;
     }
@@ -53,6 +59,9 @@ public class WxHotController {
 
     @Autowired
     UserMapper userMapper;
+
+    @Autowired
+    StaticMappingHelper staticMappingHelper;
 
     @Autowired
     RedisHelper redisHelper;

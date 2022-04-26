@@ -6,6 +6,7 @@ import main.biggreenbook.service.WxSearchService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -36,7 +37,7 @@ public class WxSearchController {
     public List<PreviewCard> doContentSearch(@RequestParam int page, @RequestParam int query_id, @RequestParam String search, String sort) {
         //page parameter check
         if (page < 0) page = 0;
-        if (page >= getContentSearchPageAmount(query_id)) page = getContentSearchPageAmount(query_id);
+        if (page >= getContentSearchPageAmount(query_id)) return new ArrayList<>();
         //sort check
         sort = sort.toUpperCase();
         if (!sort.equals("HOT") && !sort.equals("LATEST")) sort = "HOT";
@@ -86,7 +87,7 @@ public class WxSearchController {
                                        @RequestParam String follower) {
         //page parameter check
         if (page < 0) page = 0;
-        if (page >= getUserCardsPageAmount(query_id)) page = getUserCardsPageAmount(query_id) - 1;
+        if (page >= getUserCardsPageAmount(query_id)) return new ArrayList<>();
 
         Map<String, Object> map = new HashMap<>();
         map.put("pageNum", page);

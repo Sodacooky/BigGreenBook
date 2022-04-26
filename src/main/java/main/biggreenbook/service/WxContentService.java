@@ -8,6 +8,7 @@ import main.biggreenbook.entity.dao.*;
 import main.biggreenbook.entity.pojo.Content;
 import main.biggreenbook.entity.pojo.Reply;
 import main.biggreenbook.entity.pojo.Resource;
+import main.biggreenbook.entity.pojo.User;
 import main.biggreenbook.entity.vo.ContentInfo;
 import main.biggreenbook.entity.vo.PreviewCard;
 import main.biggreenbook.entity.vo.ReplyVO;
@@ -273,11 +274,15 @@ public class WxContentService {
     public boolean publishContent(String customCode, Content content) {
         //登录判断
         if (!redisHelper.hasCustomCode(customCode)) return false;
+        //判断封禁
+        String uid = redisHelper.getUidFromCustomCode(customCode);
+        User user = userMapper.getUserByUid(uid);
+        if (user.getState() == 1) return false;
         //设置内容的非用户编辑属性
         content.setCid(UUIDGenerator.generate());
         content.setDate(new Timestamp(Calendar.getInstance().getTimeInMillis()));
         content.setLikeAmount(0);
-        content.setUid(redisHelper.getUidFromCustomCode(customCode));
+        content.setUid(uid);
         //保存
         return contentMapper.publishContent(content) > 0;
     }
@@ -327,7 +332,7 @@ public class WxContentService {
         if (!redisHelper.hasUploadId(uploadId)) return false;
 
         //make destination path
-        StringBuilder toStoreFilename = new StringBuilder();
+        StringBuilder toStoreFilename = new StringBuilder("/");//res root
         //check upload type
         String uploadType = redisHelper.getUploadType(uploadId);
         if (uploadType.equals("picture")) {
@@ -335,7 +340,7 @@ public class WxContentService {
             Set<String> availableFiles = new HashSet<>(Arrays.asList("jpg", "png", "jpeg"));
             if (!availableFiles.contains(FilenameUtils.getExtension(file.getOriginalFilename()))) return false;
             //set dir
-            toStoreFilename.append("picture/");
+            toStoreFilename.append("img/");
         } else if (uploadType.equals("video")) {
             //check extension
             if (!"mp4".equals(FilenameUtils.getExtension(file.getOriginalFilename()))) return false;
@@ -343,9 +348,10 @@ public class WxContentService {
             toStoreFilename.append("vid/");
         } else return false;
         //generate filename
-        toStoreFilename.append(UUIDGenerator.generate()).append(FilenameUtils.getExtension(file.getOriginalFilename()));
+        toStoreFilename.append(UUIDGenerator.generate()).append(".").append(FilenameUtils.getExtension(file.getOriginalFilename()));
         //make mapped url
-        String toSavePath = staticMappingHelper.getStaticLocations() + toStoreFilename;
+        String toSavePath = staticMappingHelper.getStaticLocations().substring("file:".length()) + toStoreFilename;
+
 
         //save file
         try {
@@ -353,6 +359,7 @@ public class WxContentService {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+
 
         //add url to database
         Resource resource = resourceMapper.getBySid(redisHelper.getUploadSid(uploadId));
@@ -368,6 +375,7 @@ public class WxContentService {
         } catch (JsonProcessingException e) {
             throw new RuntimeException(e);
         }
+        resourceMapper.update(resource);
 
         //
         return true;
@@ -415,13 +423,18 @@ public class WxContentService {
         List<ReplyVO> topReply = replyMapper.getAllTopReplyOfContent(cid);
         //遍历楼中楼，填充楼中楼评论
         topReply.forEach(top -> {
+            //将所有top的资源映射到链接
             top.setUserAvatarPath(staticMappingHelper.doMapToDomain(top.getUserAvatarPath()));
+            //获取当前top回复下的所有楼中楼
             List<ReplyVO> subReply = replyMapper.getAllSubReply(top.getRid());
+            //
             subReply.forEach(sub -> {
+                //将所有楼中楼映射资源
                 sub.setUserAvatarPath(staticMappingHelper.doMapToDomain(sub.getUserAvatarPath()));
-                if (sub.getInner() == null || sub.getInner().isEmpty()) {
-                    sub.setInnerGoalNickname(userMapper.getUserByUid(sub.getInnerGoalNickname()).getNickname());
-                }
+                //如果
+//                if (sub.getInner() == null || sub.getInner().isEmpty()) {
+//                    sub.setInnerGoalNickname(userMapper.getUserByUid(sub.getInnerGoalNickname()).getNickname());
+//                }
             });
             top.setInner(subReply);
         });
@@ -438,6 +451,7 @@ public class WxContentService {
         reply.setUid(redisHelper.getUidFromCustomCode(customCode));
         reply.setContent(content);
         reply.setGoal(goal_id);
+        reply.setType(goal_type);
         reply.setDate(new Timestamp(Calendar.getInstance().getTimeInMillis()));
         reply.setLikeAmount(0);
         reply.setRid(UUIDGenerator.generate());
