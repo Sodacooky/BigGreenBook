@@ -4,6 +4,7 @@ import main.biggreenbook.controller.WxSearchController;
 import main.biggreenbook.entity.pojo.Content;
 import main.biggreenbook.entity.vo.ContentInfo;
 import main.biggreenbook.entity.vo.PreviewCard;
+import main.biggreenbook.entity.vo.UserCard;
 import main.biggreenbook.service.WxSearchService;
 import main.biggreenbook.utils.StaticMappingHelper;
 import org.junit.jupiter.api.Test;
@@ -55,6 +56,14 @@ public class ContentMapperTest {
         List<PreviewCard> contentBySearch = wxSearchController.doContentSearch(10, queryId, null, "HOT");
         contentBySearch.forEach(System.out::println);
     }
+    @Test
+    public void getUserCardBySearchTest(){
+        int queryId = wxSearchController.getSearchQueryId(null);
+        System.out.println(queryId);
+        List<UserCard> userCards = wxSearchController.doUserSearch(10, queryId, null, "obrK14iCCFuFye29bq-dV7BJU9l4", "FANS");
+        userCards.forEach(System.out::println);
+    }
+
 
     // 用户收藏夹 //
     // 用户收藏夹 //
