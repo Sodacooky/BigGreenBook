@@ -1,8 +1,10 @@
 package main.biggreenbook.entity.dao;
 
+import main.biggreenbook.controller.WxSearchController;
 import main.biggreenbook.entity.pojo.Content;
 import main.biggreenbook.entity.vo.ContentInfo;
 import main.biggreenbook.entity.vo.PreviewCard;
+import main.biggreenbook.service.WxSearchService;
 import main.biggreenbook.utils.StaticMappingHelper;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -48,13 +50,9 @@ public class ContentMapperTest {
 
     @Test
     public void getContentBySearchTest() {
-        HashMap<String, Object> paramMap = new HashMap<>();
-        paramMap.put("pageNum", 0);
-        paramMap.put("pageSize", 8);
-        paramMap.put("amount", 8);
-        paramMap.put("search", "布里");
-        paramMap.put("sort", "LATEST");
-        List<PreviewCard> contentBySearch = contentMapper.getContentBySearch(paramMap);
+        int queryId = wxSearchController.getContentSearchQueryId(null);
+        System.out.println(queryId);
+        List<PreviewCard> contentBySearch = wxSearchController.doContentSearch(10, queryId, null, "HOT");
         contentBySearch.forEach(System.out::println);
     }
 
@@ -72,6 +70,9 @@ public class ContentMapperTest {
         List<PreviewCard> userCollections = contentMapper.getUserCollections("0", 0, 8);
         userCollections.forEach(System.out::println);
     }
+
+    @Autowired
+    WxSearchController wxSearchController;
 
     //contentMapper of the testing
     @Autowired
@@ -127,7 +128,7 @@ public class ContentMapperTest {
 
     @Test
     public void publishContentTest(){
-        Content content = new Content("obrK14iCCFuFye29bq-dV7BJU114","原神","xiangling","[\"原神\", \"香菱\", \"二次元\"]",new Timestamp(new Date().getTime()),"picture",0,"1","1");
+        Content content = new Content("obrK14iCCFuFye29bq-dV7BJU113","原神","xiangling","[\"原神\", \"香菱\", \"二次元\"]",new Timestamp(new Date().getTime()),"picture",0,"1","1");
         contentMapper.publishContent(content);
     }
 
