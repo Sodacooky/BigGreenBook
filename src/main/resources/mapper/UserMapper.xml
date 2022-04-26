@@ -63,7 +63,7 @@
         group by `user`.`uid`)tmp1
         LEFT JOIN `follow` ON `follow`.`uid` = `tmp1`.uid
         GROUP BY `tmp1`.uid)tmp
-        LEFT JOIN `follow` on `follow`.`uid` = `tmp`.`uid` and `follow`.`follower` = ${follower}
+        LEFT JOIN `follow` on `follow`.`uid` = `tmp`.`uid` and `follow`.`follower` = #{follower}
         group by `tmp`.`uid`
         <choose>
             <when test="sort == null or sort == ''">

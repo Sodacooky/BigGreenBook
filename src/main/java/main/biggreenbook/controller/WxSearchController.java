@@ -7,9 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 
 /**
@@ -72,33 +70,29 @@ public class WxSearchController {
     // 用户搜索 //
 
     /**
-     * @param page     页
-     * @param query_id 检索ID
-     * @param sort     排序方式，可以为null，默认为null时，按昵称排序；    "FANS"按粉丝数量排序
-     * @param search   搜索内容，不可为null;
-     * @param follower 关注者uid， 即当前用户uid
+     * @param page       页
+     * @param query_id   检索ID
+     * @param sort       排序方式，可以为null，默认为null时，按昵称排序；    "FANS"按粉丝数量排序
+     * @param search     搜索内容，不可为null;
+     * @param customCode 用户自己的自定义登录记录字符串
      * @return 用户信息预览卡片数组
      */
     @GetMapping("/do_user_search")
     public List<UserCard> doUserSearch(@RequestParam int page,
                                        @RequestParam int query_id,
-                                       @RequestParam String sort,
                                        @RequestParam String search,
-                                       @RequestParam String follower) {
+                                       @RequestParam String customCode,
+                                       String sort) {
         //page parameter check
         if (page < 0) page = 0;
         if (page >= getUserCardsPageAmount(query_id)) return new ArrayList<>();
 
-        Map<String, Object> map = new HashMap<>();
-        map.put("pageNum", page);
-        map.put("pageSize", PAGESIZE);
-        map.put("amount", query_id % PAGESIZE);
-        map.put("sort", sort);
-        map.put("search", search);
-        map.put("follower", follower);
+        //sort check
+        sort = sort.toUpperCase();
+        if (!sort.equals("FANS") && sort != null) sort = "FANS";
 
         //to service
-        return wxSearchService.getUserCardsBySearch(query_id, map);
+        return wxSearchService.getUserCardsBySearch(page, query_id, sort, search, customCode);
     }
 
     @GetMapping("/get_user_search_query_id")
