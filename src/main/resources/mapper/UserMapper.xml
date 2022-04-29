@@ -34,7 +34,7 @@
         select count(*)
         from `user`
         <if test="search != null and search != ''">
-            where `user`.`nickname` like '%${search}%'
+            where `user`.`nickname` like '%${search}%' or `user`.`description` like '%${search}%'
         </if>
     </select>
 
@@ -58,7 +58,7 @@
         from `user`
         left join `content` on `user`.uid = `content`.`uid`
         <if test="search != null and search != ''">
-            where `user`.`nickname` like '%${search}%'
+            where `user`.`nickname` like '%${search}%' or `user`.`description` like '%${search}%'
         </if>
         group by `user`.`uid`)tmp1
         LEFT JOIN `follow` ON `follow`.`uid` = `tmp1`.uid

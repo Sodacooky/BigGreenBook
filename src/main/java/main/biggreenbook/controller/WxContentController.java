@@ -193,6 +193,11 @@ public class WxContentController {
     }
 
 
+    @GetMapping("/remove_content")
+    public boolean removeContent(@RequestParam("customCode") String customCode, @RequestParam("cid") String cid) {
+        return wxContentService.removeContent(customCode, cid);
+    }
+
     /**
      * 指示开始上传文件，如果调用该方法后半小时仍然没有指示结束上传，那么资源将作废
      *
@@ -229,12 +234,6 @@ public class WxContentController {
         return wxContentService.finishUploadFile(uploadId);
     }
 
-    @GetMapping("/remove_content")
-    public boolean removeContent(@RequestParam("customCode") String customCode,
-                                 @RequestParam("cid") String cid) {
-        return wxContentService.removeContent(customCode, cid);
-    }
-
     // 内容评论 //
     // 内容评论 //
     // 内容评论 //
@@ -267,7 +266,7 @@ public class WxContentController {
         goal_type = goal_type.toLowerCase();
         return wxContentService.addReply(customCode, goal_id, goal_type, content);
     }
-    
+
 
     @Autowired
     WxContentService wxContentService;

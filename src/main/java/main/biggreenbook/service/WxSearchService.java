@@ -82,9 +82,9 @@ public class WxSearchService {
         if (queryId == 0)
             return 0;
         else if (queryId % PAGESIZE == 0)
-            return queryId / PAGESIZE - 1;
+            return queryId / PAGESIZE;
         else
-            return queryId < PAGESIZE ? 0 : queryId / PAGESIZE - 1;
+            return queryId < PAGESIZE ? 1 : (queryId / PAGESIZE) + 1;
     }
 
 
@@ -93,15 +93,16 @@ public class WxSearchService {
 
     /**
      * 通过搜索获取用户卡片
+     *
      * @param page
      * @param queryId
      * @param sort
      * @param search
      * @param customCode
-     * @date 2022/4/26 11:12
      * @return 用户搜索预览卡片
+     * @date 2022/4/26 11:12
      */
-    public List<UserCard> getUserCardsBySearch(int page,int queryId,String sort,String search,String customCode ) {
+    public List<UserCard> getUserCardsBySearch(int page, int queryId, String sort, String search, String customCode) {
         if (!redisHelper.hasCustomCode(customCode)) return null;
         String uid = redisHelper.getUidFromCustomCode(customCode);
 
@@ -164,9 +165,9 @@ public class WxSearchService {
         if (queryId == 0)
             return 0;
         else if (queryId % PAGESIZE == 0)
-            return queryId / PAGESIZE - 1;
+            return queryId / PAGESIZE;
         else
-            return queryId < PAGESIZE ? 0 : queryId / PAGESIZE - 1;
+            return queryId < PAGESIZE ? 1 : (queryId / PAGESIZE) + 1;
     }
 
 

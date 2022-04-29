@@ -17,7 +17,7 @@ import java.util.List;
 @Component
 public class HotUpdater {
 
-    @Scheduled(cron = "0 */30 * * * *")
+    @Scheduled(cron = "0 */1 * * * *")
     public void updateHot() {
         Logger logger = LoggerFactory.getLogger(this.getClass());
         logger.info("started to update hot ...");

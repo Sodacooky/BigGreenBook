@@ -11,7 +11,7 @@ import org.springframework.stereotype.Component;
 public class AmountUpdater {
 
     //更新内容的点赞数量，计划任务
-    @Scheduled(cron = "0 */30 * * * *")
+    @Scheduled(cron = "0 */1 * * * *")
     public void updateContentLikeAmount() {
         Logger logger = LoggerFactory.getLogger(this.getClass());
         logger.info("started to update content like amount...");

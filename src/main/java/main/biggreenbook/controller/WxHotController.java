@@ -44,11 +44,13 @@ public class WxHotController {
         List<PreviewCard> results = new ArrayList<>();
         cids.forEach(cid -> {
             PreviewCard previewCard = contentMapper.getPreviewCardByCid(cid);
-            //map
-            previewCard.setUserAvatarPath(staticMappingHelper.doMapToDomain(previewCard.getUserAvatarPath()));
-            previewCard.setResourcePath(staticMappingHelper.doMapToDomain(previewCard.getResourcePath()));
-            //
-            results.add(previewCard);
+            if (previewCard != null) {
+                //map
+                previewCard.setUserAvatarPath(staticMappingHelper.doMapToDomain(previewCard.getUserAvatarPath()));
+                previewCard.setResourcePath(staticMappingHelper.doMapToDomain(previewCard.getResourcePath()));
+                //
+                results.add(previewCard);
+            }
         });
         return results;
     }

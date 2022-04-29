@@ -57,9 +57,11 @@ public class WxContentService {
         //计算逆序页，获得数据
         int pageAmount = queryId < PAGESIZE ? 1 : queryId / PAGESIZE;
         int actualPage = pageAmount - 1 - page;
-
-        result.addAll(contentMapper.getHomePageContent(actualPage, PAGESIZE));
-
+        //后面的分页方法是按时间顺序，因此要反向添加到result里
+        List<PreviewCard> homeContentAtPage = contentMapper.getHomePageContent(actualPage, PAGESIZE);
+        for (int index = homeContentAtPage.size() - 1; index > 0; index--) {
+            result.add(homeContentAtPage.get(index));
+        }
         //路径映射
         result.forEach(one -> {
             one.setUserAvatarPath(staticMappingHelper.doMapToDomain(one.getUserAvatarPath()));
